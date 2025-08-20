@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        .infos {
+            padding: 50px;
+            border: 1px solid black;
+            border-radius: 20px;
+        }
+    </style>
+</head>
+
+<body onload="aprovar()">
+    <div id="tudo">
+    </div>
+</body>
+
+</html>
+<script>
+
+    function aprovar() {
+        //Pegar o caminho para a função GET do buscar
+        fetch("http://localhost:3333/aprovacao/aprovar", {
+            method: "GET",
+            headers: {
+                "Content-Type": "application/json"
+            }
+        })
+            .then(function (resposta) {
+                console.log("ESTOU NO THEN DO buscar()!");
+
+                if (resposta.ok) {
+                    resposta.json().then(data => {
+                        console.log(data);
+                        console.log(JSON.stringify(data));
+
+                        dados = data;
+                        console.log(dados);
+                        teste();
+                    });
+                } else {
+                    console.log("Houve um erro ao tentar buscar as perguntas!");
+                    resposta.text().then(texto => {
+                        console.error(texto);
+                    });
+                }
+            })
+            .catch(function (erro) {
+                console.log(erro);
+            });
+        return false;
+    }
+
+    function teste(){
+        console.log("Teste:",dados);
+            for (var i = 0; i < dados.length; i++) {
+            nome = dados[i].nome_aprovacao;
+            cnpj = dados[i].cnpj_aprovacao;
+            email = dados[i].email_aprovacao;
+
+            document.getElementById("tudo").innerHTML += `<div class="infos"><label>${nome}</label> <br> <label>${cnpj}</label><br><label>${email}</label><br> <button onclick="aceitar(${i})">Aceitar</button> <button onclick="limpar(${i})">Recusar</button></div>`;
+        }
+    }
+    function aceitar(i) {
+        var nomeAprovado = dados[i].nome_aprovacao;
+        var emailAprovado = dados[i].email_aprovacao;
+        var senhaAprovado = dados[i].senha_aprovacao;
+        var cnpjAprovado = dados[i].cnpj_aprovacao;
+
+        // Enviando o valor da nova input
+        fetch("/usuarios/cadastrarAprovado", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+                nomeServer: nomeAprovado,
+                emailServer: emailAprovado,
+                senhaServer: senhaAprovado,
+                cnpjServer: cnpjAprovado
+            }),
+        })
+            .then(function (resposta) {
+                console.log("resposta: ", resposta);
+                limpar(i);
+            })
+            .catch(function (resposta) {
+                console.log(`#ERRO: ${resposta}`);
+            });
+        return false;
+    }
+
+    function limpar(i) {
+        var idAprovado = dados[i].id;
+
+        // Enviando o valor da nova input
+        fetch("/usuarios/limpar", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+                idServer: idAprovado
+            }),
+        })
+            .then(function (resposta) {
+                console.log("resposta: ", resposta);
+                console.log("Limpei", dados);
+                location.reload();
+
+            })
+            .catch(function (resposta) {
+                console.log(`#ERRO: ${resposta}`);
+            });
+        return false;
+    }
+</script>

@@ -1,0 +1,331 @@
+    @import url('https://fonts.googleapis.com/css2?family=Lexend:wght@100..900&display=swap');
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    html{
+      scroll-behavior: smooth;
+    }
+
+    body {
+      font-family: 'Lexend', sans-serif;
+      padding-top: 15vh;
+    }
+
+    /* NAVBAR */
+    .nav-bar {
+      display: flex;
+      flex-direction: row;
+      justify-content: space-between;
+      height: 15vh;
+      width: 100%;
+      align-items: center;
+      background-color: white;
+      position: fixed;
+      top: 0;
+      left: 0;
+      z-index: 1000;
+    }
+
+    .nav-bar::after {
+      content: "";
+      position: absolute;
+      bottom: -1px;
+      left: 0;
+      width: 100%;
+      height: 2px;
+      background: linear-gradient(to right, #a53568, #e26c5d);
+    }
+
+    .nav-logo {
+      background-image: url(../assets/Logo.png);
+      width: 80px;
+      height: 70px;
+      background-size: cover;
+      background-repeat: no-repeat;
+      margin-left: 30px;
+    }
+
+    .nav-logo:hover{
+      cursor: pointer;
+    }
+
+    .links-navegacao {
+      width: 40%;
+      display: flex;
+      flex-direction: row;
+      justify-content: space-between;
+      list-style-type: none;
+    }
+
+    .links-rota {
+      width: 20%;
+      margin-right: 30px;
+      display: flex;
+      flex-direction: row;
+      justify-content: space-between;
+      list-style-type: none;
+      align-items: center;
+    }
+
+    .nav-bar li a {
+      display: inline-block;     
+      padding: 5px;              
+      border-radius: 5px;        
+      transition: all 0.3s ease; 
+    }
+
+    .nav-bar li a:hover {
+      transform: scale(1.2);
+      background-color: rgba(165, 53, 104, 0.9);
+      color: white;
+    }
+
+    a {
+      text-decoration: none;
+      color: #20062A;
+      font-size: 20px;
+      font-weight: 400;
+    }
+
+    .btn-contato {
+      color: white;
+      font-size: 20px;
+      height: 40px;
+      width: 100px;
+      border: none;
+      border-radius: 10px;
+      background: linear-gradient(135deg, #a53568, #e26c5d);
+      cursor: pointer;
+    }
+
+    .btn-contato:hover{
+      transition: all 0.3s ease; 
+      transform: scale(1.2);
+    }
+
+    .btn-contato a{
+      color: white;
+    }
+
+    /* HOME */
+    .home {
+      width: 100%;
+      height: 88vh;
+      background-image: url(../assets/Banner.png);
+      background-size: cover;  
+      background-attachment: fixed;
+      background-position: center; 
+      background-repeat: no-repeat;  
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+
+    .banner {
+      color: white;
+      font-size: 45px;
+      margin-left: 70px;
+    }
+
+    .banner h1,
+    .banner h3 {
+      margin: 0;
+    }
+
+    /* SOBRE NÓS */
+    .sobre-nos {
+      padding: 100px 0;
+      width: 100%;
+      display: flex;
+      justify-content: center;
+      background-color: #f8f9fa;
+    }
+
+    .conteudo {
+      width: 90%;
+      max-width: 1200px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .titulo-subtitulo {
+      text-align: center;
+      margin-bottom: 50px;
+    }
+
+    .titulo-subtitulo h2 {
+      font-size: 48px;
+      margin-bottom: 10px;
+      font-weight: 700;
+      color: #20062A;
+    }
+
+    .titulo-subtitulo h3 {
+      font-size: 24px;
+      margin: 0;
+      color: #893E86;
+      font-weight: 400;
+    }
+
+    .titulo-subtitulo span {
+      color: #D52636;
+    }
+
+    .info1-sobre-nos {
+      width: 100%;
+      margin-bottom: 50px;
+    }
+
+    .info1-sobre-nos p {
+      font-size: 18px;
+      line-height: 1.6;
+      text-align: center;
+      color: #333;
+      border: 2px solid #D52636;
+      border-radius: 15px;
+      padding: 40px;
+      margin: 0;
+    }
+
+    .segunda-div {
+      display: flex;
+      flex-direction: row;
+      justify-content: space-between;
+      align-items: center;
+      width: 100%;
+      gap: 40px;
+    }
+
+    .info2-sobre-nos {
+      flex: 1;
+      max-width: 400px;
+    }
+
+    .info2-sobre-nos p {
+      font-size: 18px;
+      line-height: 1.6;
+      color: #333;
+      border: 2px solid #D52636;
+      border-radius: 15px;
+      padding: 30px;
+      margin: 0;
+    }
+
+    .img-container {
+      flex: 1;
+      display: flex;
+      justify-content: center;
+    }
+
+    .img-sobre-nos {
+      max-width: 100%;
+      height: 300px;
+      border-radius: 15px;
+      object-fit: cover;
+    }
+
+    /* NOSSA MISSÃO */
+    .nossa-missao {
+      padding: 100px 0;
+      background: linear-gradient(135deg, rgba(165, 53, 104, 0.9), rgba(226, 108, 93, 0.9));
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .titulo-subtitulo-nossa-missao {
+      text-align: center;
+      margin-bottom: 60px;
+    }
+
+    .titulo-subtitulo-nossa-missao h2 {
+      font-size: 48px;
+      margin-bottom: 10px;
+      font-weight: 700;
+      color: white;
+    }
+
+    .titulo-subtitulo-nossa-missao h3 {
+      font-size: 24px;
+      margin: 0;
+      color: white;
+      font-weight: 300;
+    }
+
+    .cards {
+      display: flex;
+      flex-direction: row;
+      justify-content: center;
+      align-items: stretch;
+      gap: 30px;
+      max-width: 1200px;
+      width: 90%;
+    }
+
+    .card {
+      background-color: white;
+      border-radius: 15px;
+      padding: 40px 30px;
+      text-align: center; 
+      max-width: 300px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+      transition: transform 0.3s ease;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+
+    .card:hover {
+      transform: translateY(-5px);
+    }
+
+    .seguranca-img, .saude-img, .confianca-img {
+      width: 100px;
+      height: 100px;
+      background-size: cover;
+      background-repeat: no-repeat;
+      background-position: center;
+      margin: 0 auto 20px auto;
+    }
+
+    .seguranca-img {
+      background-image: url(../assets/seguranca.png);
+    }
+
+    .saude-img {
+      background-image: url(../assets/saude.png);
+    }
+
+    .confianca-img {
+      background-image: url(../assets/confianca.png);
+    }
+
+    .card h4 {
+      font-size: 24px;
+      margin-bottom: 15px;
+      font-weight: 600;
+    }
+
+    .card:nth-child(1) h4 {
+      color: #893E86;
+    }
+
+    .card:nth-child(2) h4 {
+      color: #D52636;
+    }
+
+    .card:nth-child(3) h4 {
+      color: #893E86;
+    }
+
+    .card p {
+      font-size: 16px;
+      line-height: 1.6;
+      color: #666;
+      margin: 0;
+    }
