@@ -6,7 +6,7 @@
       box-sizing: border-box;
     }
 
-    html{
+    html {
       scroll-behavior: smooth;
     }
 
@@ -49,7 +49,7 @@
       margin-left: 30px;
     }
 
-    .nav-logo:hover{
+    .nav-logo:hover {
       cursor: pointer;
     }
 
@@ -72,10 +72,10 @@
     }
 
     .nav-bar li a {
-      display: inline-block;     
-      padding: 5px;              
-      border-radius: 5px;        
-      transition: all 0.3s ease; 
+      display: inline-block;
+      padding: 5px;
+      border-radius: 5px;
+      transition: all 0.3s ease;
     }
 
     .nav-bar li a:hover {
@@ -102,12 +102,12 @@
       cursor: pointer;
     }
 
-    .btn-contato:hover{
-      transition: all 0.3s ease; 
+    .btn-contato:hover {
+      transition: all 0.3s ease;
       transform: scale(1.2);
     }
 
-    .btn-contato a{
+    .btn-contato a {
       color: white;
     }
 
@@ -116,10 +116,10 @@
       width: 100%;
       height: 88vh;
       background-image: url(../assets/Banner.png);
-      background-size: cover;  
+      background-size: cover;
       background-attachment: fixed;
-      background-position: center; 
-      background-repeat: no-repeat;  
+      background-position: center;
+      background-repeat: no-repeat;
       display: flex;
       flex-direction: column;
       justify-content: center;
@@ -271,7 +271,7 @@
       background-color: white;
       border-radius: 15px;
       padding: 40px 30px;
-      text-align: center; 
+      text-align: center;
       max-width: 300px;
       box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
       transition: transform 0.3s ease;
@@ -284,7 +284,9 @@
       transform: translateY(-5px);
     }
 
-    .seguranca-img, .saude-img, .confianca-img {
+    .seguranca-img,
+    .saude-img,
+    .confianca-img {
       width: 100px;
       height: 100px;
       background-size: cover;
@@ -328,4 +330,245 @@
       line-height: 1.6;
       color: #666;
       margin: 0;
+    }
+
+    /*CENARIO*/
+    .cenario {
+      height: 88vh;
+      display: flex;
+      padding: 50px;
+      flex-direction: column;
+    }
+
+    .cenario h4 {
+      font-size: 48px;
+      text-align: center;
+    }
+
+    .cenario p {
+      font-size: 28px;
+      text-align: center;
+      font-weight: 100px;
+      color: #893E86;
+    }
+
+    .cenario span {
+      color: #D52636;
+    }
+
+    #div1-img-cenario {
+      display: flex;
+      gap: 60px;
+      height: 300px;
+      align-items: center;
+      height: 200px;
+    }
+
+    #div2-img-cenario {
+      display: flex;
+      height: 200px;
+      align-items: center;
+      justify-content: center;
+      gap: 40px;
+    }
+
+    #colunas-empresas {
+      display: flex;
+      padding: 40px;
+      flex-direction: column;
+      gap: 60px;
+    }
+
+    #div-contato {
+      display: flex;
+    }
+
+    .cenario img {
+      overflow: hidden;
+    }
+
+    /*BENEFICIOS*/
+    #beneficios {
+      height: 88vh;
+      padding: 110px;
+      display: flex;
+      flex-direction: column;
+      gap: 30px;
+      padding: 50px 90px;
+    }
+
+    #quadro-beneficios {
+      display: flex;
+      gap: 55px;
+      flex-direction: column;
+    }
+
+    .beneficios-texto {
+      font-weight: 300;
+      color: #20062A;
+      font-size: 24px;
+      text-align: start;
+      width: 80%;
+    }
+
+
+    #beneficios h4 {
+      font-size: 48px;
+    }
+
+    #beneficios-subtitulo {
+      font-size: 28px;
+      color: #D52636;
+      font-weight: 300;
+    }
+
+    #beneficios span {
+      color: #893E86;
+    }
+
+    .info-beneficios {
+      font-size: 28px;
+      font-weight: 200px;
+      color: #333;
+      border-radius: 15px;
+      padding: 30px;
+      display: flex;
+      text-align: center;
+      height: 120px;
+    }
+
+    .info-beneficios img {
+      width: 90px;
+      height: 80px;
+    }
+
+    #beneficio1 {
+      border: 2px solid #893E86;
+      display: flex;
+    }
+
+    #beneficio2-fundo {
+      background: linear-gradient(180deg, #893E86, #D52636);
+      border-radius: 15px;
+      height: 134px;
+      padding: 1.5px;
+      align-items: center;
+      display: flex;
+    }
+
+    #beneficio2 {
+      background-color: white;
+      border-radius: 13px;
+      height: 131px;
+    }
+
+    #beneficio3 {
+      border: 2px solid#D52636;
+      display: flex;
+    }
+
+    .beneficios {
+      height: 88vh;
+    }
+
+    /*FAQ*/
+    #faq {
+      padding: 70px;
+      display: flex;
+      height: 88vh;
+      align-items: center;
+      display: flex;
+      flex-direction: column;
+      gap: 40px;
+      text-align: start;
+    }
+
+    .faq-perguntas {
+      background: linear-gradient(135deg, rgba(165, 53, 104, 0.9), rgba(226, 108, 93, 0.9));
+      border-radius: 20px;
+      width: 1000px;
+      height: 90px;
+      color: white;
+      text-align: center;
+      padding: 60px;
+      font-size: 40px;
+      font-weight: 200;
+    }
+
+    #caixa-perguntas {
+      gap: 30px;
+      display: flex;
+      flex-direction: column;
+    }
+  
+
+    #faq h4 {
+      font-size: 48px;
+    }
+
+    #faq p {
+      font-size: 32px;
+      color: #D52636;
+      font-weight: 300;
+    }
+
+    #faq span {
+      color: #893E86;
+    }
+
+    /* CONTATO */
+    #div-contato {
+      height: 88vh;
+      background: linear-gradient(135deg, rgba(165, 53, 104, 0.9), rgba(226, 108, 93, 0.9));
+      color: white;
+      display: flex;
+      padding: 50px;
+      flex-direction: column;
+      gap: 50px;
+    }
+
+    #img-coracao {
+      width: 210px;
+      height: 190px;
+      align-self: center;
+      margin-bottom: 15px;
+    }
+
+    #texto-contato {
+      margin-top: 70px;
+      font-size: 32px;
+      font-weight: 200;
+      width: 60%;
+    }
+
+    #logo-contato {
+      display: flex;
+      flex-direction: column;
+      text-align: center;
+      font-size: 30px;
+      font-weight: 200;
+    }
+
+    .info-contato {
+      display: flex;
+      gap: 120px;
+      flex-direction: row;
+      font-size: 28px;
+      font-weight: regular;
+    }
+
+    .info-contato h6 {
+      font-size: 36px;
+    }
+
+    .info-contato a {
+      color: white;
+      text-decoration: none;
+    }
+
+    #contato-primeira-fileira {
+      display: flex;
+      flex-direction: row;
+      gap: 540px;
+      width: 80vw;
     }
