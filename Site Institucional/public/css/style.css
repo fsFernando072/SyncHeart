@@ -8,11 +8,13 @@
 
     html {
       scroll-behavior: smooth;
+      font-family: 'Lexend', sans-serif;
+      scroll-padding-top: 10vh;
     }
 
     body {
-      font-family: 'Lexend', sans-serif;
-      padding-top: 15vh;
+      padding-top: 10vh;
+      overflow-x: hidden;
     }
 
     /* NAVBAR */
@@ -20,7 +22,7 @@
       display: flex;
       flex-direction: row;
       justify-content: space-between;
-      height: 15vh;
+      height: 10vh;
       width: 100%;
       align-items: center;
       background-color: white;
@@ -78,7 +80,13 @@
       transition: all 0.3s ease;
     }
 
-    .nav-bar li a:hover {
+    .nav-bar .links-navegacao li a:hover {
+      transform: scale(1.2);
+      background-color: rgba(165, 53, 104, 0.9);
+      color: white;
+    }
+
+    .nav-bar .links-rota li:not(:last-child) a:hover {
       transform: scale(1.2);
       background-color: rgba(165, 53, 104, 0.9);
       color: white;
@@ -98,7 +106,7 @@
       width: 100px;
       border: none;
       border-radius: 10px;
-      background: linear-gradient(135deg, #a53568, #e26c5d);
+      background: linear-gradient(135deg, #893E86, #D52636);
       cursor: pointer;
     }
 
@@ -115,7 +123,7 @@
     .home {
       width: 100%;
       height: 88vh;
-      background-image: url(../assets/Banner.png);
+      background-image: url(../assets/banner.jpg);
       background-size: cover;
       background-attachment: fixed;
       background-position: center;
@@ -127,18 +135,20 @@
 
     .banner {
       color: white;
-      font-size: 45px;
+      font-size: 70px;
       margin-left: 70px;
+      text-shadow: 0 0 5px rgba(255, 255, 255, 0.6);
     }
 
     .banner h1,
     .banner h3 {
       margin: 0;
+      margin-left: 10%;
     }
 
     /* SOBRE NÓS */
     .sobre-nos {
-      padding: 100px 0;
+      padding: 100px 200px;
       width: 100%;
       display: flex;
       justify-content: center;
@@ -150,33 +160,44 @@
       max-width: 1200px;
       display: flex;
       flex-direction: column;
-      align-items: center;
+      align-items: flex-start;
     }
 
     .titulo-subtitulo {
+      display: flex;
+      flex-direction: column;
+      align-items: self-start;
       text-align: center;
       margin-bottom: 50px;
     }
 
     .titulo-subtitulo h2 {
-      font-size: 48px;
+      font-size: 80px;
       margin-bottom: 10px;
       font-weight: 700;
       color: #20062A;
+      text-shadow: 0 0 5px rgba(32, 6, 42, 0.3);
     }
 
     .titulo-subtitulo h3 {
-      font-size: 24px;
+      font-size: 48px;
       margin: 0;
       color: #893E86;
+      text-shadow:
+        0 0 4px rgba(137, 62, 134, 0.2),
+        0 0 10px rgba(137, 62, 134, 0.2);
       font-weight: 400;
     }
 
     .titulo-subtitulo span {
       color: #D52636;
+      text-shadow:
+        0 0 4px rgba(213, 38, 54, 0.2),
+        0 0 10px rgba(213, 38, 54, 0.2);
     }
 
     .info1-sobre-nos {
+      text-align: justify;
       width: 100%;
       margin-bottom: 50px;
     }
@@ -232,7 +253,7 @@
     /* NOSSA MISSÃO */
     .nossa-missao {
       padding: 100px 0;
-      background: linear-gradient(135deg, rgba(165, 53, 104, 0.9), rgba(226, 108, 93, 0.9));
+      background: linear-gradient(135deg, #D52636, #893E86);
       display: flex;
       flex-direction: column;
       align-items: center;
@@ -244,16 +265,18 @@
     }
 
     .titulo-subtitulo-nossa-missao h2 {
-      font-size: 48px;
+      font-size: 80px;
       margin-bottom: 10px;
       font-weight: 700;
       color: white;
+      text-shadow: 0 0 5px rgba(255, 255, 255, 0.6);
     }
 
     .titulo-subtitulo-nossa-missao h3 {
-      font-size: 24px;
+      font-size: 48px;
       margin: 0;
       color: white;
+      text-shadow: 0 0 5px rgba(255, 255, 255, 0.6);
       font-weight: 300;
     }
 
@@ -307,10 +330,16 @@
       background-image: url(../assets/confianca.png);
     }
 
-    .card h4 {
-      font-size: 24px;
+    .card h2 {
+      font-size: 80px;
       margin-bottom: 15px;
       font-weight: 600;
+      color: #20062A;
+      text-shadow: 0 0 5px rgba(32, 6, 42, 0.3);
+    }
+
+    .card h4{
+      margin-bottom: 10px;
     }
 
     .card:nth-child(1) h4 {
@@ -325,8 +354,8 @@
       color: #893E86;
     }
 
-    .card p {
-      font-size: 16px;
+    .card h3 {
+      font-size: 48px;
       line-height: 1.6;
       color: #666;
       margin: 0;
@@ -334,26 +363,34 @@
 
     /*CENARIO*/
     .cenario {
-      height: 88vh;
+      height: fit-content;
       display: flex;
-      padding: 50px;
       flex-direction: column;
+      margin-top: 100px;
     }
 
-    .cenario h4 {
-      font-size: 48px;
+    .cenario h2 {
+      color: #20062A;
+      text-shadow: 0 0 5px rgba(32, 6, 42, 0.3);
+      font-size: 80px;
       text-align: center;
     }
 
-    .cenario p {
-      font-size: 28px;
+    .cenario h3 {
+      font-size: 48px;
       text-align: center;
       font-weight: 100px;
       color: #893E86;
+      text-shadow:
+        0 0 4px rgba(137, 62, 134, 0.2),
+        0 0 10px rgba(137, 62, 134, 0.2);
     }
 
     .cenario span {
       color: #D52636;
+      text-shadow:
+        0 0 4px rgba(213, 38, 54, 0.2),
+        0 0 10px rgba(213, 38, 54, 0.2);
     }
 
     #div1-img-cenario {
@@ -373,13 +410,15 @@
     }
 
     #colunas-empresas {
+      margin-top: 100px;
       display: flex;
-      padding: 40px;
       flex-direction: column;
-      gap: 60px;
+      justify-content: center;
+      align-items: center;
+      flex-direction: column;
     }
 
-    #div-contato {
+    #contato {
       display: flex;
     }
 
@@ -389,18 +428,27 @@
 
     /*BENEFICIOS*/
     #beneficios {
-      height: 88vh;
-      padding: 110px;
+      height: 90vh;
       display: flex;
       flex-direction: column;
-      gap: 30px;
-      padding: 50px 90px;
+      justify-content: space-evenly;
+      padding: 0px 200px;
+      margin-top: 100px;
+    }
+
+    #beneficios-titulo-subtitulo{
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      height: 20%;
     }
 
     #quadro-beneficios {
+      margin-top: 70px;
       display: flex;
-      gap: 55px;
       flex-direction: column;
+      justify-content: space-around;
+      height: 80%;
     }
 
     .beneficios-texto {
@@ -411,8 +459,13 @@
       width: 80%;
     }
 
+    #beneficios h2 {
+      color: #20062A;
+      text-shadow: 0 0 5px rgba(32, 6, 42, 0.3);
+      font-size: 80px;
+    }
 
-    #beneficios h4 {
+    #beneficios h3 {
       font-size: 48px;
     }
 
@@ -420,10 +473,16 @@
       font-size: 28px;
       color: #D52636;
       font-weight: 300;
+      text-shadow:
+        0 0 4px rgba(213, 38, 54, 0.2),
+        0 0 10px rgba(213, 38, 54, 0.2);
     }
 
     #beneficios span {
       color: #893E86;
+      text-shadow:
+        0 0 4px rgba(137, 62, 134, 0.2),
+        0 0 10px rgba(137, 62, 134, 0.2);
     }
 
     .info-beneficios {
@@ -434,6 +493,8 @@
       padding: 30px;
       display: flex;
       text-align: center;
+      justify-content: space-around;
+      align-items: center;
       height: 120px;
     }
 
@@ -443,23 +504,13 @@
     }
 
     #beneficio1 {
-      border: 2px solid #893E86;
-      display: flex;
-    }
-
-    #beneficio2-fundo {
-      background: linear-gradient(180deg, #893E86, #D52636);
-      border-radius: 15px;
-      height: 134px;
-      padding: 1.5px;
-      align-items: center;
+      border: 2px solid#D52636;
       display: flex;
     }
 
     #beneficio2 {
-      background-color: white;
-      border-radius: 13px;
-      height: 131px;
+      border: 2px solid #893E86;
+      display: flex;
     }
 
     #beneficio3 {
@@ -467,64 +518,16 @@
       display: flex;
     }
 
-    .beneficios {
-      height: 88vh;
-    }
-
-    /*FAQ*/
-    #faq {
-      padding: 70px;
-      display: flex;
-      height: 88vh;
-      align-items: center;
-      display: flex;
-      flex-direction: column;
-      gap: 40px;
-      text-align: start;
-    }
-
-    .faq-perguntas {
-      background: linear-gradient(135deg, rgba(165, 53, 104, 0.9), rgba(226, 108, 93, 0.9));
-      border-radius: 20px;
-      width: 1000px;
-      height: 90px;
-      color: white;
-      text-align: center;
-      padding: 60px;
-      font-size: 40px;
-      font-weight: 200;
-    }
-
-    #caixa-perguntas {
-      gap: 30px;
-      display: flex;
-      flex-direction: column;
-    }
-  
-
-    #faq h4 {
-      font-size: 48px;
-    }
-
-    #faq p {
-      font-size: 32px;
-      color: #D52636;
-      font-weight: 300;
-    }
-
-    #faq span {
-      color: #893E86;
-    }
-
     /* CONTATO */
-    #div-contato {
-      height: 88vh;
-      background: linear-gradient(135deg, rgba(165, 53, 104, 0.9), rgba(226, 108, 93, 0.9));
+    #contato {
+      height: fit-content;
+      background: linear-gradient(135deg, #D52636, #893E86);
       color: white;
       display: flex;
       padding: 50px;
       flex-direction: column;
-      gap: 50px;
+      justify-content: center;
+      margin-top: 100px;
     }
 
     #img-coracao {
@@ -536,9 +539,30 @@
 
     #texto-contato {
       margin-top: 70px;
-      font-size: 32px;
+      font-size: 25px;
       font-weight: 200;
-      width: 60%;
+      margin-left: 9%;
+      width: 50%;
+    }
+
+    #contatos-links {
+      display: flex;
+      flex-direction: column;
+    }
+
+    #contatos-links a {
+      font-weight: 200;
+      font-size: 22px;
+      color: white;
+    }
+
+    #contatos-links a:hover {
+      text-decoration: underline;
+    }
+
+    #contatos-links h3 {
+      font-size: 36px;
+      font-weight: 200;
     }
 
     #logo-contato {
@@ -549,26 +573,22 @@
       font-weight: 200;
     }
 
-    .info-contato {
-      display: flex;
-      gap: 120px;
-      flex-direction: row;
-      font-size: 28px;
-      font-weight: regular;
-    }
-
-    .info-contato h6 {
-      font-size: 36px;
-    }
-
-    .info-contato a {
-      color: white;
-      text-decoration: none;
-    }
-
     #contato-primeira-fileira {
       display: flex;
       flex-direction: row;
-      gap: 540px;
-      width: 80vw;
+      justify-content: space-around;
+    }
+
+    #contatos-contatos {
+      font-weight: 200;
+      font-size: 22px;
+    }
+
+    #contatos-contatos h3 {
+      font-size: 36px;
+      font-weight: 200;
+    }
+
+    #contatos-contatos span{
+      text-decoration: underline;
     }
