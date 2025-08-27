@@ -40,43 +40,92 @@ function cadastrarAprovado(req, res) {
     var senhaAprovado = req.body.senhaServer;
     var cnpjAprovado = req.body.cnpjServer;
 
-        usuarioModel.cadastrarAprovado(nomeAprovado, emailAprovado, senhaAprovado, cnpjAprovado)
-            .then(
-                function (resultado) {
-                    res.json(resultado);
-                }
-            ).catch(
-                function (erro) {
-                    console.log(erro);
-                    console.log(
-                        "\nHouve um erro ao realizar o cadastro! Erro: ",
-                        erro.sqlMessage
-                    );
-                    res.status(500).json(erro.sqlMessage);
-                }
-            );
-    }
+    usuarioModel.cadastrarAprovado(nomeAprovado, emailAprovado, senhaAprovado, cnpjAprovado)
+        .then(
+            function (resultado) {
+                res.json(resultado);
+            }
+        ).catch(
+            function (erro) {
+                console.log(erro);
+                console.log(
+                    "\nHouve um erro ao realizar o cadastro! Erro: ",
+                    erro.sqlMessage
+                );
+                res.status(500).json(erro.sqlMessage);
+            }
+        );
+}
 
-    function limpar(req, res) {
+function limpar(req, res) {
     var idAprovado = req.body.idServer;
 
-        usuarioModel.limpar(idAprovado)
+    usuarioModel.limpar(idAprovado)
+        .then(
+            function (resultado) {
+                res.json(resultado);
+            }
+        ).catch(
+            function (erro) {
+                console.log(erro);
+                console.log(
+                    "\nHouve um erro ao realizar o cadastro! Erro: ",
+                    erro.sqlMessage
+                );
+                res.status(500).json(erro.sqlMessage);
+            }
+        );
+}
+
+function autenticar(req, res) {
+    var email = req.body.emailServer;
+    var senha = req.body.senhaServer;
+
+    if (email == undefined) {
+        res.status(400).send("Seu email está undefined!");
+    } else if (senha == undefined) {
+        res.status(400).send("Sua senha está indefinida!");
+    } else {
+
+        usuarioModel.autenticar(email, senha)
             .then(
-                function (resultado) {
-                    res.json(resultado);
+                function (resultadoAutenticar) {
+                    console.log(`\nResultados encontrados: ${resultadoAutenticar.length}`);
+                    console.log(`Resultados: ${JSON.stringify(resultadoAutenticar)}`);
+
+                    if (resultadoAutenticar.length == 1) {
+                        res.json(resultadoAutenticar[0]);
+                    } else if (resultadoAutenticar.length == 0) {
+                        usuarioModel.autenticar_suporte(email, senha)
+                            .then(
+                                function (resultadoAutenticar) {
+                                    console.log(`\nResultados encontrados: ${resultadoAutenticar.length}`);
+                                    console.log(`Resultados: ${JSON.stringify(resultadoAutenticar)}`);
+
+                                    if (resultadoAutenticar.length == 1) {
+                                        res.json(resultadoAutenticar[0]);
+                                    } else if (resultadoAutenticar.length == 0) {
+                                        res.json(resultadoAutenticar.length)
+                                    } else {
+                                        res.status(403).send("Mais de um usuário com o mesmo login e senha!");
+                                    }
+                                }
+                            )
+                    } else {
+                        res.status(403).send("Mais de um usuário com o mesmo login e senha!");
+                    }
                 }
             ).catch(
                 function (erro) {
                     console.log(erro);
-                    console.log(
-                        "\nHouve um erro ao realizar o cadastro! Erro: ",
-                        erro.sqlMessage
-                    );
+                    console.log("\nHouve um erro ao realizar o login! Erro: ", erro.sqlMessage);
                     res.status(500).json(erro.sqlMessage);
                 }
             );
     }
+}
+
 
 module.exports = {
-    cadastrar,cadastrarAprovado,limpar
+    cadastrar, cadastrarAprovado, limpar, autenticar
 }

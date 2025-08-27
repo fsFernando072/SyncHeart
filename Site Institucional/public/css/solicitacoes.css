@@ -1,0 +1,115 @@
+@import url('https://fonts.googleapis.com/css2?family=Lexend:wght@100..900&display=swap');
+
+html {
+    scroll-behavior: smooth;
+    font-family: 'Lexend', sans-serif;
+    scroll-padding-top: 10vh;
+}
+
+.container {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    margin: 20px;
+}
+
+.container h1 {
+    font-size: 40px;
+    margin-top: 50px;
+}
+
+.logo-slogan {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: flex-start;
+}
+
+.slogan {
+    font-size: 20px;
+    margin-left: 10px;
+}
+
+.slogan h4 {
+    color: #893E86;
+}
+
+.slogan span {
+    color: #D52636;
+}
+
+.logo {
+    background-image: url("../assets/Logo.png");
+    background-repeat: no-repeat;
+    background-size: contain;
+    width: 70px;
+    height: 60px;
+}
+
+.slogan h3,
+h4 {
+    margin: 0;
+}
+
+.card {
+    display: flex;
+    flex-direction: row;
+    width: 70%;
+    justify-content: space-between;
+    align-items: center;
+    border-radius: 10px;
+    padding: 30px;
+    font-weight: 200;
+    background:
+        linear-gradient(#fff, #fff) padding-box,
+        linear-gradient(90deg, #893E86, #D52636) border-box;
+    border: 2px solid transparent;
+}
+
+.card p {
+    font-size: 25px;
+    font-weight: 200;
+    color: #893E86;
+    margin: 0;
+    margin-bottom: 10px;
+}
+
+.aceitar {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    width: 35%;
+}
+
+.botoes {
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+}
+
+.aceitar button {
+    border-radius: 10px;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    width: 45%;
+    margin: 0;
+    font-weight: bold;
+    font-size: 15px;
+    border: black;
+    text-align: center;
+}
+
+.aceitar button:hover {
+    cursor: pointer;
+    transform: scale(1.1);
+}
+
+.btn-aceitar {
+    background-color: #29BA48;
+}
+
+.btn-recusar {
+    background-color: #BA2929;
+}
