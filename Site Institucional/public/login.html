@@ -14,7 +14,7 @@
 
         <!--Header-->
         <div class="header">
-            <img src="assets/Logo.png" width="70">
+            <img src="assets/Logo.png" width="70" alt="Logo SyncHeart">
             <div class="slogan">
                 <h1>SyncHeart</h1>
                 <h2><span>Monitorar é</span> nossa paixão</h2>
@@ -24,26 +24,84 @@
         <!--Container-->
         <div class="container">
             <div class="right">
+                <button class="btn-voltar" onclick="window.location.href='index.html'">← Voltar</button>
                 <h3>Login</h3>
                 <form>
                     <div class="form-group">
                         <label>Email</label>
-                        <input type="email" placeholder="Digite o email de contato">
+                        <input type="email" placeholder="Digite o email de contato" id="ipt_email" required>
                     </div>
                     <div class="form-group">
                         <label>Senha</label>
-                        <input type="password" placeholder="Digite a senha">
+                        <input type="password" placeholder="Digite a senha" id="ipt_senha" required>
                     </div>
                 </form>
+
+                <div class="signup-link">
+                    <button class="signup-btn" href="cadastro.html"><a href="cadastro.html">Ainda não possui
+                            cadastro?</a></button>
+                </div>
             </div>
+
             <div class="left">
-                <img src="assets/Logo_branco.png" width="150">
-                <h2>Bem Vindo</h2>
-                <img src="assets/logo-escrita.png" width="300" class="logo-escrita">
-                <button>Entrar</button>
+                <img src="assets/Logo_branco.png" width="150" alt="Logo SyncHeart branco">
+                <h2>Bem-vindo</h2>
+                <img src="assets/logo-escrita.png" width="300" class="logo-escrita" alt="SyncHeart escrito">
+                <button onclick="login()">Entrar</button>
             </div>
         </div>
     </div>
 </body>
+
+<script>
+    function login() {
+        var emailVar = ipt_email.value;
+        var senhaVar = ipt_senha.value;
+
+        fetch("/usuarios/autenticar", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+                emailServer: emailVar,
+                senhaServer: senhaVar
+            })
+        })
+            .then(function (resposta) {
+                if (resposta.ok) {
+                    if (reposta.json() > 0) {
+                        console.log("oiii")
+                    } else {
+                        console.log("aaa")
+                    }
+                    resposta.json().then(json => {
+                        sessionStorage.NOME_USUARIO = json.Nome;
+                        sessionStorage.ID_USUARIO = json.IdFuncionario;
+
+                        document.getElementById("mensagem_sucesso").innerText = "Login realizado com sucesso!";
+                        document.getElementById("cardSucesso").style.display = "block";
+
+                        setTimeout(() => {
+                            if (senhaVar == '0000') {
+                                window.location = "suporte.html";
+
+                            } else {
+                                window.location = "dashboard_final.html";
+                            }
+                        }, 1500);
+                    });
+                } else {
+                    resposta.text().then(texto => {
+                        document.getElementById("mensagem_erro").innerText = "Usuário ou senha inválidos.";
+                        document.getElementById("cardErro").style.display = "block";
+                    });
+                }
+            })
+            .catch(function (erro) {
+                document.getElementById("mensagem_erro").innerText = "Erro ao conectar com o servidor.";
+                document.getElementById("cardErro").style.display = "block";
+            });
+    }
+
+</script>
 
 </html>

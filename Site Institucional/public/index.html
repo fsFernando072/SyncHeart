@@ -17,15 +17,19 @@
     <!--Navegação-->
     <div class="nav-bar">
       <a href="#home" class="nav-logo"></a>
+      <div class="menu-toggle" onclick="toggleMenu()">☰</div>
       <ul class="links-navegacao">
         <li><a href="#sobre-nos">Sobre Nós</a></li>
         <li><a href="#nossa-missao">Nossa Missão</a></li>
+        <li><a href="#nossos-diferenciais">Diferenciais</a></li>
+        <li><a href="#resultados-esperados">Resultados</a></li>
         <li><a href="#cenario">Cenário</a></li>
         <li><a href="#beneficios">Benefícios</a></li>
       </ul>
       <ul class="links-rota">
-        <li><a href="cadastro.html">Entrar</a></li>
-        <li><a href="aprovacao.html"><button class="btn-contato">Contato</button></a></li>
+        <li><a href="login.html">Entrar</a></li>
+        <li class="separator"></li>
+        <li><a href="#contato"><button class="btn-contato">Contato</button></a></li>
       </ul>
     </div>
 
@@ -45,18 +49,17 @@
           <h3>Monitorar é <span>nossa paixão</span></h3>
         </div>
         <div class="info1-sobre-nos">
-          <p>Nossa missão é oferecer soluções inteligentes para que você tenha controle total sobre o que realmente
-            importa. Com tecnologia de ponta e uma dedicada, desenvolvemos sistemas de monitoramento precisos, rápidos e
-            fáceis de usar.</p>
+          <p>Somos movidos pela paixão em transformar tecnologia em cuidado humano. O SyncHeart nasceu para monitorar de
+            forma contínua e inteligente os componentes internos de marcapassos, garantindo mais segurança, confiança e
+            tranquilidade para pacientes, médicos e fabricantes. Nossa dedicação está em unir ciência, inovação e
+            responsabilidade para salvar vidas.</p>
         </div>
         <div class="segunda-div">
           <div class="info2-sobre-nos">
             <p>Nossa missão é oferecer soluções inteligentes para que você tenha controle total sobre o que realmente
               importa.</p>
           </div>
-          <div>
-            <img src="assets/sobre_nos.png" class="img-sobre-nos">
-          </div>
+          <div class="img-sobre-nos"></div>
         </div>
       </div>
     </div>
@@ -71,17 +74,78 @@
         <div class="card">
           <div class="seguranca-img"></div>
           <h4>Segurança</h4>
-          <p>Nossa missão é oferecer soluções inteligentes para que você tenha controle total.</p>
+          <p>Transformar dados em decisões inteligentes, garantindo o monitoramento contínuo e seguro dos componentes de
+            marcapassos para preservar vidas.</p>
         </div>
         <div class="card">
           <div class="saude-img"></div>
           <h4>Saúde</h4>
-          <p>Nossa missão é oferecer soluções inteligentes para que você tenha controle total.</p>
+          <p>Oferecer soluções inovadoras que unem saúde, confiança e tecnologia, reduzindo riscos, custos e aumentando
+            a qualidade de vida de pacientes no mundo todo.</p>
         </div>
         <div class="card">
           <div class="confianca-img"></div>
           <h4>Confiança</h4>
-          <p>Nossa missão é oferecer soluções inteligentes para que você tenha controle total.</p>
+          <p>Promover a evolução da medicina preventiva com sistemas de monitoramento inteligentes, transformando falhas
+            em alertas e incertezas em segurança.</p>
+        </div>
+      </div>
+    </div>
+
+    <!--Nossos Diferenciais-->
+    <div class="nossos-diferenciais" id="nossos-diferenciais">
+      <div class="titulo-subtitulo">
+        <h2>Nossos Diferenciais</h2>
+        <h3>Tecnologia que <span>faz a diferença</span></h3>
+      </div>
+      <div class="diferenciais-container">
+        <div class="diferencial-item">
+          <div class="diferencial-icon">⚡</div>
+          <div class="diferencial-texto">
+            <p>Monitoramento em tempo real da CPU, memória e bateria dos marcapassos.</p>
+          </div>
+        </div>
+        <div class="diferencial-item">
+          <div class="diferencial-icon">💼</div>
+          <div class="diferencial-texto">
+            <p>Redução de riscos legais e financeiros para fabricantes.</p>
+          </div>
+        </div>
+        <div class="diferencial-item">
+          <div class="diferencial-icon">🔬</div>
+          <div class="diferencial-texto">
+            <p>Tecnologia confiável e fácil de usar, desenvolvida com foco na saúde.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!--Resultados Esperados-->
+    <div class="resultados-esperados" id="resultados-esperados">
+      <div class="titulo-subtitulo">
+        <h2>Resultados Esperados</h2>
+        <h3>Impacto <span>mensurável</span> na saúde</h3>
+      </div>
+      <div class="resultados-grid">
+        <div class="resultado-card">
+          <span class="resultado-numero">40%</span>
+          <p>Redução das falhas graves não detectadas</p>
+          <div class="resultado-meta">em até 6 meses</div>
+        </div>
+        <div class="resultado-card">
+          <span class="resultado-numero">30%</span>
+          <p>Diminuição dos custos com manutenções corretivas e recalls</p>
+          <div class="resultado-meta">em até 1 ano</div>
+        </div>
+        <div class="resultado-card">
+          <span class="resultado-numero">50%</span>
+          <p>Aumento na detecção precoce de problemas críticos</p>
+          <div class="resultado-meta">detecção imediata</div>
+        </div>
+        <div class="resultado-card">
+          <span class="resultado-numero">60%</span>
+          <p>Redução dos eventos adversos graves ligados a falhas de hardware</p>
+          <div class="resultado-meta">prevenção ativa</div>
         </div>
       </div>
     </div>
@@ -94,13 +158,23 @@
       </div>
       <div id="colunas-empresas">
         <div id="div1-img-cenario">
-          <img src="./assets/image 3.png" alt="img/Abbott">
-          <img src="./assets/image 1.png" alt="img/BioCatch">
-          <img src="./assets/image 2.png" alt="img/Medtronic">
+          <div class="empresa-placeholder">
+            <img src="assets/image 1.png">
+          </div>
+          <div class="empresa-placeholder">
+            <img src="assets/image 2.png">
+          </div>
+          <div class="empresa-placeholder">
+            <img src="assets/image 3.png">
+          </div>
         </div>
         <div id="div2-img-cenario">
-          <img src="./assets/image 4.png" alt="img/BIOTRONIK">
-          <img src="./assets/image 5.png" alt="BIOCOR">
+          <div class="empresa-placeholder">
+            <img src="assets/image 4.png">
+          </div>
+          <div class="empresa-placeholder">
+            <img src="assets/image 5.png">
+          </div>
         </div>
       </div>
     </div>
@@ -113,19 +187,19 @@
       </div>
       <div id="quadro-beneficios">
         <div class="info-beneficios" id="beneficio1">
-          <p class="beneficios-texto">Nossa missão é oferecer soluções inteligentes para que
-            você tenha controle total sobre o que realmente importa.</p>
-          <img src="./assets/Logo.png" alt="logo-syncheart">
+          <p class="beneficios-texto">Mais segurança – Identificação precoce de falhas nos componentes do marcapasso,
+            protegendo pacientes e evitando riscos graves.</p>
+          <div class="logo-placeholder"></div>
         </div>
         <div class="info-beneficios" id="beneficio2">
-          <img src="./assets/Logo.png" alt="logo-syncheart">
-          <p class="beneficios-texto">Nossa missão é oferecer soluções inteligentes para que
-            você tenha controle total sobre o que realmente importa.</p>
+          <div class="logo-placeholder"></div>
+          <p class="beneficios-texto">Eficiência para fabricantes – Redução de custos com manutenções corretivas e
+            recalls, fortalecendo a imagem e competitividade no mercado.</p>
         </div>
         <div class="info-beneficios" id="beneficio3">
-          <p class="beneficios-texto">Nossa missão é oferecer soluções inteligentes para que
-            você tenha controle total sobre o que realmente importa.</p>
-          <img src="./assets/Logo.png" alt="logo-syncheart">
+          <p class="beneficios-texto">Confiança no cuidado – Monitoramento inteligente que gera tranquilidade para
+            médicos, pacientes e familiares, com decisões rápidas e assertivas.</p>
+          <div class="logo-placeholder"></div>
         </div>
       </div>
     </div>
@@ -134,19 +208,18 @@
     <div id="contato">
       <div id="contato-primeira-fileira">
         <div id="logo-contato">
-          <img src="./assets/Logo_branco.png" id="img-coracao" alt="Logo-Syncheart">
-          <img src="./assets/logo-escrita.png" id="img-logo-escrita" alt="logo-escrita-syncheart">
+          <div id="img-coracao"></div>
+          <div id="img-logo-escrita"></div>
           <p>Sincronize sua Saúde</p>
         </div>
         <div id="contatos-links">
           <h3>Links Rápidos</h3>
-          <a href="">Sobre nós</a>
-
-          <a href="">Nossa missão</a>
-
-          <a href="">Cenário</a>
-
-          <a href="">Benefícios</a>
+          <a href="#sobre-nos">Sobre nós</a>
+          <a href="#nossa-missao">Nossa missão</a>
+          <a href="#nossos-diferenciais">Diferenciais</a>
+          <a href="#resultados-esperados">Resultados</a>
+          <a href="#cenario">Cenário</a>
+          <a href="#beneficios">Benefícios</a>
         </div>
         <div id="contatos-contatos">
           <h3>Contatos</h3>
@@ -163,6 +236,14 @@
           saúde e a qualidade de vida de todos.</p>
       </div>
     </div>
+  </div>
 </body>
+
+<script>
+  function toggleMenu() {
+    document.querySelector(".links-navegacao").classList.toggle("active");
+    document.querySelector(".links-rota").classList.toggle("active");
+  }
+</script>
 
 </html>

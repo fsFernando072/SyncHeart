@@ -21,6 +21,14 @@ function limpar(idAprovado) {
     return database.executar(instrucaoSql);
 }
 
+function autenticar(email, senha) {
+    var instrucaoSql = `
+        SELECT id_fabricante as IdFabricante, nome_fabricante as NomeFabricante from Fabricante where email = '${email}' and senha = '${senha}';
+    `;
+    console.log("Executando a instrução SQL: \n" + instrucaoSql);
+    return database.executar(instrucaoSql);
+}
+
 module.exports = {
-    cadastrar,cadastrarAprovado,limpar
+    cadastrar, cadastrarAprovado, limpar, autenticar
 };

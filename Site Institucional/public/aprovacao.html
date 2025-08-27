@@ -4,18 +4,23 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="css/solicitacoes.css">
+      <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Lexend:wght@100..900&display=swap" rel="stylesheet">
     <title>Document</title>
-    <style>
-        .infos {
-            padding: 50px;
-            border: 1px solid black;
-            border-radius: 20px;
-        }
-    </style>
 </head>
 
 <body onload="aprovar()">
-    <div id="tudo">
+    <div id="container" class="container">
+        <div class="logo-slogan">
+            <div class="logo"></div>
+            <div class="slogan">
+                <h3>SyncHeart</h3>
+                <h4>Monitorar é <span>nossa paixão</span></h4>
+            </div>
+        </div>
+        <h1>Solicitações de Cadastro</h1>
     </div>
 </body>
 
@@ -55,16 +60,30 @@
         return false;
     }
 
-    function teste(){
-        console.log("Teste:",dados);
-            for (var i = 0; i < dados.length; i++) {
+    function teste() {
+        console.log("Teste:", dados);
+        for (var i = 0; i < dados.length; i++) {
             nome = dados[i].nome_aprovacao;
             cnpj = dados[i].cnpj_aprovacao;
             email = dados[i].email_aprovacao;
 
-            document.getElementById("tudo").innerHTML += `<div class="infos"><label>${nome}</label> <br> <label>${cnpj}</label><br><label>${email}</label><br> <button onclick="aceitar(${i})">Aceitar</button> <button onclick="limpar(${i})">Recusar</button></div>`;
+            document.getElementById("container").innerHTML += `
+                <div class="card">
+                    <div class="informacoes">
+                        <p><b>Nome da Empresa:</b> ${nome}</p> 
+                        <p><b>Email de Contato:</b> ${email}</p>
+                    </div>
+                    <div class="aceitar">
+                        <p><b>CNPJ:</b> ${cnpj}</p>
+                        <div class="botoes">
+                            <button onclick="aceitar(${i})" class="btn-aceitar">Aceitar</button> 
+                            <button onclick="limpar(${i})" class="btn-recusar">Recusar</button>    
+                        </div>
+                    </div>
+                </div>`;
         }
     }
+
     function aceitar(i) {
         var nomeAprovado = dados[i].nome_aprovacao;
         var emailAprovado = dados[i].email_aprovacao;
