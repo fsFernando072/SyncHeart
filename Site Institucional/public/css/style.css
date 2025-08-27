@@ -16,7 +16,7 @@
 
     html {
       scroll-behavior: smooth;
-      scroll-padding-top: 80px;
+      scroll-padding-top: 10vh;
     }
 
     body {
@@ -24,7 +24,7 @@
       line-height: 1.6;
       color: var(--dark);
       background: var(--white);
-      padding-top: 80px;
+      padding-top: 10vh;
     }
 
     /* NAVBAR */
@@ -275,7 +275,7 @@
 
     .info2-sobre-nos p {
       background: var(--white);
-      padding: 2rem;
+      padding: 2.5rem;
       border-radius: 20px;
       box-shadow: var(--shadow);
       font-size: 1rem;
@@ -820,7 +820,7 @@
 
     /* CONTATO */
     #contato {
-      background: linear-gradient(to right, #a53568, #e26c5d);
+      background: linear-gradient(to right, #D52636, #893E86);
       color: var(--white);
       position: relative;
       overflow: hidden;
@@ -922,7 +922,7 @@
       }
 
       body {
-        padding-top: 80px;
+        padding-top: 10vh;
       }
 
       section {
@@ -1069,5 +1069,26 @@
       .nav-logo {
         width: 50px;
         height: 45px;
+      }
+    }
+
+    @media (min-width: 1251px) and (max-width: 1450px) {    
+      .nav-bar a {
+        font-size: 16px;
+      }
+
+      .btn-contato {
+        font-size: 16px;
+        height: 30px;
+        width: 70px;
+      }
+
+      .nav-logo {
+        width: 55px;
+        height: 50px;
+      }
+
+      #contato {
+        max-height: 100vh;
       }
     }
