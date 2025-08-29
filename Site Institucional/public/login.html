@@ -66,39 +66,21 @@
                 senhaServer: senhaVar
             })
         })
-            .then(function (resposta) {
-                if (resposta.ok) {
-                    if (reposta.json() > 0) {
-                        console.log("oiii")
-                    } else {
-                        console.log("aaa")
-                    }
-                    resposta.json().then(json => {
-                        sessionStorage.NOME_USUARIO = json.Nome;
-                        sessionStorage.ID_USUARIO = json.IdFuncionario;
-
-                        document.getElementById("mensagem_sucesso").innerText = "Login realizado com sucesso!";
-                        document.getElementById("cardSucesso").style.display = "block";
-
-                        setTimeout(() => {
-                            if (senhaVar == '0000') {
-                                window.location = "suporte.html";
-
-                            } else {
-                                window.location = "dashboard_final.html";
-                            }
-                        }, 1500);
-                    });
+            .then(resposta => resposta.json())
+            .then(json => {
+                if (json.status === "fabricante") {
+                    window.location = "dashboard_final.html";
+                } else if (json.status === "aprovacao") {
+                    window.location = "aguardando_validacao.html";
+                } else if (json.status === "empresa") {
+                    window.location = "aprovacao.html";
                 } else {
-                    resposta.text().then(texto => {
-                        document.getElementById("mensagem_erro").innerText = "Usuário ou senha inválidos.";
-                        document.getElementById("cardErro").style.display = "block";
-                    });
+                    alert("Usuário ou senha inválidos.");
                 }
             })
-            .catch(function (erro) {
-                document.getElementById("mensagem_erro").innerText = "Erro ao conectar com o servidor.";
-                document.getElementById("cardErro").style.display = "block";
+            .catch(erro => {
+                console.log("Erro: ", erro);
+                alert("Erro ao tentar logar.");
             });
     }
 

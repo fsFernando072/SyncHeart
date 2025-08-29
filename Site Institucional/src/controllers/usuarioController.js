@@ -81,48 +81,36 @@ function autenticar(req, res) {
     var email = req.body.emailServer;
     var senha = req.body.senhaServer;
 
-    if (email == undefined) {
-        res.status(400).send("Seu email está undefined!");
-    } else if (senha == undefined) {
-        res.status(400).send("Sua senha está indefinida!");
-    } else {
-
-        usuarioModel.autenticar(email, senha)
-            .then(
-                function (resultadoAutenticar) {
-                    console.log(`\nResultados encontrados: ${resultadoAutenticar.length}`);
-                    console.log(`Resultados: ${JSON.stringify(resultadoAutenticar)}`);
-
-                    if (resultadoAutenticar.length == 1) {
-                        res.json(resultadoAutenticar[0]);
-                    } else if (resultadoAutenticar.length == 0) {
-                        usuarioModel.autenticar_suporte(email, senha)
-                            .then(
-                                function (resultadoAutenticar) {
-                                    console.log(`\nResultados encontrados: ${resultadoAutenticar.length}`);
-                                    console.log(`Resultados: ${JSON.stringify(resultadoAutenticar)}`);
-
-                                    if (resultadoAutenticar.length == 1) {
-                                        res.json(resultadoAutenticar[0]);
-                                    } else if (resultadoAutenticar.length == 0) {
-                                        res.json(resultadoAutenticar.length)
-                                    } else {
-                                        res.status(403).send("Mais de um usuário com o mesmo login e senha!");
-                                    }
-                                }
-                            )
-                    } else {
-                        res.status(403).send("Mais de um usuário com o mesmo login e senha!");
-                    }
-                }
-            ).catch(
-                function (erro) {
-                    console.log(erro);
-                    console.log("\nHouve um erro ao realizar o login! Erro: ", erro.sqlMessage);
-                    res.status(500).json(erro.sqlMessage);
-                }
-            );
+    if (!email || !senha) {
+        return res.status(400).send("Email ou senha estão indefinidos!");
     }
+
+    usuarioModel.autenticarFabricante(email, senha)
+        .then(resultadoFabricante => {
+            if (resultadoFabricante.length == 1) {
+                res.json({ status: "fabricante", dados: resultadoFabricante[0] });
+            } else {
+                usuarioModel.autenticarAprovacao(email, senha)
+                    .then(resultadoAprovacao => {
+                        if (resultadoAprovacao.length == 1) {
+                            res.json({ status: "aprovacao", dados: resultadoAprovacao[0] });
+                        } else {
+                            usuarioModel.autenticarEmpresa(email, senha)
+                                .then(resultadoEmpresa => {
+                                    if (resultadoEmpresa.length == 1) {
+                                        res.json({ status: "empresa", dados: resultadoEmpresa[0] });
+                                    } else {
+                                        res.status(403).send("Usuário ou senha inválidos.");
+                                    }
+                                })
+                        }
+                    })
+            }
+        })
+        .catch(erro => {
+            console.log("Erro ao autenticar: ", erro.sqlMessage);
+            res.status(500).json(erro.sqlMessage);
+        });
 }
 
 

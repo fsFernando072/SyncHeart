@@ -54,8 +54,14 @@ email_aprovacao varchar(50),
 senha_aprovacao varchar(50)
 );
 
+create table Usuario_Syncheart(
+	id int primary key auto_increment,
+    nome varchar(50),
+    email varchar(50),
+    senha varchar(50)
+);
+
+insert into Usuario_Syncheart (nome, email, senha) values ('Gabriel Castilho', 'gabriel@gmail', '12345');
+
 insert into TipoParametro (nome)
 values	("cpu"),("ram"),("disco");
-
-select * from Tabela_Aprovacao;
-select * from Fabricante;
