@@ -40,3 +40,12 @@ cnpj_aprovacao varchar(50),
 email_aprovacao varchar(50),
 senha_aprovacao varchar(50)
 );
+
+create table Usuario_Syncheart(
+    int primary key auto_increment,
+    nome varchar(50),
+    email varchar(50),
+    senha varchar(50)
+)
+
+insert into Usuario_Syncheart (nome, email, senha) values ('Gabriel', 'gabriel.castilho@sptech.school', '12345')
