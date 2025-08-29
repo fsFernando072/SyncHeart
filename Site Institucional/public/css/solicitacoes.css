@@ -64,6 +64,7 @@ h4 {
         linear-gradient(#fff, #fff) padding-box,
         linear-gradient(90deg, #893E86, #D52636) border-box;
     border: 2px solid transparent;
+    margin-bottom: 10px;
 }
 
 .card p {

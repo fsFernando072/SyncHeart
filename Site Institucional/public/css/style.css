@@ -301,6 +301,7 @@
       background-image: url("../assets/sobre_nos.png");
       background-repeat: no-repeat;
       background-size: contain;
+      background-position: center;
 
     }
 
@@ -547,7 +548,7 @@
     /* RESULTADOS ESPERADOS */
     .resultados-esperados {
       background: linear-gradient(135deg, rgba(137, 62, 134, 0.05), rgba(213, 38, 54, 0.05));
-      padding: 100px;
+      padding: 100px 20px;
       position: relative;
       overflow: hidden;
     }
@@ -611,20 +612,19 @@
       z-index: 2;
     }
 
-    .resultado-card:last-child {
-      grid-column: 2 / 3;
-      grid-row: 2 / 3;
-    }
-
     .resultado-card {
       background: var(--white);
-      padding: 2.5rem;
+      padding: 2.5rem 2rem;
       border-radius: 20px;
       text-align: center;
       box-shadow: var(--shadow);
       transition: var(--transition);
       position: relative;
       overflow: hidden;
+      min-height: 200px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
     }
 
     .resultado-card::before {
@@ -643,7 +643,7 @@
     }
 
     .resultado-numero {
-      font-size: 3rem;
+      font-size: clamp(2.5rem, 5vw, 3.5rem);
       font-weight: 700;
       background: linear-gradient(135deg, var(--purple), var(--red));
       -webkit-background-clip: text;
@@ -654,23 +654,37 @@
     }
 
     .resultado-card p {
-      font-size: 1.1rem;
+      font-size: clamp(1rem, 2.5vw, 1.1rem);
       line-height: 1.6;
       color: var(--dark);
       margin: 0;
+      flex-grow: 1;
     }
 
     .resultado-meta {
-      font-size: 0.9rem;
+      font-size: clamp(0.8rem, 2vw, 0.9rem);
       color: var(--purple);
       font-weight: 500;
       margin-top: 0.5rem;
     }
 
+    @media (min-width: 1025px) {
+      .resultados-grid {
+        grid-template-rows: auto auto;
+        justify-items: center;
+      }
+
+      .resultado-card:nth-child(4) {
+        grid-column: 1 / 4;
+        grid-row: 2 / 3;
+        max-width: 400px;
+      }
+    }
+
     /* CENÁRIO */
     .cenario {
       background: var(--white);
-      padding: 100px;
+      padding: 100px 20px;
     }
 
     .texto-cenario {
@@ -697,33 +711,37 @@
       font-weight: 600;
     }
 
-    #colunas-empresas {
+    #container-empresas {
       display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 12rem;
-    }
-
-    #div1-img-cenario {
-      margin-top: 10px;
-      display: flex;
-      gap: 2rem;
-      align-items: center;
-      justify-content: center;
       flex-wrap: wrap;
-    }
-
-    #div2-img-cenario {
-      display: flex;
-      gap: 3rem;
-      align-items: center;
       justify-content: center;
-      flex-wrap: wrap;
+      align-items: center;
+      gap: clamp(1rem, 4vw, 3rem);
+      max-width: 1200px;
+      margin: 0 auto;
     }
 
-    .cenario .empresa-placeholder:hover {
-      transform: scale(1.05);
+    .empresa-placeholder {
+      flex: 0 1 auto;
       transition: var(--transition);
+      cursor: pointer;
+    }
+
+    .empresa-placeholder:hover {
+      transform: scale(1.05);
+    }
+
+    .empresa-placeholder img {
+      width: 100%;
+      height: auto;
+      max-width: 200px;
+      object-fit: contain;
+      filter: grayscale(20%);
+      transition: var(--transition);
+    }
+
+    .empresa-placeholder:hover img {
+      filter: grayscale(0%);
     }
 
     /* BENEFÍCIOS */
@@ -1007,10 +1025,48 @@
       .separator {
         display: none !important;
       }
+
+      .cenario {
+        padding: 60px 15px;
+      }
+
+      .texto-cenario {
+        margin-bottom: 2.5rem;
+      }
+
+      #container-empresas {
+        gap: clamp(1rem, 3vw, 2rem);
+      }
+
+      .empresa-placeholder img {
+        max-width: clamp(120px, 25vw, 160px);
+      }
+
+      .resultados-esperados {
+        padding: 60px 15px;
+      }
+
+      .resultados-esperados .titulo-subtitulo {
+        margin-bottom: 2.5rem;
+      }
+
+      .resultados-grid {
+        grid-template-columns: 1fr;
+        gap: 1.5rem;
+      }
+
+      .resultado-card {
+        padding: 2rem 1.5rem;
+        min-height: 180px;
+      }
+
+      .resultado-card:nth-child(4) {
+        grid-column: 1;
+        grid-row: auto;
+      }
     }
 
     @media (min-width: 769px) and (max-width: 1024px) {
-
       .btn-contato {
         font-size: 13px;
         height: 30px;
@@ -1045,8 +1101,28 @@
         grid-template-columns: 1fr;
       }
 
+      .resultados-esperados {
+        padding: 80px 30px;
+      }
+
+      .resultados-esperados .titulo-subtitulo {
+        margin-bottom: 3rem;
+      }
+
       .resultados-grid {
-        grid-template-columns: repeat(2, 1fr);
+        grid-template-columns: 1fr;
+        gap: 1.8rem;
+        max-width: 500px;
+      }
+
+      .resultado-card {
+        padding: 2.2rem 1.8rem;
+        min-height: 190px;
+      }
+
+      .resultado-card:nth-child(4) {
+        grid-column: 1;
+        grid-row: auto;
       }
     }
 
@@ -1070,9 +1146,46 @@
         width: 50px;
         height: 45px;
       }
+
+      .cenario {
+        padding: 90px 40px;
+      }
+
+      .texto-cenario {
+        margin-bottom: 3.5rem;
+      }
+
+      #container-empresas {
+        gap: clamp(2rem, 3vw, 2.5rem);
+      }
+
+      .empresa-placeholder img {
+        max-width: clamp(160px, 18vw, 190px);
+      }
+
+      .resultados-esperados {
+        padding: 90px 40px;
+      }
+
+      .resultados-esperados .titulo-subtitulo {
+        margin-bottom: 3.5rem;
+      }
+
+      .resultados-grid {
+        gap: 1.8rem;
+      }
+
+      .resultado-card {
+        padding: 2.2rem;
+        min-height: 200px;
+      }
+
+      .resultado-card:nth-child(4) {
+        max-width: 380px;
+      }
     }
 
-    @media (min-width: 1251px) and (max-width: 1450px) {    
+    @media (min-width: 1251px) and (max-width: 1450px) {
       .nav-bar a {
         font-size: 16px;
       }
@@ -1090,5 +1203,69 @@
 
       #contato {
         max-height: 100vh;
+      }
+
+      .cenario {
+        padding: 100px 50px;
+      }
+
+      .texto-cenario {
+        margin-bottom: 4rem;
+      }
+
+      #container-empresas {
+        gap: clamp(2.5rem, 3vw, 3rem);
+      }
+
+      .empresa-placeholder img {
+        max-width: clamp(180px, 16vw, 200px);
+      }
+
+      .resultados-esperados {
+        padding: 100px 50px;
+      }
+
+      .resultados-grid {
+        gap: 2rem;
+      }
+
+      .resultado-card {
+        padding: 2.5rem;
+        min-height: 210px;
+      }
+
+      .resultado-card:nth-child(4) {
+        max-width: 400px;
+      }
+    }
+
+    @media (min-width: 1451px) {
+      .cenario {
+        padding: 100px;
+      }
+
+      #container-empresas {
+        gap: 3rem;
+      }
+
+      .empresa-placeholder img {
+        max-width: 200px;
+      }
+
+      .resultados-esperados {
+        padding: 100px;
+      }
+
+      .resultados-grid {
+        gap: 2.5rem;
+      }
+
+      .resultado-card {
+        padding: 3rem;
+        min-height: 220px;
+      }
+
+      .resultado-card:nth-child(4) {
+        max-width: 420px;
       }
     }

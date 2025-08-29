@@ -1,0 +1,89 @@
+        /* Aqui estou reaproveitando o estilo que você passou */
+        @import url('https://fonts.googleapis.com/css2?family=Lexend:wght@100..900&display=swap');
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Lexend', sans-serif;
+        }
+
+        body {
+            background-color: #fff;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .wrapper {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            width: 70%;
+            max-width: 1000px;
+        }
+
+        .header {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            justify-content: flex-start;
+        }
+
+        .header img {
+            filter: drop-shadow(0 4px 8px rgba(32, 6, 42, 0.2));
+        }
+
+        .header h1 {
+            font-size: 35px;
+            color: #20062A;
+            text-shadow: 0 2px 8px rgba(32, 6, 42, 0.3);
+            font-weight: 700;
+        }
+
+        .header h2 {
+            font-size: 20px;
+            color: #D52636;
+            font-weight: 400;
+            text-shadow: 0 2px 6px rgba(213, 38, 54, 0.3);
+        }
+
+        .header span {
+            color: #893E86;
+            font-weight: 600;
+            text-shadow: 0 2px 6px rgba(137, 62, 134, 0.3);
+        }
+
+        .container {
+            display: flex;
+            border-radius: 20px;
+            overflow: hidden;
+            background: linear-gradient(#fff, #fff) padding-box,
+                linear-gradient(135deg, #893E86, #D52636) border-box;
+            border: 3px solid transparent;
+            box-shadow: 0 15px 40px rgba(32, 6, 42, 0.15);
+            height: 400px;
+            position: relative;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .mensagem {
+            text-align: center;
+            color: #20062A;
+            z-index: 2;
+        }
+
+        .mensagem h2 {
+            font-size: 40px;
+            margin-bottom: 15px;
+            font-weight: 700;
+            color: #893E86;
+        }
+
+        .mensagem p {
+            font-size: 20px;
+            color: #333;
+        }

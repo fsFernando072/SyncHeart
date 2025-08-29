@@ -21,14 +21,34 @@ function limpar(idAprovado) {
     return database.executar(instrucaoSql);
 }
 
-function autenticar(email, senha) {
+function autenticarFabricante(email, senha) {
     var instrucaoSql = `
-        SELECT id_fabricante as IdFabricante, nome_fabricante as NomeFabricante from Fabricante where email = '${email}' and senha = '${senha}';
+        SELECT id_fabricante as Id, nome_fabricante as Nome, 'fabricante' as Tipo
+        FROM Fabricante 
+        WHERE email_fabricante = '${email}' AND senha_fabricante = '${senha}';
     `;
-    console.log("Executando a instrução SQL: \n" + instrucaoSql);
+    return database.executar(instrucaoSql);
+}
+
+function autenticarAprovacao(email, senha) {
+    var instrucaoSql = `
+        SELECT id as Id, nome_aprovacao as Nome, 'aprovacao' as Tipo
+        FROM Tabela_Aprovacao
+        WHERE email_aprovacao = '${email}' AND senha_aprovacao = '${senha}';
+    `;
+    return database.executar(instrucaoSql);
+}
+
+function autenticarEmpresa(email, senha) {
+    var instrucaoSql = `
+        SELECT id as Id, nome as Nome, 'empresa' as Tipo
+        FROM Usuario_Syncheart 
+        WHERE email = '${email}' AND senha = '${senha}';
+    `;
     return database.executar(instrucaoSql);
 }
 
 module.exports = {
-    cadastrar, cadastrarAprovado, limpar, autenticar
+    cadastrar, cadastrarAprovado, limpar,
+    autenticarFabricante, autenticarAprovacao, autenticarEmpresa
 };
