@@ -932,6 +932,32 @@
     }
 
     /* RESPONSIVIDADE */
+    @media (max-width: 480px) {
+      body {
+        padding: 10px;
+        align-items: flex-start;
+      }
+
+      .wrapper {
+        width: 100%;
+        gap: 15px;
+      }
+
+      h1 {
+        font-size: 1.5rem;
+      }
+
+      p {
+        font-size: 0.9rem;
+      }
+
+      button {
+        width: 100%;
+        font-size: 0.95rem;
+        padding: 14px;
+      }
+    }
+
     @media (max-width: 768px) {
 
       .links-navegacao,

@@ -113,7 +113,25 @@ function autenticar(req, res) {
         });
 }
 
+function cadastrarUsuario(req, res) {
+    var nome = req.body.nomeServer;
+    var cpf = req.body.cpfServer;
+    var email = req.body.emailServer;
+    var fk_fabricante = req.body.fkFabricante;
+
+    if (!nome || !cpf || !email || !fk_fabricante) {
+        return res.status(400).send("Dados inválidos para cadastro do usuário.");
+    }
+
+    usuarioModel.cadastrarUsuario(nome, cpf, email, fk_fabricante)
+        .then(resultado => res.json(resultado))
+        .catch(erro => {
+            console.log("Erro ao cadastrar usuário: ", erro.sqlMessage);
+            res.status(500).json(erro.sqlMessage);
+        });
+}
 
 module.exports = {
-    cadastrar, cadastrarAprovado, limpar, autenticar
-}
+    cadastrar, cadastrarAprovado, limpar, autenticar,
+    cadastrarUsuario
+};

@@ -69,6 +69,9 @@
             .then(resposta => resposta.json())
             .then(json => {
                 if (json.status === "fabricante") {
+                    sessionStorage.setItem("idFabricante", json.dados.Id);
+                    sessionStorage.setItem("nomeFabricante", json.dados.Nome);
+                    console.log(sessionStorage.setItem("idFabricante", json.dados.Id))
                     window.location = "dashboard_final.html";
                 } else if (json.status === "aprovacao") {
                     window.location = "aguardando_validacao.html";

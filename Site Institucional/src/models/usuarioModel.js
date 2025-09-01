@@ -48,7 +48,16 @@ function autenticarEmpresa(email, senha) {
     return database.executar(instrucaoSql);
 }
 
+function cadastrarUsuario(nome, cpf, email, fk_fabricante) {
+    var instrucaoSql = `
+        INSERT INTO Usuario (nome_usuario, cpf_usuario, email_usuario, fk_fabricante) 
+        VALUES ('${nome}', '${cpf}', '${email}', ${fk_fabricante});
+    `;
+    return database.executar(instrucaoSql);
+}
+
 module.exports = {
     cadastrar, cadastrarAprovado, limpar,
-    autenticarFabricante, autenticarAprovacao, autenticarEmpresa
+    autenticarFabricante, autenticarAprovacao, autenticarEmpresa,
+    cadastrarUsuario
 };

@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="css/cadastro_funcionario.css">
+    <title>Document</title>
+</head>
+
+<body>
+    <div class="wrapper">
+        <!-- Header -->
+        <div class="header">
+            <img src="assets/Logo.png" width="70" alt="Logo SyncHeart">
+            <div class="slogan">
+                <h1>SyncHeart</h1>
+                <h2><span>Monitorar é</span> nossa paixão</h2>
+            </div>
+        </div>
+
+        <!-- Container -->
+        <div class="container">
+            <!-- Lado esquerdo com branding -->
+            <div class="left">
+                <h2>Cadastro</h2>
+                <p>Adicione novos membros à sua equipe e mantenha seu time sempre conectado ao SyncHeart</p>
+            </div>
+
+            <!-- Lado direito com formulário -->
+            <div class="right">
+                <a href="dashboard_final.html" class="btn-voltar">← Voltar ao Dashboard</a>
+
+                <h3>Cadastrar Funcionário</h3>
+
+                <form onsubmit="return cadastrarUsuario()">
+                    <div class="form-group">
+                        <label for="ipt_nomeUsuario">Nome Completo:</label>
+                        <input type="text" id="ipt_nomeUsuario" placeholder="Digite o nome completo" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="ipt_cpfUsuario">CPF:</label>
+                        <input type="text" id="ipt_cpfUsuario" placeholder="000.000.000-00" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="ipt_emailUsuario">Email:</label>
+                        <input type="email" id="ipt_emailUsuario" placeholder="email@empresa.com" required>
+                    </div>
+
+                    <button type="submit" class="btn-submit">Cadastrar Funcionário</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</body>
+
+<script>
+    function cadastrarUsuario() {
+        var nomeVar = ipt_nomeUsuario.value;
+        var cpfVar = ipt_cpfUsuario.value;
+        var emailVar = ipt_emailUsuario.value;
+        var fkFabricante = sessionStorage.getItem("idFabricante");
+
+        fetch("/usuarios/cadastrarUsuario", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+                nomeServer: nomeVar,
+                cpfServer: cpfVar,
+                emailServer: emailVar,
+                fkFabricante: fkFabricante
+            })
+        })
+            .then(res => {
+                if (res.ok) {
+                    alert("Usuário cadastrado com sucesso!");
+                    document.querySelector("form").reset();
+                } else {
+                    alert("Erro ao cadastrar usuário!");
+                }
+            })
+            .catch(erro => console.error("Erro:", erro));
+
+        return false;
+    }
+</script>
+
+</html>
