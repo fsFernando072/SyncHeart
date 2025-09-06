@@ -931,30 +931,336 @@
       z-index: 2;
     }
 
-    /* RESPONSIVIDADE */
-    @media (max-width: 480px) {
+    @media (max-width: 468px) {
       body {
-        padding: 10px;
-        align-items: flex-start;
+        padding-top: 15vh;
       }
 
-      .wrapper {
+      /* NAVBAR MOBILE */
+      .nav-bar {
+        height: 15vh;
+        padding: 0 10px;
+        flex-wrap: wrap;
+      }
+
+      .nav-logo {
+        width: 60px;
+        height: 50px;
+        margin-left: 10px;
+      }
+
+      .menu-toggle {
+        display: block;
+        margin-right: 10px;
+        color: var(--purple);
+      }
+
+      .links-navegacao {
+        display: none;
+        position: absolute;
+        top: 100%;
+        left: 0;
         width: 100%;
-        gap: 15px;
+        background: white;
+        flex-direction: column;
+        padding: 1rem;
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        z-index: 999;
       }
 
-      h1 {
+      .links-navegacao.active {
+        display: flex;
+      }
+
+      .links-navegacao li {
+        margin: 0.5rem 0;
+        text-align: center;
+      }
+
+      .links-navegacao li a {
+        font-size: 18px;
+        padding: 10px;
+        display: block;
+        border-radius: 8px;
+      }
+
+      .links-rota {
+        display: none;
+        position: absolute;
+        top: 100%;
+        right: 0;
+        width: 50%;
+        background: white;
+        flex-direction: column;
+        padding: 1rem;
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        z-index: 999;
+        margin-right: 0;
+      }
+
+      .links-rota.active {
+        display: flex;
+      }
+
+      .links-rota .separator {
+        display: none;
+      }
+
+      .links-rota li {
+        margin: 0.5rem 0;
+        text-align: center;
+      }
+
+      .btn-contato {
+        width: 80px;
+        height: 35px;
+        font-size: 16px;
+      }
+
+      /* HOME MOBILE */
+      .home {
+        padding: 20px;
+        text-align: center;
+        justify-content: center;
+        background-attachment: scroll;
+      }
+
+      .banner {
+        text-align: center;
+      }
+
+      .banner h1 {
+        font-size: 3rem;
+        margin-bottom: 0.5rem;
+      }
+
+      .banner h3 {
         font-size: 1.5rem;
       }
 
-      p {
+      /* SOBRE NÓS MOBILE */
+      .sobre-nos {
+        padding: 60px 20px;
+      }
+
+      .titulo-subtitulo h2 {
+        font-size: 2.5rem;
+      }
+
+      .titulo-subtitulo h3 {
+        font-size: 1.2rem;
+      }
+
+      .info1-sobre-nos p {
+        padding: 1.5rem;
+        font-size: 1rem;
+      }
+
+      .segunda-div {
+        grid-template-columns: 1fr;
+        gap: 2rem;
+      }
+
+      .info2-sobre-nos p {
+        padding: 1.5rem;
+        font-size: 0.95rem;
+      }
+
+      .img-sobre-nos {
+        height: 200px;
+        font-size: 1.2rem;
+      }
+
+      /* NOSSA MISSÃO MOBILE */
+      .nossa-missao {
+        padding: 60px 20px;
+      }
+
+      .cards {
+        grid-template-columns: 1fr;
+        gap: 1.5rem;
+      }
+
+      .card {
+        padding: 2rem;
+      }
+
+      .card h4 {
+        font-size: 1.3rem;
+      }
+
+      .card p {
+        font-size: 0.95rem;
+      }
+
+      /* DIFERENCIAIS MOBILE */
+      .nossos-diferenciais {
+        padding: 60px 20px;
+      }
+
+      .diferenciais-container {
+        grid-template-columns: 1fr;
+        gap: 1.5rem;
+      }
+
+      .diferencial-item {
+        padding: 1.5rem;
+        flex-direction: column;
+        text-align: center;
+        gap: 1rem;
+      }
+
+      .diferencial-icon {
+        width: 60px;
+        height: 60px;
+        font-size: 1.5rem;
+      }
+
+      .diferencial-texto p {
+        font-size: 1rem;
+      }
+
+      /* RESULTADOS MOBILE */
+      .resultados-esperados {
+        padding: 60px 15px;
+      }
+
+      .resultados-grid {
+        grid-template-columns: 1fr;
+        gap: 1.5rem;
+      }
+
+      .resultado-card {
+        padding: 2rem 1.5rem;
+        min-height: 180px;
+      }
+
+      .resultado-numero {
+        font-size: 2.5rem;
+      }
+
+      .resultado-card p {
+        font-size: 1rem;
+      }
+
+      /* CENÁRIO MOBILE */
+      .cenario {
+        padding: 60px 15px;
+      }
+
+      #container-empresas {
+        gap: 1rem;
+      }
+
+      .empresa-placeholder {
+        width: 100px;
+        height: 50px;
+        font-size: 0.8rem;
+      }
+
+      /* BENEFÍCIOS MOBILE */
+      #beneficios {
+        padding: 60px 20px;
+      }
+
+      .info-beneficios {
+        flex-direction: column;
+        text-align: center;
+        padding: 2rem;
+        gap: 1.5rem;
+      }
+
+      .beneficios-texto {
+        font-size: 1rem;
+      }
+
+      .info-beneficios .logo-placeholder {
+        width: 50px;
+        height: 50px;
+        font-size: 0.7rem;
+      }
+
+      /* CONTATO MOBILE */
+      #contato {
+        padding: 60px 20px;
+      }
+
+      #contato-primeira-fileira {
+        grid-template-columns: 1fr;
+        gap: 2rem;
+      }
+
+      #img-coracao {
+        width: 100px;
+        height: 80px;
+        font-size: 1.8rem;
+      }
+
+      #img-logo-escrita {
+        width: 100px;
+        height: 50px;
+        font-size: 1rem;
+      }
+
+      #contatos-links h3,
+      #contatos-contatos h3 {
+        font-size: 1.2rem;
+        text-align: center;
+      }
+
+      #contatos-links a {
+        font-size: 0.9rem;
+        text-align: center;
+      }
+
+      #contatos-contatos {
+        text-align: center;
+      }
+
+      #contatos-contatos p {
         font-size: 0.9rem;
       }
 
-      button {
-        width: 100%;
-        font-size: 0.95rem;
-        padding: 14px;
+      #texto-contato {
+        font-size: 1rem;
+        padding: 1.5rem;
+      }
+    }
+
+    @media (min-width: 469px) and (max-width: 768px) {
+      .home {
+        padding-left: 50px;
+      }
+
+      .sobre-nos,
+      .nossa-missao,
+      .nossos-diferenciais,
+      #beneficios,
+      #contato {
+        padding: 80px 40px;
+      }
+
+      .resultados-esperados,
+      .cenario {
+        padding: 80px 30px;
+      }
+
+      .cards {
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      }
+
+      .diferenciais-container {
+        grid-template-columns: 1fr;
+      }
+
+      .resultados-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+
+      .info-beneficios {
+        flex-direction: column;
+        text-align: center;
+        gap: 1.5rem;
       }
     }
 
