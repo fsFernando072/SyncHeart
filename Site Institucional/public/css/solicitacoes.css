@@ -6,11 +6,74 @@ html {
     scroll-padding-top: 10vh;
 }
 
+/* Alterações do Silva - Caso queira ajustar */
+.first {
+    width: 100%;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.segundo {
+    display: flex;
+    width: 700px;
+    background: linear-gradient(#fff, #fff) padding-box,
+        linear-gradient(135deg, #893E86, #D52636) border-box;
+    border: 3px solid transparent;
+    box-shadow: 0 15px 40px rgba(32, 6, 42, 0.15);
+    align-items: center;
+    justify-content: center;
+    border-radius: 10px;
+    padding: 30px;
+    font-size: 25px;
+    gap: 90px;
+}
+
+#hint {
+    color: #20062A;
+    text-shadow: 0 2px 8px rgba(32, 6, 42, 0.3);
+    font-weight: 700;
+}
+
+#nome_value {
+    color: #D52636;
+}
+
+#email_value {
+    color: #D52636;
+}
+
+.container-nothing {
+    display: flex;
+    border-radius: 20px;
+    overflow: hidden;
+    background: linear-gradient(#fff, #fff) padding-box,
+        linear-gradient(135deg, #893E86, #D52636) border-box;
+    border: 3px solid transparent;
+    box-shadow: 0 15px 40px rgba(32, 6, 42, 0.15);
+    height: 400px;
+    position: relative;
+    justify-content: center;
+    align-items: center;
+    padding-left: 10%;
+    padding-right: 10%;
+    font-size: 20px;
+    text-align: justify;
+}
+
+.sem_solicitacoes {
+    width: 100%;
+}
+
+/* Fim Alterações do Silva */
+
 .container {
     display: flex;
     flex-direction: column;
     align-items: flex-start;
     margin: 20px;
+    padding-left: 8%;
+    padding-right: 8%;
+    padding-top: 2%;
 }
 
 .container h1 {
@@ -54,7 +117,7 @@ h4 {
 .card {
     display: flex;
     flex-direction: row;
-    width: 70%;
+    width: 90%;
     justify-content: space-between;
     align-items: center;
     border-radius: 10px;

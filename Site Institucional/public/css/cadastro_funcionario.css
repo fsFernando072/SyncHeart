@@ -7,6 +7,10 @@
           font-family: 'Lexend', sans-serif;
       }
 
+      html{
+        overflow: hidden;
+      }
+
       body {
           background-color: #fff;
           display: flex;
@@ -20,7 +24,7 @@
           display: flex;
           flex-direction: column;
           gap: 20px;
-          width: 70%;
+          width: 100%;
           max-width: 1000px;
       }
 
@@ -184,7 +188,7 @@
       }
 
       .right h3 {
-          font-size: 42px;
+          font-size: 35px;
           margin-bottom: 30px;
           color: #20062A;
           font-weight: 700;

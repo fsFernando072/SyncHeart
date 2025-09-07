@@ -6,7 +6,8 @@ id_fabricante int primary key auto_increment,
 nome_fabricante varchar(50),
 cnpj_fabricante varchar(50),
 email_fabricante varchar(50),
-senha_fabricante varchar(50)
+senha_fabricante varchar(50),
+acesso tinyint
 );
 
 create table Usuario (
@@ -32,14 +33,6 @@ foreign key fk_fabricante(fk_fabricante) references Fabricante(id_fabricante),
 fk_parametro int,
 foreign key fk_parametro(fk_parametro) references Parametro(id_parametro)
 )auto_increment = 10000;
-
-create table Tabela_Aprovacao (
-id int primary key auto_increment,
-nome_aprovacao varchar(50),
-cnpj_aprovacao varchar(50),
-email_aprovacao varchar(50),
-senha_aprovacao varchar(50)
-);
 
 create table Usuario_Syncheart(
     int primary key auto_increment,

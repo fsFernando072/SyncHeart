@@ -5,69 +5,111 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="css/solicitacoes.css">
-      <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Lexend:wght@100..900&display=swap" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Lexend:wght@100..900&display=swap" rel="stylesheet">
     <title>Document</title>
 </head>
 
 <body onload="aprovar()">
     <div id="container" class="container">
-        <div class="logo-slogan">
-            <div class="logo"></div>
-            <div class="slogan">
-                <h3>SyncHeart</h3>
-                <h4>Monitorar é <span>nossa paixão</span></h4>
+        <div class="first" style="display: flex;">
+            <div class="primeiro">
+                <div class="logo-slogan">
+                    <div class="logo"></div>
+                    <div class="slogan">
+                        <h3>SyncHeart</h3>
+                        <h4>Monitorar é <span>nossa paixão</span></h4>
+                    </div>
+                </div>
+            </div>
+            <div class="segundo">
+                <label id="hint">Nome: <label id="nome_value" style="margin-right: 40px;"></label></label>
+                <label id="hint">Email: <label id="email_value"></label></label>
             </div>
         </div>
         <h1>Solicitações de Cadastro</h1>
+
+        <div class="sem_solicitacoes">
+
+        </div>
     </div>
-</body>
 
-</html>
-<script>
+    <script>
+        let nomeUsuario = sessionStorage.getItem("nomeFabricante");
+        let emailUsuario = sessionStorage.getItem("emailFabricante")
 
-    function aprovar() {
-        //Pegar o caminho para a função GET do buscar
-        fetch("http://localhost:3333/aprovacao/aprovar", {
-            method: "GET",
-            headers: {
-                "Content-Type": "application/json"
-            }
-        })
-            .then(function (resposta) {
-                console.log("ESTOU NO THEN DO buscar()!");
+        nome_value.innerHTML = nomeUsuario;
+        email_value.innerHTML = emailUsuario;
 
-                if (resposta.ok) {
-                    resposta.json().then(data => {
-                        console.log(data);
-                        console.log(JSON.stringify(data));
-
-                        dados = data;
-                        console.log(dados);
-                        teste();
-                    });
-                } else {
-                    console.log("Houve um erro ao tentar buscar as perguntas!");
-                    resposta.text().then(texto => {
-                        console.error(texto);
-                    });
+        function aprovar() {
+            //Pegar o caminho para a função GET do buscar
+            fetch("http://localhost:3333/aprovacao/aprovar", {
+                method: "GET",
+                headers: {
+                    "Content-Type": "application/json"
                 }
             })
-            .catch(function (erro) {
-                console.log(erro);
-            });
-        return false;
-    }
+                .then(function (resposta) {
+                    console.log("ESTOU NO THEN DO buscar()!");
 
-    function teste() {
-        console.log("Teste:", dados);
-        for (var i = 0; i < dados.length; i++) {
-            nome = dados[i].nome_aprovacao;
-            cnpj = dados[i].cnpj_aprovacao;
-            email = dados[i].email_aprovacao;
+                    if (resposta.ok) {
+                        resposta.json().then(data => {
+                            console.log(data);
+                            console.log(JSON.stringify(data));
 
-            document.getElementById("container").innerHTML += `
+                            dados = data;
+                            console.log(dados);
+                            teste();
+                        });
+                    } else {
+                        console.log("Houve um erro ao tentar buscar as perguntas!");
+                        resposta.text().then(texto => {
+                            console.error(texto);
+                        });
+                    }
+                })
+                .catch(function (erro) {
+                    console.log(erro);
+                });
+            return false;
+        }
+
+        function teste() {
+            const sem_solicitacoes = document.querySelector('.sem_solicitacoes');
+            console.log("Teste:", dados);
+
+            if (dados.length == 0) {
+                sem_solicitacoes.innerHTML = `
+                <div class="container-nothing">
+                <div class="mensagem">
+                    <h2>Sem Solicitações ou Cadastros Pendentes</h2>
+                    <p>Não há solicitações pendentes ou cadastros ativos! 
+                    Em caso de inconformidade com esta situação, verifique
+                    conexões com Banco de Dados ou consulte sua ferramenta
+                    de IA auxiliar...</p>
+                </div>
+                </div>
+                `;
+            }
+            for (var i = 0; i < dados.length; i++) {
+                nome = dados[i].nome_fabricante;
+                cnpj = dados[i].cnpj_fabricante;
+                email = dados[i].email_fabricante;
+                acesso = dados[i].acesso;
+
+                btnAceitar = "";
+                btnRecusar = "";
+
+                if (acesso == 1) {
+                    btnAceitar = "<button class = 'btn-aceitar' style='opacity: 0.5; cursor: not-allowed; cursor:default;'> Aprovado </button>";
+                    btnRecusar = `<button class='btn-recusar' onclick='limpar(${i})'> Cancelar </button>`;
+                } else {
+                    btnAceitar = `<button onclick="aceitar(${i})" class="btn-aceitar">Aceitar</button>`;
+                    btnRecusar = `<button onclick="limpar(${i})" class="btn-recusar">Recusar</button>`;
+                }
+
+                document.getElementById("container").innerHTML += `
                 <div class="card">
                     <div class="informacoes">
                         <p><b>Nome da Empresa:</b> ${nome}</p> 
@@ -76,65 +118,68 @@
                     <div class="aceitar">
                         <p><b>CNPJ:</b> ${cnpj}</p>
                         <div class="botoes">
-                            <button onclick="aceitar(${i})" class="btn-aceitar">Aceitar</button> 
-                            <button onclick="limpar(${i})" class="btn-recusar">Recusar</button>    
+                            ${btnAceitar}
+                            ${btnRecusar}  
                         </div>
                     </div>
                 </div>`;
+            }
         }
-    }
 
-    function aceitar(i) {
-        var nomeAprovado = dados[i].nome_aprovacao;
-        var emailAprovado = dados[i].email_aprovacao;
-        var senhaAprovado = dados[i].senha_aprovacao;
-        var cnpjAprovado = dados[i].cnpj_aprovacao;
+        function aceitar(i) {
+            var nomeAprovado = dados[i].nome_fabricante;
+            var emailAprovado = dados[i].email_fabricante;
+            var senhaAprovado = dados[i].senha_fabricante;
+            var cnpjAprovado = dados[i].cnpj_fabricante;
 
-        // Enviando o valor da nova input
-        fetch("/usuarios/cadastrarAprovado", {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-            },
-            body: JSON.stringify({
-                nomeServer: nomeAprovado,
-                emailServer: emailAprovado,
-                senhaServer: senhaAprovado,
-                cnpjServer: cnpjAprovado
-            }),
-        })
-            .then(function (resposta) {
-                console.log("resposta: ", resposta);
-                limpar(i);
+            // Enviando o valor da nova input
+            fetch("/usuarios/cadastrarAprovado", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify({
+                    nomeServer: nomeAprovado,
+                    emailServer: emailAprovado,
+                    senhaServer: senhaAprovado,
+                    cnpjServer: cnpjAprovado
+                }),
             })
-            .catch(function (resposta) {
-                console.log(`#ERRO: ${resposta}`);
-            });
-        return false;
-    }
+                .then(function (resposta) {
+                    console.log("resposta: ", resposta);
+                    location.reload();
+                })
+                .catch(function (resposta) {
+                    console.log(`#ERRO: ${resposta}`);
+                });
+            return false;
+        }
 
-    function limpar(i) {
-        var idAprovado = dados[i].id;
+        function limpar(i) {
+            var idAprovado = dados[i].id_fabricante;
 
-        // Enviando o valor da nova input
-        fetch("/usuarios/limpar", {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-            },
-            body: JSON.stringify({
-                idServer: idAprovado
-            }),
-        })
-            .then(function (resposta) {
-                console.log("resposta: ", resposta);
-                console.log("Limpei", dados);
-                location.reload();
-
+            // Enviando o valor da nova input
+            fetch("/usuarios/limpar", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify({
+                    idServer: idAprovado
+                }),
             })
-            .catch(function (resposta) {
-                console.log(`#ERRO: ${resposta}`);
-            });
-        return false;
-    }
-</script>
+                .then(function (resposta) {
+                    console.log("resposta: ", resposta);
+                    console.log("Limpei", dados);
+                    location.reload();
+
+                })
+                .catch(function (resposta) {
+                    console.log(`#ERRO: ${resposta}`);
+                });
+            return false;
+        }
+    </script>
+</body>
+
+</html>

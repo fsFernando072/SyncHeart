@@ -71,6 +71,7 @@
                 if (json.status === "fabricante") {
                     sessionStorage.setItem("idFabricante", json.dados.Id);
                     sessionStorage.setItem("nomeFabricante", json.dados.Nome);
+                    sessionStorage.setItem("emailFabricante",json.dados.Email);
                     console.log(sessionStorage.setItem("idFabricante", json.dados.Id))
                     window.location = "dashboard_final.html";
                 } else if (json.status === "aprovacao") {

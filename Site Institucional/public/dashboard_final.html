@@ -12,10 +12,19 @@
     <div class="wrapper">
         <!--Header-->
         <div class="header">
-            <img src="assets/Logo.png" width="70" alt="Logo SyncHeart">
-            <div class="slogan">
-                <h1>SyncHeart</h1>
-                <h2><span>Monitorar é</span> nossa paixão</h2>
+            <div class="first" style="display: flex; width: 350px; justify-content: space-between;">
+                <img src="assets/Logo.png" width="70" alt="Logo SyncHeart">
+                <div class="slogan">
+                    <h1>SyncHeart</h1>
+                    <h2><span>Monitorar é</span> nossa paixão</h2>
+                </div>
+            </div>
+
+            <div class="second" style="font-size: 20px;">
+                <div class="dados-usuario">
+                    <label id="hint">Nome: <label id="nome_value" style="margin-right: 40px;"></label></label>
+                    <label id="hint">Email: <label id="email_value"></label></label>
+                </div>
             </div>
         </div>
 
@@ -33,3 +42,10 @@
 </body>
 
 </html>
+<script>
+    let nomeUsuario = sessionStorage.getItem("nomeFabricante");
+    let emailUsuario = sessionStorage.getItem("emailFabricante")
+
+    nome_value.innerHTML = nomeUsuario;
+    email_value.innerHTML = emailUsuario; 
+</script>
