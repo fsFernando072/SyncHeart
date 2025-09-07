@@ -2,39 +2,23 @@ var database = require("../database/config")
 
 function cadastrar(nome, email, senha, cnpj) {
     var instrucaoSql = `
-        INSERT INTO Tabela_Aprovacao (nome_aprovacao, email_aprovacao, senha_aprovacao, cnpj_aprovacao ) VALUES ('${nome}', '${email}', '${senha}', '${cnpj}');
+        INSERT INTO Fabricante (nome_fabricante, email_fabricante, senha_fabricante, cnpj_fabricante,acesso ) VALUES ('${nome}', '${email}', '${senha}', '${cnpj}',0);
     `;
     return database.executar(instrucaoSql);
 }
 
-function cadastrarAprovado(nomeAprovado, emailAprovado, senhaAprovado, cnpjAprovado) {
+function cadastrarAprovado(nomeAprovado, emailAprovado, senhaAprovado) {
     var instrucaoSql = `
-        INSERT INTO Fabricante (nome_fabricante, email_fabricante, senha_fabricante, cnpj_fabricante ) VALUES ('${nomeAprovado}', '${emailAprovado}', '${senhaAprovado}', '${cnpjAprovado}');
-    `;
-    return database.executar(instrucaoSql);
-}
-
-function limpar(idAprovado) {
-    var instrucaoSql = `
-        DELETE FROM Tabela_Aprovacao WHERE id = ${idAprovado};
+        UPDATE Fabricante SET acesso = 1 WHERE nome_fabricante = '${nomeAprovado}' AND email_fabricante = '${emailAprovado}' AND senha_fabricante = '${senhaAprovado}'
     `;
     return database.executar(instrucaoSql);
 }
 
 function autenticarFabricante(email, senha) {
     var instrucaoSql = `
-        SELECT id_fabricante as Id, nome_fabricante as Nome, 'fabricante' as Tipo
+        SELECT id_fabricante as Id, email_fabricante as Email, nome_fabricante as Nome, acesso
         FROM Fabricante 
         WHERE email_fabricante = '${email}' AND senha_fabricante = '${senha}';
-    `;
-    return database.executar(instrucaoSql);
-}
-
-function autenticarAprovacao(email, senha) {
-    var instrucaoSql = `
-        SELECT id as Id, nome_aprovacao as Nome, 'aprovacao' as Tipo
-        FROM Tabela_Aprovacao
-        WHERE email_aprovacao = '${email}' AND senha_aprovacao = '${senha}';
     `;
     return database.executar(instrucaoSql);
 }
@@ -56,8 +40,15 @@ function cadastrarUsuario(nome, cpf, email, fk_fabricante) {
     return database.executar(instrucaoSql);
 }
 
+function limpar(idAprovado) {
+    var instrucaoSql = `
+        DELETE FROM Fabricante WHERE id_fabricante = ${idAprovado};
+    `;
+    return database.executar(instrucaoSql);
+}
+
 module.exports = {
-    cadastrar, cadastrarAprovado, limpar,
-    autenticarFabricante, autenticarAprovacao, autenticarEmpresa,
-    cadastrarUsuario
+    cadastrar, cadastrarAprovado,
+    autenticarFabricante, autenticarEmpresa,
+    cadastrarUsuario,limpar
 };

@@ -57,26 +57,6 @@ function cadastrarAprovado(req, res) {
         );
 }
 
-function limpar(req, res) {
-    var idAprovado = req.body.idServer;
-
-    usuarioModel.limpar(idAprovado)
-        .then(
-            function (resultado) {
-                res.json(resultado);
-            }
-        ).catch(
-            function (erro) {
-                console.log(erro);
-                console.log(
-                    "\nHouve um erro ao realizar o cadastro! Erro: ",
-                    erro.sqlMessage
-                );
-                res.status(500).json(erro.sqlMessage);
-            }
-        );
-}
-
 function autenticar(req, res) {
     var email = req.body.emailServer;
     var senha = req.body.senhaServer;
@@ -88,21 +68,18 @@ function autenticar(req, res) {
     usuarioModel.autenticarFabricante(email, senha)
         .then(resultadoFabricante => {
             if (resultadoFabricante.length == 1) {
-                res.json({ status: "fabricante", dados: resultadoFabricante[0] });
+                if (resultadoFabricante[0].acesso == 0) {
+                    res.json({ status: "aprovacao", dados: resultadoFabricante[0] });
+                } else {
+                    res.json({ status: "fabricante", dados: resultadoFabricante[0] });
+                }
             } else {
-                usuarioModel.autenticarAprovacao(email, senha)
-                    .then(resultadoAprovacao => {
-                        if (resultadoAprovacao.length == 1) {
-                            res.json({ status: "aprovacao", dados: resultadoAprovacao[0] });
+                usuarioModel.autenticarEmpresa(email, senha)
+                    .then(resultadoEmpresa => {
+                        if (resultadoEmpresa.length == 1) {
+                            res.json({ status: "empresa", dados: resultadoEmpresa[0] });
                         } else {
-                            usuarioModel.autenticarEmpresa(email, senha)
-                                .then(resultadoEmpresa => {
-                                    if (resultadoEmpresa.length == 1) {
-                                        res.json({ status: "empresa", dados: resultadoEmpresa[0] });
-                                    } else {
-                                        res.status(403).send("Usuário ou senha inválidos.");
-                                    }
-                                })
+                            res.status(403).send("Usuário ou senha inválidos.");
                         }
                     })
             }
@@ -131,7 +108,27 @@ function cadastrarUsuario(req, res) {
         });
 }
 
+function limpar(req, res) {
+    var idAprovado = req.body.idServer;
+
+    usuarioModel.limpar(idAprovado)
+        .then(
+            function (resultado) {
+                res.json(resultado);
+            }
+        ).catch(
+            function (erro) {
+                console.log(erro);
+                console.log(
+                    "\nHouve um erro ao realizar o cadastro! Erro: ",
+                    erro.sqlMessage
+                );
+                res.status(500).json(erro.sqlMessage);
+            }
+        );
+}
+
 module.exports = {
-    cadastrar, cadastrarAprovado, limpar, autenticar,
-    cadastrarUsuario
+    cadastrar, cadastrarAprovado, autenticar,
+    cadastrarUsuario,limpar
 };
