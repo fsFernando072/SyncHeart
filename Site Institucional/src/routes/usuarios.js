@@ -23,4 +23,8 @@ router.post("/cadastrarUsuario", function (req, res) {
     usuarioController.cadastrarUsuario(req, res);
 });
 
+router.post("/limparUsuario", function (req, res) {
+    usuarioController.limparUsuario(req, res);
+});
+
 module.exports = router;

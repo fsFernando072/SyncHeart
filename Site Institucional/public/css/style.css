@@ -70,6 +70,7 @@
       font-size: 28px;
       cursor: pointer;
       margin-right: 20px;
+      height: fit-content;
     }
 
     .links-navegacao {
@@ -1338,6 +1339,7 @@
 
       .links-navegacao.active,
       .links-rota.active {
+        height: fit-content;
         display: flex;
       }
 

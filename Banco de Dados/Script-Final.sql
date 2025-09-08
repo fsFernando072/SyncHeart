@@ -51,7 +51,7 @@ create table Parametro (
   foreign key (fk_tipo_parametro) references Tipo_Parametro(idTipo_Parametro)
 ) auto_increment = 1000;
 
-create table UsuarioSyncHeart (
+create table Usuario_SyncHeart (
   id_UsuarioSyncHeart int primary key auto_increment,
   nome varchar(50),
   email varchar(50),
@@ -59,4 +59,4 @@ create table UsuarioSyncHeart (
 );
 
 insert into UsuarioSyncHeart (nome, email, senha)
-values ('Gabriel', 'gabriel.castilho@sptech.school', '12345');
+values ('SyncHeart', 'syncheart@sptech.school', '12345');

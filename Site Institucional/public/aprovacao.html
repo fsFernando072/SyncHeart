@@ -103,10 +103,10 @@
 
                 if (acesso == 1) {
                     btnAceitar = "<button class = 'btn-aceitar' style='opacity: 0.5; cursor: not-allowed; cursor:default;'> Aprovado </button>";
-                    btnRecusar = `<button class='btn-recusar' onclick='limpar(${i})'> Cancelar </button>`;
+                    btnRecusar = `<button class='btn-recusar' onclick='limparUsuario(${i})'> Cancelar </button>`;
                 } else {
                     btnAceitar = `<button onclick="aceitar(${i})" class="btn-aceitar">Aceitar</button>`;
-                    btnRecusar = `<button onclick="limpar(${i})" class="btn-recusar">Recusar</button>`;
+                    btnRecusar = `<button onclick="limparUsuario(${i})" class="btn-recusar">Recusar</button>`;
                 }
 
                 document.getElementById("container").innerHTML += `
@@ -147,7 +147,7 @@
             })
                 .then(function (resposta) {
                     console.log("resposta: ", resposta);
-                    location.reload();
+                    location.reload()
                 })
                 .catch(function (resposta) {
                     console.log(`#ERRO: ${resposta}`);
@@ -155,9 +155,32 @@
             return false;
         }
 
-        function limpar(i) {
+        function limparUsuario(i) {
             var idAprovado = dados[i].id_fabricante;
 
+            // Enviando o valor da nova input
+            fetch("/usuarios/limparUsuario", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify({
+                    idServer: idAprovado
+                }),
+            })
+                .then(function (resposta) {
+                    console.log("resposta: ", resposta);
+                    console.log("Limpei", dados);
+                    console.log(idAprovado)
+                    limpar(idAprovado);
+                })
+                .catch(function (resposta) {
+                    console.log(`#ERRO: ${resposta}`);
+                });
+            return false;
+        }
+
+        function limpar(idAprovado) {
             // Enviando o valor da nova input
             fetch("/usuarios/limpar", {
                 method: "POST",
@@ -171,8 +194,7 @@
                 .then(function (resposta) {
                     console.log("resposta: ", resposta);
                     console.log("Limpei", dados);
-                    location.reload();
-
+                    location.reload()
                 })
                 .catch(function (resposta) {
                     console.log(`#ERRO: ${resposta}`);
