@@ -25,7 +25,7 @@ function autenticarFabricante(email, senha) {
 
 function autenticarEmpresa(email, senha) {
     var instrucaoSql = `
-        SELECT id as Id, nome as Nome, 'empresa' as Tipo
+        SELECT id_UsuarioSyncHeart as Id, nome as Nome, 'empresa' as Tipo
         FROM Usuario_Syncheart 
         WHERE email = '${email}' AND senha = '${senha}';
     `;
@@ -47,8 +47,15 @@ function limpar(idAprovado) {
     return database.executar(instrucaoSql);
 }
 
+function limparUsuario(idAprovado) {
+    var instrucaoSql = `
+        DELETE FROM Usuario WHERE fk_fabricante = ${idAprovado};
+    `;
+    return database.executar(instrucaoSql);
+}
+
 module.exports = {
     cadastrar, cadastrarAprovado,
     autenticarFabricante, autenticarEmpresa,
-    cadastrarUsuario,limpar
+    cadastrarUsuario,limpar,limparUsuario
 };
