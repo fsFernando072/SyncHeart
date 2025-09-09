@@ -61,6 +61,3 @@ create table Usuario_SyncHeart (
 
 insert into Usuario_SyncHeart (nome, email, senha)
 values ('SyncHeart', 'syncheart@sptech.school', '12345');
-
-select * from Fabricante;
-select * from Usuario_SyncHeart;
