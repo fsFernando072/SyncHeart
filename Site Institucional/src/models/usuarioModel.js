@@ -32,10 +32,19 @@ function autenticarEmpresa(email, senha) {
     return database.executar(instrucaoSql);
 }
 
-function cadastrarUsuario(nome, cpf, email, fk_fabricante) {
+function autenticarUsuario(email, senha) {
     var instrucaoSql = `
-        INSERT INTO Usuario (nome_usuario, cpf_usuario, email_usuario, fk_fabricante) 
-        VALUES ('${nome}', '${cpf}', '${email}', ${fk_fabricante});
+        SELECT id_usuario as Id, nome_usuario as Nome, email_usuario as Email
+        FROM Usuario 
+        WHERE email_usuario = '${email}' AND senha_usuario = '${senha}';
+    `;
+    return database.executar(instrucaoSql);
+}
+
+function cadastrarUsuario(nome, cpf, email, senha, fk_fabricante) {
+    var instrucaoSql = `
+        INSERT INTO Usuario (nome_usuario, cpf_usuario, email_usuario, senha_usuario, fk_fabricante) 
+        VALUES ('${nome}', '${cpf}', '${email}', '${senha}', ${fk_fabricante});
     `;
     return database.executar(instrucaoSql);
 }
@@ -57,5 +66,6 @@ function limparUsuario(idAprovado) {
 module.exports = {
     cadastrar, cadastrarAprovado,
     autenticarFabricante, autenticarEmpresa,
-    cadastrarUsuario,limpar,limparUsuario
+    cadastrarUsuario,limpar,limparUsuario,
+    autenticarUsuario
 };

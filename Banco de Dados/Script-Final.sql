@@ -16,6 +16,7 @@ create table Fabricante (
 create table Usuario (
   id_usuario int primary key auto_increment,
   nome_usuario varchar(50),
+  cpf_usuario varchar(50),
   email_usuario varchar(50),
   senha_usuario varchar(50),
   cargo_usuario varchar(50),
@@ -58,5 +59,8 @@ create table Usuario_SyncHeart (
   senha varchar(50)
 );
 
-insert into UsuarioSyncHeart (nome, email, senha)
+insert into Usuario_SyncHeart (nome, email, senha)
 values ('SyncHeart', 'syncheart@sptech.school', '12345');
+
+select * from Fabricante;
+select * from Usuario_SyncHeart;
