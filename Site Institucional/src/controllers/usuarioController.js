@@ -79,28 +79,45 @@ function autenticar(req, res) {
                         if (resultadoEmpresa.length == 1) {
                             res.json({ status: "empresa", dados: resultadoEmpresa[0] });
                         } else {
-                            res.status(403).send("Usuário ou senha inválidos.");
+                            usuarioModel.autenticarUsuario(email, senha)
+                                .then(resultadoUsuario => {
+                                    if (resultadoUsuario.length == 1) {
+                                        res.json({ status: "usuario", dados: resultadoUsuario[0] });
+                                    } else {
+                                        res.status(403).send("Usuário ou senha inválidos.");
+                                    }
+                                })
+                                .catch(erro => {
+                                    console.log("Erro ao autenticar usuário: ", erro.sqlMessage);
+                                    res.status(500).json(erro.sqlMessage);
+                                });
                         }
                     })
+                    .catch(erro => {
+                        console.log("Erro ao autenticar empresa: ", erro.sqlMessage);
+                        res.status(500).json(erro.sqlMessage);
+                    });
             }
         })
         .catch(erro => {
-            console.log("Erro ao autenticar: ", erro.sqlMessage);
+            console.log("Erro ao autenticar fabricante: ", erro.sqlMessage);
             res.status(500).json(erro.sqlMessage);
         });
 }
+
 
 function cadastrarUsuario(req, res) {
     var nome = req.body.nomeServer;
     var cpf = req.body.cpfServer;
     var email = req.body.emailServer;
+    var senha = req.body.senhaServer;
     var fk_fabricante = req.body.fkFabricante;
 
-    if (!nome || !cpf || !email || !fk_fabricante) {
+    if (!nome || !cpf || !email || !fk_fabricante || !senha) {
         return res.status(400).send("Dados inválidos para cadastro do usuário.");
     }
 
-    usuarioModel.cadastrarUsuario(nome, cpf, email, fk_fabricante)
+    usuarioModel.cadastrarUsuario(nome, cpf, email, senha, fk_fabricante)
         .then(resultado => res.json(resultado))
         .catch(erro => {
             console.log("Erro ao cadastrar usuário: ", erro.sqlMessage);

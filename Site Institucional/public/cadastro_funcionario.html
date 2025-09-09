@@ -36,17 +36,26 @@
                 <form onsubmit="return cadastrarUsuario()">
                     <div class="form-group">
                         <label for="ipt_nomeUsuario">Nome Completo:</label>
-                        <input type="text" id="ipt_nomeUsuario" placeholder="Digite o nome completo" required value="Gabriel Silva">
+                        <input type="text" id="ipt_nomeUsuario" placeholder="Digite o nome completo" required
+                            value="Gabriel Silva">
                     </div>
 
                     <div class="form-group">
                         <label for="ipt_cpfUsuario">CPF:</label>
-                        <input type="text" id="ipt_cpfUsuario" placeholder="000.000.000-00" required value="123.123.123-00">
+                        <input type="text" id="ipt_cpfUsuario" placeholder="000.000.000-00" required
+                            value="123.123.123-00">
                     </div>
 
                     <div class="form-group">
                         <label for="ipt_emailUsuario">Email:</label>
-                        <input type="email" id="ipt_emailUsuario" placeholder="email@empresa.com" required value="gabriel@gmail.com">
+                        <input type="email" id="ipt_emailUsuario" placeholder="email@empresa.com" required
+                            value="gabriel@gmail.com">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="ipt_emailUsuario">Senha:</label>
+                        <input type="password" id="ipt_senhaUsuario" placeholder="******" required
+                            value="12345">
                     </div>
 
                     <button type="submit" class="btn-submit">Cadastrar Funcionário</button>
@@ -61,6 +70,7 @@
         var nomeVar = ipt_nomeUsuario.value;
         var cpfVar = ipt_cpfUsuario.value;
         var emailVar = ipt_emailUsuario.value;
+        var senhaVar = ipt_senhaUsuario.value;
         var fkFabricante = sessionStorage.getItem("idFabricante");
 
         fetch("/usuarios/cadastrarUsuario", {
@@ -70,6 +80,7 @@
                 nomeServer: nomeVar,
                 cpfServer: cpfVar,
                 emailServer: emailVar,
+                senhaServer: senhaVar,
                 fkFabricante: fkFabricante
             })
         })

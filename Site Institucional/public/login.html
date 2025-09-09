@@ -71,13 +71,17 @@
                 if (json.status === "fabricante") {
                     sessionStorage.setItem("idFabricante", json.dados.Id);
                     sessionStorage.setItem("nomeFabricante", json.dados.Nome);
-                    sessionStorage.setItem("emailFabricante",json.dados.Email);
+                    sessionStorage.setItem("emailFabricante", json.dados.Email);
                     console.log(sessionStorage.setItem("idFabricante", json.dados.Id))
                     window.location = "dashboard_final.html";
                 } else if (json.status === "aprovacao") {
                     window.location = "aguardando_validacao.html";
                 } else if (json.status === "empresa") {
                     window.location = "aprovacao.html";
+                } else if (json.status === "usuario") {
+                    sessionStorage.setItem("nomeUsuario", json.dados.Nome);
+                    sessionStorage.setItem("emailUsuario", json.dados.Email);
+                    window.location = "dashboard_final_usuario.html";
                 } else {
                     alert("Usuário ou senha inválidos.");
                 }
