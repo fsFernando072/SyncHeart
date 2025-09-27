@@ -1,5 +1,15 @@
 @import url('https://fonts.googleapis.com/css2?family=Lexend:wght@100..900&family=Rubik:ital,wght@0,300..900;1,300..900&display=swap');
 
+:root {
+    --purple: #893E86;
+    --red: #D52636;
+    --dark: #20062A;
+    --white: #ffffff;
+    --light: #f8f9fa;
+    --shadow: 0 10px 30px rgba(32, 6, 42, 0.15);
+    --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
 * {
     margin: 0;
     padding: 0;
@@ -8,6 +18,7 @@
 
 html {
     scroll-behavior: smooth;
+    scroll-padding-top: 10vh;
 }
 
 body {

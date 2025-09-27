@@ -7,6 +7,7 @@ header {
     align-items: center;
     background-color: white;
     box-shadow: rgba(50, 50, 93, 0.25) 0px 2px 5px -1px, rgba(0, 0, 0, 0.3) 0px 1px 3px -1px;
+    z-index: 1000;
 }
 
 header .container {
@@ -49,19 +50,16 @@ ul {
 }
 
 .links {
-    width: 40%;
     display: flex;
     flex-direction: row;
     justify-content: space-between;
     align-items: center;
     height: 100%;
-    width: 50%;
+    width: 60%;
 }
 
 .links a:hover {
-    font-size: 21px;
-    color: #7c5f86;
-    font-weight: 500;
+    color: #c079d8;
 }
 
 .links-rotas {
@@ -73,11 +71,31 @@ ul {
     align-items: center;
 }
 
+.links-rotas a {
+    color: white;
+    font-weight: 500;
+}
+
+.btn-entrar {
+    background: linear-gradient(135deg, #893E86, #D52636);
+    width: 40%;
+    height: 60%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 15px;
+    cursor: pointer;
+    transition: var(--transition);
+}
+
+.btn-entrar:hover {
+    background: linear-gradient(135deg, #b658b3, #f13242);
+}
+
 a {
     text-decoration: none;
     color: #20062A;
     font-size: 20px;
-    font-weight: 400;
-
-    transition: all 0.15s;
+    font-weight: 600;
+    transition: all 0.3s;
 }
