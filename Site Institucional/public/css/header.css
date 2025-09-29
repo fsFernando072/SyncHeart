@@ -28,6 +28,15 @@ header .menu {
    align-items: center;
 }
 
+header span {
+    color: black;
+    transition: var(--transition);
+}
+
+header span:hover {
+    color: var(--red);
+}
+
 .titulo {
     font-size: 25px;
 }

@@ -13,7 +13,7 @@
     <header>
         <section class="container">
             <nav class="menu">
-                <h2 class="titulo">SYNCHEART</h2>
+                <a href="#home" class="titulo">SYNC<span>HEART</span></a>
                 <ul class="links">
                     <li>
                      <a href="#sobre-nos">Sobre Nós</a>
@@ -34,7 +34,7 @@
                         <a href="#beneficios">Benefícios</a>
                     </li>
                     <li>
-                        <a href="">Fale Conosco</a>
+                        <a href="#fale-conosco">Fale Conosco</a>
                     </li>
                 </ul>
                 <ul class="links-rotas">
@@ -48,7 +48,7 @@
         </section>
     </header>
 
-    <section class="home">
+    <section id="home" class="home">
         <div class="texto-home">
             <h1>SyncHeart</h1>
             <h3>Sincronize sua saúde</h3>
@@ -60,11 +60,17 @@
             <h2>Sobre Nós</h2>
             <h3>Monitorar é nossa <span>paixão</span></h3>
         </div>
-        <div class="info1">
-            Somos movidos pela paixão em transformar tecnologia em cuidado humano. O SyncHeart nasceu para monitorar de
-            forma contínua e inteligente os componentes internos de marcapassos, garantindo mais segurança, confiança e
-            tranquilidade para pacientes, médicos e fabricantes. Nossa dedicação está em unir ciência, inovação e
-            responsabilidade para salvar vidas.
+        <div class="slider-sobre-nos">
+            <div class="imagem-sobre">
+
+            </div>
+            <div class="texto-sobre">
+                <h3>Nossa <span>Motivação</span></h3>
+                <p>Somos movidos pela paixão em transformar tecnologia em cuidado humano. O SyncHeart nasceu para monitorar de
+                forma contínua e inteligente os componentes internos de marcapassos, garantindo mais segurança, confiança e
+                tranquilidade para pacientes, médicos e fabricantes. Nossa dedicação está em unir ciência, inovação e
+                responsabilidade para salvar vidas.</p>
+            </div>
         </div>
     </section>
 
@@ -210,8 +216,69 @@
         </div>
     </section>
 
-    <footer>
+    <section id="fale-conosco" class="fale-conosco">
+        <div class="titulo-fale-conosco">
+            <h2>Fale Conosco</h2>
+            <h3>Faça comentários e <span>esclareça dúvidas</span></h3>
+        </div>
 
+        <div class="corpo-fale-conosco">
+
+            <div class="campo-fale-conosco">
+                <label for="assunto">Assunto:</label>
+                <select name="assunto" id="assunto">
+                    <option value="#">Selecione um assunto</option>
+                    <option value="duvida">Dúvida</option>
+                    <option value="sugestao">Sugestão</option>
+                    <option value="comentario">Comentário</option>
+                </select>
+            </div>
+
+            <div class="campo-fale-conosco">
+                 <label for="nome">Nome:</label>
+                 <input type="text" id="nome" placeholder="Digite seu nome">
+            </div>
+            <div class="campo-fale-conosco">
+                <label for="email">Email:</label>
+                <input type="text" id="email" placeholder="Digite seu email">
+            </div>
+            <div class="campo-fale-conosco texto-mensagem">
+                <label for="mensagem">Mensagem:</label>
+                <textarea name="mensagem" id="mensagem" maxlength="250" wrap="hard" placeholder="Digite sua mensagem"></textarea>
+            </div>
+            <div class="btn-fale-conosco">
+                <button>Enviar</button>
+            </div>
+
+        </div>
+    </section>
+
+    <footer>
+        <div class="parte-logo">
+            <div class="coracao"></div>
+            <div class="logo-escrita"></div>
+            <div class="texto-sincronize">
+                Sincronize sua saúde
+            </div>
+        </div>
+        <div class="parte-contatos">
+            <div class="links-rapidos">
+                <h3>Links Rápidos</h3>
+                <a href="#sobre-nos">Sobre Nós</a>
+                <a href="#nossa-missao">Nossa Missão</a>
+                <a href="#nossos-diferenciais">Diferenciais</a>
+                <a href="#resultados">Resultados</a>
+                <a href="solucoes">Cenário</a>
+                <a href="beneficios">Benefícios</a>
+            </div>
+            <div class="contatos">
+                <h3>Contatos</h3>
+                <p>syncheart@gmail.com</p>
+                <p>+55 (11) 4002-8922</p>
+                <p>Rua Haddock Lobo 305</p>
+                <p>São Paulo 01414-905</p>         
+            </div>
+        </div>
     </footer>
 </body>
 </html>
