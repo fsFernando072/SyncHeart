@@ -1,5 +1,85 @@
 footer {
+    padding-top: 2rem;
     width: 100%;
     height: 40rem;
     background: linear-gradient(135deg, #D52636, #893E86);
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    color: white;
+}
+
+footer a {
+    font-weight: 400;
+    color: white;
+    opacity: 0.7;
+    transition: var(--transition);
+}
+
+footer a:hover {
+    opacity: 1;
+}
+
+.parte-logo {
+    width: 25%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: center;
+    padding-top: 3rem;
+}
+
+.coracao {
+    background-image: url('../assets/Logo_branco.png');
+    width: 120px;
+    height: 100px;
+    background-repeat: no-repeat;
+    background-size: contain;
+}
+
+.logo-escrita {
+    background-image: url('../assets/logo-escrita.png');
+    width: 120px;
+    height: 60px;
+    background-repeat: no-repeat;
+    background-size: contain;
+}
+
+.texto-sincronize {
+    width: 100%;
+    text-align: center;
+}
+
+.parte-contatos {
+    width: 50%;
+    height: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+}
+
+.links-rapidos {
+    width: 50%;
+    height:70%;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: flex-start;
+    gap: 1rem;
+    padding-left: 2rem;
+    padding-top: 3rem;
+
+}
+
+.contatos {
+    width: 50%;
+    height: 70%;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: flex-start;
+    gap: 1rem;
+    padding-left: 2rem;
+    padding-top: 3rem;
 }
