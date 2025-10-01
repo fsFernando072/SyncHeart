@@ -1,0 +1,248 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+ 
+}
+
+:root{
+ --rosa-escuro: #52136d;
+ --rosa-claro: #bb3e73;
+ --magenta: #ad4d8c;
+}
+body {
+  font-family: 'Lexend', sans-serif;
+
+  min-height: 100vh;
+  color: #52136d;
+}
+
+.container {
+  display: flex;
+  min-height: 100vh;
+
+  margin: 0 auto;
+}
+
+.sidebar {
+  background: linear-gradient(180deg, #412051 50%,#9b4b7e 100%);
+  width: 88px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 20px 0;
+  position: relative;
+}
+
+.logo {
+    background-image: url("../assets/logo.png");
+    width: 100%;
+    height: 64px;
+    margin-left: 18px;
+    background-repeat: no-repeat;
+    background-size: contain;
+  margin-bottom: 15px;
+}
+
+.menu-toggle {
+  background: none;
+  border: none;
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding: 8px;
+}
+
+.menu-toggle span {
+  width: 52px;
+  margin: 3px;
+  height: 3px;
+  background: white;
+  border-radius: 0.5px;
+  transition: all 0.3s ease;
+}
+
+.menu-toggle:hover span {
+  background: #f8bbd9;
+}
+
+.main-content {
+  flex: 1;
+  background: white;
+  padding: 40px;
+  padding-left: 70px;
+  overflow-y: auto;
+}
+
+.page-header {
+  margin-bottom: 40px;
+}
+
+.page-header h1 {
+  color: var(--rosa-escuro);
+  font-size: 3.5rem;
+  font-weight: bold;
+  position: relative;
+  padding-bottom: 15px;
+}
+
+.page-header h1::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 550px;
+  height: 4px;
+  background: linear-gradient(90deg, var(--rosa-escuro) 0% ,  var(--rosa-claro) 40%);
+  border-radius: 2px;
+}
+
+.registration-form { 
+  max-width: 75%;
+}
+
+.form-grid {
+  width: 100%;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 50px 75px;
+  margin-bottom: 40px;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+}
+
+.form-group label {
+  color: var(--rosa-escuro);
+  font-size: 2rem;
+  font-weight: 500;
+  margin-bottom: 12px;
+}
+
+.form-group input {
+  border: none;
+  border-bottom: 3px solid #deb9d1;
+  background: transparent;
+  padding: 12px 0;
+  font-size: 1.5rem;
+  color: #333;
+  transition: all 0.3s ease;
+  outline: none;
+}
+
+.form-group input:focus {
+  border-bottom-color: #4a148c;
+  background: rgba(233, 30, 99, 0.05);
+}
+
+.form-group input::placeholder {
+  color: #999;
+}
+
+.submit-btn {
+ display: inline-block;
+outline: none;
+cursor: pointer;
+font-size: 2rem;
+line-height: 20px;
+font-weight: 600;
+border-radius: 8px;
+padding: 24px 24px;
+margin-top: 20px;
+border: none;
+transition: box-shadow 0.2s ease 0s, -ms-transform 0.1s ease 0s, -webkit-transform 0.1s ease 0s, transform 0.1s ease 0s;
+background: var(--magenta);
+color: #fff;
+}
+
+.submit-btn:active {
+  transform: translateY(0);
+}
+  
+                
+
+/* Mobile */
+@media (max-width: 768px) {
+  .container {
+    max-width: 100%;
+  }
+  
+  .sidebar {
+    width: 80px;
+    padding: 15px 0;
+  }
+
+  .logo{
+    margin-left: 10px;
+  }
+  
+  .registration-form{
+    max-width: 100%;
+    display: flex;
+    flex-direction: column;
+  }
+  .main-content {
+    padding: 20px;
+  }
+  
+  .page-header h1 {
+    font-size: 2.2rem;
+  }
+  
+  .form-grid {
+    grid-template-columns: 1fr;
+    gap: 25px;
+    
+  }
+  
+  .submit-btn {
+    
+    width: 100%;
+    padding: 18px;
+  }
+}
+
+
+
+.form-group input:focus + label,
+.form-group input:not(:placeholder-shown) + label {
+  transform: translateY(-20px);
+  font-size: 0.9rem;
+  color: #e91e63;
+}
+
+
+.form-group.success input {
+  border-bottom-color: #4caf50;
+}
+
+.form-group.error input {
+  border-bottom-color: #f44336;
+}
+
+
+.submit-btn.loading {
+  opacity: 0.7;
+  cursor: not-allowed;
+  pointer-events: none;
+}
+
+.submit-btn.loading::after {
+  content: '';
+  width: 16px;
+  height: 16px;
+  border: 2px solid transparent;
+  border-top: 2px solid white;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+  display: inline-block;
+  margin-left: 8px;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
