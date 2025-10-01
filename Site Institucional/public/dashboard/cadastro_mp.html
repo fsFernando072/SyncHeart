@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tela de cadastro de marca-passo</title>
+    <style>
+
+         * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+        font-family: 'Lexend', sans-serif;
+    }
+
+    body {
+        display: flex;
+        flex-direction: row;
+    }
+
+    .side-bar {   
+        display: flex;
+        justify-content: center;
+        height: 100vh;
+        width: 88px;
+        background-image: linear-gradient(to bottom, #412051, #9b4e7e);
+        padding-top:16px;
+    }
+    #logo{
+      
+      width: 70px;
+      height: 70px;
+      background-image: url("../assets/Logo.png");
+      background-repeat: no-repeat;
+      background-size: contain;
+    }
+
+    main .titulo{
+        color: #52136d;
+        font-size: 50px;
+        font-family: 'Lexend', sans-serif;
+        font-weight: bold;
+        padding: 24px;
+
+    }
+
+    main .linha-texto{
+        /* #412051 #bb3e73 */
+        margin-top:20px;
+        background-image: linear-gradient(to right, #412051, #bb3e73);
+        width: 80%;
+        height: 3px;
+        
+    }
+    </style>
+</head>
+<body>
+<div class="side-bar">
+    <div id="logo"></div>
+
+</div>
+<main>
+    <div class="titulo">
+        Cadastre o modelo de Marca-passo!
+        <div class="linha-texto"></div>
+    </div>
+</main>
+
+
+    
+</body>
+</html>
