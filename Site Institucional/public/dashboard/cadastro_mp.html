@@ -1,72 +1,66 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="pt-BR">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Tela de cadastro de marca-passo</title>
-    <style>
-
-         * {
-        margin: 0;
-        padding: 0;
-        box-sizing: border-box;
-        font-family: 'Lexend', sans-serif;
-    }
-
-    body {
-        display: flex;
-        flex-direction: row;
-    }
-
-    .side-bar {   
-        display: flex;
-        justify-content: center;
-        height: 100vh;
-        width: 88px;
-        background-image: linear-gradient(to bottom, #412051, #9b4e7e);
-        padding-top:16px;
-    }
-    #logo{
-      
-      width: 70px;
-      height: 70px;
-      background-image: url("../assets/Logo.png");
-      background-repeat: no-repeat;
-      background-size: contain;
-    }
-
-    main .titulo{
-        color: #52136d;
-        font-size: 50px;
-        font-family: 'Lexend', sans-serif;
-        font-weight: bold;
-        padding: 24px;
-
-    }
-
-    main .linha-texto{
-        /* #412051 #bb3e73 */
-        margin-top:20px;
-        background-image: linear-gradient(to right, #412051, #bb3e73);
-        width: 80%;
-        height: 3px;
-        
-    }
-    </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Cadastre o modelo de Marca-passo</title>
+  <link rel="stylesheet" href="..\css\crud.css">
 </head>
 <body>
-<div class="side-bar">
-    <div id="logo"></div>
+  <div class="container">
+    <aside class="sidebar">
+      <div class="logo">
+      </div>
+      <button class="menu-toggle" aria-label="Menu">
+        <span></span>
+        <span></span>
+        <span></span>
+      </button>
+    </aside>
 
-</div>
-<main>
-    <div class="titulo">
-        Cadastre o modelo de Marca-passo!
-        <div class="linha-texto"></div>
-    </div>
-</main>
+    <main class="main-content">
+      <header class="page-header">
+        <h1>Cadastre o modelo de Marca-passo!</h1>
+      </header>
 
+      <form class="registration-form" id="fomr-mp">
+        <div class="form-grid">
+          <div class="form-group">
+            <label for="modelo-nome">Nome do modelo:</label>
+            <input type="text" id="modelo-nome" name="modelo-nome" required>
+          </div>
 
-    
+          <div class="form-group">
+            <label for="dimensoes">Dimensões (mm):</label>
+            <input type="text" id="dimensoes" name="dimensoes" required>
+          </div>
+
+          <div class="form-group">
+            <label for="frequencia">Frequência básica:</label>
+            <input type="text" id="frequencia" name="frequencia" required>
+          </div>
+
+          <div class="form-group">
+            <label for="garantia">Prazo de garantia:</label>
+            <input type="text" id="garantia" name="garantia" required>
+          </div>
+
+          <div class="form-group">
+            <label for="vidaUtil">Vida útil projetada:</label>
+            <input type="text" id="vidaUtil" name="vidaUtil" required>
+          </div>
+
+          <div class="form-group">
+            <label for="tipoBateria">Tipo de bateria:</label>
+            <input type="text" id="tipoBateria" name="tipoBateria" required>
+          </div>
+        </div>
+
+        <button type="submit" class="submit-btn">Cadastrar</button>
+      </form>
+    </main>
+  </div>
+
+  <script src="script.js"></script>
 </body>
 </html>
