@@ -177,3 +177,20 @@ h4 {
 .btn-recusar {
     background-color: #BA2929;
 }
+
+.status-container {
+    margin-top: 8px;
+    margin-bottom: 8px;
+}
+
+.status {
+    padding: 4px 12px;
+    border-radius: 12px;
+    color: white;
+    font-weight: 500;
+    font-size: 0.9rem;
+}
+
+.status-pendente { background-color: #f39c12; }
+.status-aprovada { background-color: #2ecc71; }
+.status-recusada { background-color: #e74c3c; }

@@ -1,71 +1,50 @@
-var database = require("../database/config")
+var database = require("../database/config");
 
-function cadastrar(nome, email, senha, cnpj) {
+function criarRepresentante(organizacaoId, nome_completo, email, senha) {
+    // ATENÇÃO!!!!!!!! SENHA SEM CRIPTOGRAFIA IMPLEMENTAR FUTURAMENTE
+    var usuario = email.split('@')[0];
+    var papel = 'representante';
+
     var instrucaoSql = `
-        INSERT INTO Fabricante (nome_fabricante, email_fabricante, senha_fabricante, cnpj_fabricante,acesso ) VALUES ('${nome}', '${email}', '${senha}', '${cnpj}',0);
+        INSERT INTO usuarios (organizacao_id, usuario, email, senha_hash, nome_completo, papel) 
+        VALUES (?, ?, ?, ?, ?, ?);
     `;
-    return database.executar(instrucaoSql);
+    return database.executar(instrucaoSql, [organizacaoId, usuario, email, senha, nome_completo, papel]);
 }
 
-function cadastrarAprovado(nomeAprovado, emailAprovado, senhaAprovado) {
+function buscarPorEmail(email) {
     var instrucaoSql = `
-        UPDATE Fabricante SET acesso = 1 WHERE nome_fabricante = '${nomeAprovado}' AND email_fabricante = '${emailAprovado}' AND senha_fabricante = '${senhaAprovado}'
+        SELECT u.*, o.nome as nome_organizacao, o.status as status_organizacao
+        FROM usuarios u
+        LEFT JOIN organizacoes o ON u.organizacao_id = o.id
+        WHERE u.email = ?;
     `;
-    return database.executar(instrucaoSql);
+    return database.executar(instrucaoSql, [email]);
 }
 
-function autenticarFabricante(email, senha) {
+function criarFuncionario(organizacaoId, nome_completo, email, senha, papel) {
+    var usuario = email.split('@')[0];
+
     var instrucaoSql = `
-        SELECT id_fabricante as Id, email_fabricante as Email, nome_fabricante as Nome, acesso
-        FROM Fabricante 
-        WHERE email_fabricante = '${email}' AND senha_fabricante = '${senha}';
+        INSERT INTO usuarios (organizacao_id, usuario, email, senha_hash, nome_completo, papel) 
+        VALUES (?, ?, ?, ?, ?, ?);
     `;
-    return database.executar(instrucaoSql);
+    return database.executar(instrucaoSql, [organizacaoId, usuario, email, senha, nome_completo, papel]);
 }
 
-function autenticarEmpresa(email, senha) {
+// Lista todos os usuários de uma organização específica
+function listarPorOrganizacao(organizacaoId) {
     var instrucaoSql = `
-        SELECT id_UsuarioSyncHeart as Id, nome as Nome, 'empresa' as Tipo
-        FROM Usuario_Syncheart 
-        WHERE email = '${email}' AND senha = '${senha}';
+        SELECT id, nome_completo, email, papel, ativo 
+        FROM usuarios 
+        WHERE organizacao_id = ?;
     `;
-    return database.executar(instrucaoSql);
-}
-
-function autenticarUsuario(email, senha) {
-    var instrucaoSql = `
-        SELECT id_usuario as Id, nome_usuario as Nome, email_usuario as Email
-        FROM Usuario 
-        WHERE email_usuario = '${email}' AND senha_usuario = '${senha}';
-    `;
-    return database.executar(instrucaoSql);
-}
-
-function cadastrarUsuario(nome, cpf, email, senha, fk_fabricante) {
-    var instrucaoSql = `
-        INSERT INTO Usuario (nome_usuario, cpf_usuario, email_usuario, senha_usuario, fk_fabricante) 
-        VALUES ('${nome}', '${cpf}', '${email}', '${senha}', ${fk_fabricante});
-    `;
-    return database.executar(instrucaoSql);
-}
-
-function limpar(idAprovado) {
-    var instrucaoSql = `
-        DELETE FROM Fabricante WHERE id_fabricante = ${idAprovado};
-    `;
-    return database.executar(instrucaoSql);
-}
-
-function limparUsuario(idAprovado) {
-    var instrucaoSql = `
-        DELETE FROM Usuario WHERE fk_fabricante = ${idAprovado};
-    `;
-    return database.executar(instrucaoSql);
+    return database.executar(instrucaoSql, [organizacaoId]);
 }
 
 module.exports = {
-    cadastrar, cadastrarAprovado,
-    autenticarFabricante, autenticarEmpresa,
-    cadastrarUsuario,limpar,limparUsuario,
-    autenticarUsuario
+    criarRepresentante,
+    buscarPorEmail,
+    criarFuncionario,
+    listarPorOrganizacao
 };
