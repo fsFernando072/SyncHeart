@@ -2,112 +2,81 @@
 <html lang="pt-BR">
 
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link rel="stylesheet" href="css/style_cadastro.css">
-  <title>Cadastro - SyncHeart</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="css/style_cadastro.css">
+    <style>
+        .erro {
+            color: #ff4d4d;
+            font-size: 0.8rem;
+            margin-top: 4px;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            margin-bottom: 15px;
+            /* Ajuste para dar espaço para o erro */
+        }
+    </style>
+
+    <title>Cadastro - SyncHeart</title>
 </head>
 
 <body>
-  <!--Wrapper geral-->
-  <div class="wrapper">
+    <div class="wrapper">
 
-    <!--Header-->
-    <div class="header">
-      <img src="assets/Logo.png" width="70">
-      <div class="slogan">
-        <h1>SyncHeart</h1>
-        <h2><span>Monitorar é</span> nossa paixão</h2>
-      </div>
-    </div>
-
-    <!--Container-->
-    <div class="container">
-      <div class="left">
-        <div>
-          <img src="assets/Logo_branco.png" width="150">
-          <h2>Bem-vindo</h2>
-          <img src="assets/logo-escrita.png" width="300" class="logo-escrita">
+        <div class="header">
+            <img src="assets/Logo.png" width="70">
+            <div class="slogan">
+                <h1>SyncHeart</h1>
+                <h2><span>Monitorar é</span> nossa paixão</h2>
+            </div>
         </div>
-        <button onclick="cadastrar()">Cadastrar</button>
-      </div>
 
-      <div class="right">
-        <button class="btn-voltar" onclick="window.location.href='login.html'">← Voltar</button>
-        <h3>Cadastro</h3>
-        <form>
-          <div class="form-group">
-            <label>Nome da Empresa</label>
-            <input type="text" placeholder="Digite o nome da empresa" id="nome_input" value="BrandãoSA">
-          </div>
-          <div class="form-group">
-            <label>Email</label>
-            <input type="email" placeholder="Digite o email de contato" id="email_input" value="brandao@gmail.com">
-          </div>
-          <div class="form-group">
-            <label>CNPJ</label>
-            <input type="text" placeholder="Digite o CNPJ da empresa" id="cnpj_input" value="123.123.123-12">
-          </div>
-          <div class="form-group">
-            <label>Senha</label>
-            <input type="password" placeholder="Digite a senha" id="senha_input" value="12345">
-          </div>
-        </form>
-      </div>
+        <div class="container">
+            <div class="left">
+                <div>
+                    <img src="assets/Logo_branco.png" width="150">
+                    <h2>Bem-vindo</h2>
+                    <img src="assets/logo-escrita.png" width="300" class="logo-escrita">
+                </div>
+                <button id="btn_cadastrar">Cadastrar</button>
+            </div>
+
+            <div class="right">
+                <button class="btn-voltar" onclick="window.location.href='login.html'">← Voltar</button>
+                <h3>Cadastro</h3>
+                <form onsubmit="return false;">
+                    <div class="form-group">
+                        <label>Nome da Empresa</label>
+                        <input type="text" placeholder="Digite o nome da empresa" id="nome_input">
+                    </div>
+                    <div class="form-group">
+                        <label>Nome do Representante</label>
+                        <input type="text" placeholder="Digite o seu nome completo" id="nome_representante_input">
+                    </div>
+                    <div class="form-group">
+                        <label>Email</label>
+                        <input type="email" placeholder="Digite o email de contato" id="email_input">
+                    </div>
+                    <div class="form-group">
+                        <label>CNPJ</label>
+                        <input type="text" placeholder="00.000.000/0000-00" id="cnpj_input">
+                    </div>
+                    <div class="form-group">
+                        <label>Senha</label>
+                        <input type="password" placeholder="Digite a senha" id="senha_input">
+                    </div>
+
+                    <div id="div_feedback"></div>
+
+                </form>
+            </div>
+        </div>
     </div>
-  </div>
 </body>
-<script>
-  function cadastrar() {
 
-    var nomeVar = nome_input.value;
-    var emailVar = email_input.value;
-    var senhaVar = senha_input.value;
-    var cnpjVar = cnpj_input.value;
-
-    if (
-      nomeVar == "" ||
-      emailVar == "" ||
-      senhaVar == "" ||
-      cnpjVar == ""
-    ) {
-      resposta.innerHTML = "Preencha todos os campos"
-      return false;
-    } else {
-      console.log('oiii')
-    }
-
-    // Enviando o valor da nova input
-    fetch("/usuarios/cadastrar", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        nomeServer: nomeVar,
-        emailServer: emailVar,
-        senhaServer: senhaVar,
-        cnpjServer: cnpjVar
-      }),
-    })
-      .then(function (resposta) {
-        console.log("resposta: ", resposta);
-
-        if (resposta.ok) {
-          resposta.innerHTML = "Login relizado com sucesso"
-
-          setTimeout(() => {
-            window.location = "login.html";
-          }, "2000");
-        } else {
-          resposta.innerHTML = "Login relizado com sucesso"
-        }
-      })
-      .catch(function (resposta) {
-        console.log(`#ERRO: ${resposta}`);
-      });
-    return false;
-  }
-</script>
+<script src="js\cadastro.js"></script>
 
 </html>
