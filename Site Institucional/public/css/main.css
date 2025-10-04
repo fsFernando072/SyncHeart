@@ -6,16 +6,16 @@
     background-size: cover;
     background-attachment: fixed;
     display: flex;
-    justify-content: left;
+    justify-content: center;
     align-items: center;
 }
 
 .home .texto-home {
     display: flex;
     flex-direction: column;
-    align-items: center;
+    align-items: flex-start;
     justify-content: center;
-    width: 40%;
+    width: 90%;
     height: 30%;
     color: white;
     text-shadow: 0 0 5px rgba(255, 255, 255, 0.5);
@@ -30,7 +30,7 @@
 @keyframes fadeInUp {
     from {
         opacity: 0;
-        transform: translateY(50px);
+        transform: translateY(30px);
     }
 
     to {
@@ -45,7 +45,7 @@
 }
 
 .sobre-nos {
-    height: 50rem;
+    height: 55rem;
     width: 100%;
     display: flex;
     flex-direction: column;
@@ -79,11 +79,14 @@ span {
 }
 
 .slider-sobre-nos {
-    width: 100%;
+    width: 70%;
     height: 70%;
     display: flex;
     justify-content: center;
     align-items: center;
+    overflow: hidden;
+    border-radius: 20px;
+    background-color: var(--light);
 }
 
 .imagem-sobre {
@@ -420,7 +423,6 @@ span {
 
 .empresa-placeholder img {
     max-width: clamp(180px, 16vw, 200px);
-    cursor: pointer;
     transition: var(--transition);
 }
 
@@ -475,6 +477,23 @@ span {
     border: 1px solid gray;
     align-items: center;
     justify-content: center;
+    cursor: pointer;
+    position: relative;
+    isolation: isolate;
+}
+
+.card-beneficio::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(135deg, #893E86, #D52636);
+    opacity: 0;
+    transition: opacity 0.5s;
+    z-index: -1;
+}
+
+.card-beneficio:hover::before {
+    opacity: 1;
 }
 
 .card-esquerda {
@@ -501,22 +520,22 @@ span {
 }
 
 .beneficio-texto h3 {
-    font-size: 1.3rem;
+    font-size: 1.5rem;
 }
 
 .beneficio-texto p {
     display: none;
     color: white;
-    font-size: 1.2rem;
+    font-size: 1.3rem;
 }
 
-.card-beneficio:hover {
+/* .card-beneficio:hover {
     background: linear-gradient(135deg, #893E86, #D52636);
-    cursor: pointer;
-}
+} */
 
 .card-beneficio:hover p {
     display: block;
+    animation: fadeInUp 0.5s ease-out;
 }
 
 .card-beneficio:hover h3 {
@@ -529,7 +548,7 @@ span {
 
 .fale-conosco {
     width: 100%;
-    height: 45rem;
+    height: 55rem;
     display: flex;
     flex-direction: column;
     justify-content: space-around;
@@ -555,14 +574,14 @@ span {
 }
 
 .corpo-fale-conosco {
-    width: 40%;
-    height: 60%;
+    width: 60%;
+    height: 70%;
     border-radius: 20px;
     display: flex;
     flex-direction: column;
     justify-content: space-around;
     align-items: flex-start;
-    padding: 2rem;
+    padding: 1.5rem 0;
     box-shadow: var(--shadow);
     position: relative;
     overflow: hidden;
@@ -582,25 +601,26 @@ span {
     display: flex;
     flex-direction: column;
     align-items: flex-start;
-    width: 80%;
+    margin: auto;
+    width: 90%;
     height: 15%;
     font-size: 1rem;
 }
 
 .campo-fale-conosco input {
     width: 100%;
-    height: 70%;
+    height: 60%;
     padding: 0.5rem;
     border: none;
     border-radius: 0.5rem;
-    box-shadow: var(--shadow);
+    border: 1px solid black;
     position: relative;
     outline: none;
 }
 
 .campo-fale-conosco select {
-    width: 50%;
-    height: 80%;
+    width: 35%;
+    height: 60%;
     border: none;
     border-radius: 0.5rem;
     padding: 0.5rem;
@@ -623,22 +643,23 @@ span {
     width: 100%;
     height: 10%;
     display: flex;
-    justify-content: flex-start;
+    justify-content: center;
     align-items: center;
 }
 
 .btn-fale-conosco button {
-    height: 100%;
-    width: 12%;
+    height: 90%;
+    width: 10%;
     border-radius: 10px;
     border: none;
-    font-size: 16px;
+    font-size: 18px;
     font-weight: 600;
-    background: linear-gradient(135deg, #893E86, #D52636);
+    background-color: #D52636;
     color: white;
+    transition: var(--transition);
 }
 
 .btn-fale-conosco button:hover {
     cursor: pointer;
-    background: linear-gradient(135deg, #b658b3, #f13242);
+    background-color: #eb5461;
 }

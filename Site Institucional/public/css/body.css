@@ -19,10 +19,10 @@
 html {
     scroll-behavior: smooth;
     scroll-padding-top: 10vh;
+    overflow-x: hidden;
 }
 
 body {
     font-family: 'Lexend', sans-serif;
     overflow-x: hidden;
-    
 }
