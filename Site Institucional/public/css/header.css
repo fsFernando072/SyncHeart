@@ -22,7 +22,7 @@ header .container {
 
 header .menu {
    height: 90%;
-   width: 100%;
+   width: 95%;
    display: flex;
    justify-content: space-between;
    align-items: center;
@@ -33,12 +33,12 @@ header span {
     transition: var(--transition);
 }
 
-header span:hover {
-    color: var(--red);
-}
-
 .titulo {
     font-size: 25px;
+}
+
+.titulo:hover span {
+    color: var(--red);
 }
 
 header .titulo::before {
@@ -60,45 +60,35 @@ ul {
 
 .links {
     display: flex;
-    flex-direction: row;
-    justify-content: space-between;
+    justify-content: flex-end;
     align-items: center;
+    gap: 3rem;
     height: 100%;
-    width: 60%;
+    width: 70%;
 }
 
-.links a:hover {
+.links a:hover:not(.entrar) {
     color: #c079d8;
 }
 
-.links-rotas {
-    width: 15%;
-    height: 100%;
-    display: flex;
-    flex-direction: row;
-    justify-content: space-around;
-    align-items: center;
-}
-
-.links-rotas a {
-    color: white;
-    font-weight: 500;
-}
-
 .btn-entrar {
-    background: linear-gradient(135deg, #893E86, #D52636);
-    width: 40%;
+    background-color: #D52636;
+    width: 8%;
     height: 60%;
     display: flex;
     justify-content: center;
     align-items: center;
-    border-radius: 15px;
+    border-radius: 10px;
     cursor: pointer;
     transition: var(--transition);
 }
 
 .btn-entrar:hover {
-    background: linear-gradient(135deg, #b658b3, #f13242);
+    background-color:#eb5461;
+}
+
+.btn-entrar a {
+    color: white;
 }
 
 a {

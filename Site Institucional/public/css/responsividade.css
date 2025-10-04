@@ -1,0 +1,10 @@
+@media screen and (max-width: 768px) {
+   .slider-sobre-nos {
+    display: grid;
+    grid-template-columns: auto;
+   }
+
+   .nossa-missao {
+    flex-wrap: wrap;
+   }
+}
