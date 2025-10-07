@@ -1,25 +1,25 @@
-// Aguarda o DOM estar completamente carregado antes de executar o script
-//Não retirar -> está dando erro sem ele
+// Espera a página carregar completamente antes de executar qualquer script
+// Só tirar se souber tratar o erro!!!
 document.addEventListener('DOMContentLoaded', () => {
 
     const nomeUsuarioLogadoEl = document.getElementById('nome_usuario_logado');
     const emailUsuarioLogadoEl = document.getElementById('email_usuario_logado');
     const container = document.getElementById('solicitacoes_container');
 
-    // 1. CARREGA DADOS DO USUÁRIO LOGADO E DAS SOLICITAÇÕES
+    // 1. VERIFICA SE O LOGIN É MESMO DO ADMIN PARA INICIAR
     function iniciarPagina() {
-        const nomeAdmin = sessionStorage.getItem("nomeUsuario"); 
+        const nomeAdmin = sessionStorage.getItem("nomeUsuario");
         const emailAdmin = sessionStorage.getItem("emailUsuario");
         
-        nomeUsuarioLogadoEl.innerHTML = nomeAdmin || 'Admin';
-        emailUsuarioLogadoEl.innerHTML = emailAdmin || 'admin@syncheart.com';
+        nomeUsuarioLogadoEl.innerHTML = nomeAdmin;
+        emailUsuarioLogadoEl.innerHTML = emailAdmin;
 
         carregarSolicitacoes();
     }
 
-    // 2. FUNÇÃO PARA BUSCAR AS SOLICITAÇÕES PENDENTES NO BACK-END
+    // 2. BUSCA DE SOLICITAÇÕES NO BACK-END
     async function carregarSolicitacoes() {
-          const endpoint = 'http://localhost:3333/organizacoes/todas';
+        const endpoint = 'http://localhost:3333/clinicas/listar';
 
         try {
             const resposta = await fetch(endpoint);
@@ -35,114 +35,105 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
-    // 3. FUNÇÃO PARA RENDERIZAR OS CARDS NA TELA
-   function renderizarSolicitacoes(solicitacoes) {
-    console.log("Renderizando as seguintes solicitações:", solicitacoes);
-    container.innerHTML = ''; 
+    // 3. RENDERIZA OS CARDS NA TELA 
+    function renderizarSolicitacoes(solicitacoes) {
+        console.log("Renderizando as seguintes solicitações:", solicitacoes);
+        container.innerHTML = '';
 
-    if (solicitacoes.length === 0) {
-        // Faltando colocar código de nenhuma solicitação
-        return;
-    }
-
-    solicitacoes.forEach(org => {
-        const card = document.createElement('div');
-        card.className = 'card';
-        card.id = `org-${org.id}`;
-
-        let botoesHtml = '';
-        let statusHtml = '';
-
-        // Lógica para definir os botões e o selo de status
-        switch (org.status) {
-            case 'pendente':
-                statusHtml = '<span class="status status-pendente">Pendente</span>';
-                botoesHtml = `
-                    <button class="btn-aceitar" data-id="${org.id}">Aprovar</button>
-                    <button class="btn-recusar" data-id="${org.id}">Recusar</button>
-                `;
-                break;
-            case 'aprovada':
-                statusHtml = '<span class="status status-aprovada">Aprovada</span>';
-                botoesHtml = `
-                    <button class="btn-recusar" data-id="${org.id}">Revogar</button>
-                `;
-                break;
-            case 'recusada':
-                statusHtml = '<span class="status status-recusada">Recusada</span>';
-                botoesHtml = `
-                    <button class="btn-aceitar" data-id="${org.id}">Re-aprovar</button>
-                `;
-                break;
+        if (solicitacoes.length === 0) {
+            container.innerHTML = `<p class="aviso-msg">Nenhuma solicitação encontrada.</p>`;
+            return;
         }
 
-        card.innerHTML = `
-            <div class="informacoes">
-                <p><b>Nome da Empresa:</b> ${org.nome}</p> 
-                <p><b>Email do Representante:</b> ${org.representante_email || 'Não informado'}</p>
-            </div>
-            <div class="aceitar">
-                <p><b>CNPJ:</b> ${org.cnpj}</p>
-                <div class="status-container">
-                    ${statusHtml}
-                </div>
-                <div class="botoes">
-                    ${botoesHtml}
-                </div>
-            </div>
-        `;
-        
-        container.appendChild(card);
-    });
-}
+        solicitacoes.forEach(org => {
+            const card = document.createElement('div');
+            card.className = 'card';
+            card.id = `org-${org.id}`;
 
-    // 4. FUNÇÃO PARA ATUALIZAR O STATUS (APROVAR/RECUSAR)
-    async function atualizarStatus(idOrganizacao, novoStatus) {
-        const endpoint = `http://localhost:3333/organizacoes/atualizar-status`;
+            let botoesHtml = '';
+            let statusHtml = '';
+
+            switch (org.status) {
+                case 'Pendente':
+                    statusHtml = '<span class="status status-pendente">Pendente</span>';
+                    botoesHtml = `
+                        <button class="btn-aceitar" data-id="${org.id}">Aprovar</button>
+                        <button class="btn-recusar" data-id="${org.id}">Recusar</button>
+                    `;
+                    break;
+                case 'Ativo':
+                    statusHtml = '<span class="status status-aprovada">Ativo</span>';
+                    botoesHtml = `
+                        <button class="btn-recusar" data-id="${org.id}">Inativar</button>
+                    `;
+                    break;
+                case 'Inativo':
+                    statusHtml = '<span class="status status-recusada">Inativo</span>';
+                    botoesHtml = `
+                        <button class="btn-aceitar" data-id="${org.id}">Reativar</button>
+                    `;
+                    break;
+            }
+
+            card.innerHTML = `
+                <div class="informacoes">
+                    <p><b>Nome da Empresa:</b> ${org.nome}</p> 
+                    </div>
+                <div class="aceitar">
+                    <p><b>CNPJ:</b> ${org.cnpj}</p>
+                    <div class="status-container">
+                        ${statusHtml}
+                    </div>
+                    <div class="botoes">
+                        ${botoesHtml}
+                    </div>
+                </div>
+            `;
+            
+            container.appendChild(card);
+        });
+    }
+
+    // 4. ATUALIZA O STATUS DA CLÍNICA NO BD
+    async function atualizarStatus(idClinica, novoStatus) {
+        const endpoint = `http://localhost:3333/clinicas/atualizarStatus/${idClinica}`;
 
         try {
             const resposta = await fetch(endpoint, {
-                method: 'POST',
+                method: 'PUT', 
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ 
-                    idOrganizacao: idOrganizacao, 
-                    novoStatus: novoStatus 
+                    status: novoStatus 
                 })
             });
 
             if (!resposta.ok) {
                 throw new Error('Falha ao atualizar o status.');
             }
-
-            const cardParaRemover = document.getElementById(`org-${idOrganizacao}`);
-            if (cardParaRemover) {
-                cardParaRemover.remove();
-            }
-            
-            if (container.children.length === 0) {
-                renderizarSolicitacoes([]);
-            }
+            //Chama função para recarregar com atualização
+            carregarSolicitacoes();
 
         } catch (erro) {
-            console.error(`Erro ao ${novoStatus} organização:`, erro);
-            alert(`Não foi possível atualizar o status da organização.`);
+            console.error(`Erro ao atualizar status para ${novoStatus}:`, erro);
+            alert(`Não foi possível atualizar o status da clínica.`);
         }
     }
 
-    // 5. GERENCIADOR DE EVENTOS 
+    // 5. EVENTOS
     container.addEventListener('click', (event) => {
         const target = event.target;
         const id = target.dataset.id;
+        if (!id) return;
 
         if (target.classList.contains('btn-aceitar')) {
-            if (confirm(`Deseja realmente APROVAR a organização com ID ${id}?`)) {
-                atualizarStatus(id, 'aprovada');
+            if (confirm(`Deseja realmente ATIVAR a clínica com ID ${id}?`)) {
+                atualizarStatus(id, 'Ativo');
             }
         }
 
         if (target.classList.contains('btn-recusar')) {
-            if (confirm(`Deseja realmente RECUSAR a organização com ID ${id}?`)) {
-                atualizarStatus(id, 'recusada');
+            if (confirm(`Deseja realmente INATIVAR a clínica com ID ${id}?`)) {
+                atualizarStatus(id, 'Inativo');
             }
         }
     });

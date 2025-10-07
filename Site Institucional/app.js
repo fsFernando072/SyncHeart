@@ -16,9 +16,9 @@ var indexRouter = require("./src/routes/index");
 var usuarioRouter = require("./src/routes/usuarios");
 var aprovacaoRouter = require("./src/routes/aprovacao");
 var marcaPassoRouter = require("./src/routes/marcaPassos");
+// == NOVO == //
+const clinicaRoutes = require('./src/routes/clinicas'); 
 
-//novos
-const organizacaoRoutes = require('./src/routes/organizacoes');
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
@@ -31,8 +31,8 @@ app.use("/usuarios", usuarioRouter);
 app.use("/aprovacao", aprovacaoRouter);
 app.use("/marcaPassos", marcaPassoRouter);
 
-//novos
-app.use('/organizacoes', organizacaoRoutes);
+// == NOVO == //
+app.use('/clinicas', clinicaRoutes);
 
 app.listen(PORTA_APP, function () {
     console.log(`

@@ -1,50 +1,48 @@
 var database = require("../database/config");
 
-function criarRepresentante(organizacaoId, nome_completo, email, senha) {
-    // ATENÇÃO!!!!!!!! SENHA SEM CRIPTOGRAFIA IMPLEMENTAR FUTURAMENTE
-    var usuario = email.split('@')[0];
-    var papel = 'representante';
-
+//Cria um novo usuário no banco de dados.
+function criar(nomeCompleto, email, senhaHash, cargoId, clinicaId) {
     var instrucaoSql = `
-        INSERT INTO usuarios (organizacao_id, usuario, email, senha_hash, nome_completo, papel) 
-        VALUES (?, ?, ?, ?, ?, ?);
+        INSERT INTO Usuarios (nome_completo, email, senha_hash, cargo_id, clinica_id) 
+        VALUES (?, ?, ?, ?, ?);
     `;
-    return database.executar(instrucaoSql, [organizacaoId, usuario, email, senha, nome_completo, papel]);
+    return database.executar(instrucaoSql, [nomeCompleto, email, senhaHash, cargoId, clinicaId]);
 }
 
+/*Busca um usuário pelo endereço de e-mail.
+Verifica se o usuário existe e se sua senha coincide com o BD, no processo de login*/
 function buscarPorEmail(email) {
     var instrucaoSql = `
-        SELECT u.*, o.nome as nome_organizacao, o.status as status_organizacao
-        FROM usuarios u
-        LEFT JOIN organizacoes o ON u.organizacao_id = o.id
-        WHERE u.email = ?;
+        SELECT 
+            usuario_id,
+            nome_completo,
+            email,
+            senha_hash,
+            cargo_id,
+            clinica_id 
+        FROM Usuarios WHERE email = ?;
     `;
     return database.executar(instrucaoSql, [email]);
 }
 
-function criarFuncionario(organizacaoId, nome_completo, email, senha, papel) {
-    var usuario = email.split('@')[0];
-
+/*Lista todos os usuários de uma determinada clínica.
+ Útil para a tela de gestão de usuários do administrador da clínica.*/
+function listarPorClinica(idClinica) {
     var instrucaoSql = `
-        INSERT INTO usuarios (organizacao_id, usuario, email, senha_hash, nome_completo, papel) 
-        VALUES (?, ?, ?, ?, ?, ?);
+        SELECT 
+            u.usuario_id,
+            u.nome_completo,
+            u.email,
+            c.nome_cargo 
+        FROM Usuarios u
+        JOIN Cargos c ON u.cargo_id = c.cargo_id
+        WHERE u.clinica_id = ?;
     `;
-    return database.executar(instrucaoSql, [organizacaoId, usuario, email, senha, nome_completo, papel]);
-}
-
-// Lista todos os usuários de uma organização específica
-function listarPorOrganizacao(organizacaoId) {
-    var instrucaoSql = `
-        SELECT id, nome_completo, email, papel, ativo 
-        FROM usuarios 
-        WHERE organizacao_id = ?;
-    `;
-    return database.executar(instrucaoSql, [organizacaoId]);
+    return database.executar(instrucaoSql, [idClinica]);
 }
 
 module.exports = {
-    criarRepresentante,
+    criar,
     buscarPorEmail,
-    criarFuncionario,
-    listarPorOrganizacao
+    listarPorClinica
 };
