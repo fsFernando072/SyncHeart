@@ -1,4 +1,4 @@
-// 1. SELEÇÃO DE ELEMENTOS
+// 1.SELEÇÃO DE ELEMENTOS
 const emailInput = document.getElementById('ipt_email');
 const senhaInput = document.getElementById('ipt_senha');
 const btnLogin = document.getElementById('btn_login');
@@ -6,7 +6,7 @@ const divFeedback = document.getElementById('div_feedback');
 
 let feedbackTimeout;
 
-// 2. FUNÇÃO DE FEEDBACK 
+// 2.FEEDBACK 
 function mostrarFeedback(mensagem, tipo = 'error') {
     clearTimeout(feedbackTimeout);
     divFeedback.textContent = mensagem;
@@ -17,7 +17,7 @@ function mostrarFeedback(mensagem, tipo = 'error') {
     }, 5000);
 }
 
-// 3. FUNÇÃO DE VALIDAÇÃO DOS CAMPOS 
+// 3.VALIDAÇÃO DOS CAMPOS 
 function validarCampos() {
     document.querySelectorAll('.erro').forEach(e => e.remove());
     let erros = 0;
@@ -38,7 +38,7 @@ function validarCampos() {
     return erros === 0;
 }
 
-// 4. FUNÇÃO PRINCIPAL DE LOGIN 
+// 4.FUNÇÃO PRINCIPAL DE LOGIN 
 function login() {
     if (!validarCampos()) {
         return;
@@ -60,43 +60,43 @@ function login() {
     })
     .then(resposta => {
         if (!resposta.ok) {
-            // Se a resposta for 401, 403, etc., o erro será tratado no .catch
-            throw new Error('Credenciais inválidas ou usuário inativo.');
+            return resposta.json().then(erroJson => {
+                throw erroJson;
+            });
         }
         return resposta.json();
     })
     .then(json => {
-        console.log("Resposta do back-end:", json);
-        
-        // Salva os dados do usuário e organização na sessão
-        sessionStorage.setItem("idUsuario", json.dados.usuario.id);
-        sessionStorage.setItem("nomeUsuario", json.dados.usuario.nome);
-        sessionStorage.setItem("emailUsuario", json.dados.usuario.email);
-        sessionStorage.setItem("papelUsuario", json.dados.usuario.papel);
-        sessionStorage.setItem("idOrganizacao", json.dados.organizacao.id);
-        sessionStorage.setItem("nomeOrganizacao", json.dados.organizacao.nome);
-        
+        //console.log("Resposta de sucesso do back-end:", json);
         mostrarFeedback("Login realizado com sucesso! Redirecionando...", 'success');
-
+        sessionStorage.setItem('USUARIO_LOGADO', JSON.stringify(json.dados));
+        
         setTimeout(() => {
-            // Decide para onde redirecionar com base na resposta do back-end
-            if (json.status === "aprovacao") {
-                // Se a organização está pendente, vai para a tela de aguardo
-                window.location = "aguardando_validacao.html";
-            } else if (json.dados.usuario.papel === 'superadmin' || json.dados.usuario.papel === 'suporte') {
-                // Se for um admin da SyncHeart, vai para a tela de aprovações
-                window.location = "solicitacoes.html";
+            if (json.status === "sucesso_admin") {
+                window.location.href = "solicitacoes.html";
             } else {
-                // Para outros papéis (médico, técnico, etc.), vai para o dashboard principal
-                window.location = "dashboard_final.html"; 
+                window.location.href = "dashboard_final.html";
             }
-        }, 2000); // Redireciona após 2 segundos
+        }, 1500);
     })
     .catch(erro => {
+        // O bloco .catch() agora recebe o JSON de erro do backend.
         console.error("Erro no login:", erro);
-        mostrarFeedback("Usuário ou senha inválidos.", 'error');
+
+        // Verifica se a aprovação já foi realizada
+        if (erro.status === "aprovacao_pendente") {
+            mostrarFeedback(erro.mensagem, 'warning'); // Mostra a mensagem de "Aguarde aprovação"
+            setTimeout(() => {
+                // Redireciona para a tela de espera
+                window.location.href = "aguardando_validacao.html"; 
+            }, 2000);
+        } else {
+            // Para todos os outros erros mostra essa mensagem de erro.
+            mostrarFeedback(erro.erro || "Usuário ou senha inválidos.", 'error');
+        }
     })
     .finally(() => {
+        //reativa o botão de login
         btnLogin.disabled = false;
         btnLogin.textContent = 'Entrar';
     });

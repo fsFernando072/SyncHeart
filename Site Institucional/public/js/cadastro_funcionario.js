@@ -5,14 +5,33 @@ document.addEventListener('DOMContentLoaded', () => {
     const nomeInput = document.getElementById('ipt_nome');
     const emailInput = document.getElementById('ipt_email');
     const senhaInput = document.getElementById('ipt_senha');
-    const papelSelect = document.getElementById('sel_papel');
+    const cargoSelect = document.getElementById('sel_cargo');
     const btnCadastrar = document.getElementById('btn_cadastrar');
     const divFeedback = document.getElementById('div_feedback');
+    const containerDireito = document.querySelector('.right');
 
     const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
     let feedbackTimeout;
 
-    // 2. FUNÇÃO DE FEEDBACK 
+    // VERIFICA SE O USUARIO TEM PERMISSAO PARA CADASTRAR FUNCIONARIOS EM "idClinica"
+    function verificarPermissao() {
+        const idClinica = sessionStorage.getItem("idClinica");
+
+      
+        if (!idClinica) {   //Verifica se é o admin que está logado
+            containerDireito.innerHTML = `
+                <div class="aviso-permissao">
+                    <h2>Acesso Negado</h2>
+                    <p>Você está logado como Administrador do Sistema. Apenas usuários vinculados a uma clínica podem cadastrar novos funcionários.</p>
+                    <a href="solicitacoes.html" class="btn-voltar">← Voltar para a tela de aprovações</a>
+                </div>
+            `;
+            return false; // Indica que não tem permissão
+        }
+        return true; // Indica que tem permissão
+    }
+
+    // 2.FEEDBACK
     function mostrarFeedback(mensagem, tipo = 'error') {
         clearTimeout(feedbackTimeout);
         divFeedback.textContent = mensagem;
@@ -23,7 +42,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }, 4000);
     }
 
-    // 3. FUNÇÃO DE VALIDAÇÃO
+    // 3.VALIDAÇÃO DO FORM
     function validarFormulario() {
         document.querySelectorAll('.erro').forEach(e => e.remove());
         let erros = 0;
@@ -41,14 +60,14 @@ document.addEventListener('DOMContentLoaded', () => {
         gerenciarErro(nomeInput, nomeInput.value.trim().length < 2, "Nome inválido.");
         gerenciarErro(emailInput, !emailRegex.test(emailInput.value), "E-mail inválido.");
         gerenciarErro(senhaInput, senhaInput.value.length < 6, "A senha deve ter no mínimo 6 caracteres.");
-        gerenciarErro(papelSelect, papelSelect.value === "", "Selecione um papel.");
+        gerenciarErro(cargoSelect, cargoSelect.value === "", "Selecione um cargo.");
         
         return erros === 0;
     }
 
-    // 4. FUNÇÃO PRINCIPAL DE CADASTRO
+    // 4.CADASTRO DE FUNCIONARIO
     async function cadastrarUsuario(event) {
-        event.preventDefault(); // Impede o recarregamento da página
+        event.preventDefault();
 
         if (!validarFormulario()) {
             mostrarFeedback("Por favor, corrija os erros no formulário.", "error");
@@ -58,19 +77,21 @@ document.addEventListener('DOMContentLoaded', () => {
         btnCadastrar.disabled = true;
         btnCadastrar.textContent = 'Aguarde...';
 
-        //Busca a chave do sessionStorage
-        const idOrganizacao = sessionStorage.getItem("idOrganizacao");
-
-        // Montan o objeto com os nomes para o back-end
-        const dados = {
-            organizacaoId: idOrganizacao,
-            nome_completo: nomeInput.value,
-            email: emailInput.value,
-            senha: senhaInput.value,
-            papel: papelSelect.value
-        };
-
         try {
+            const idClinica = sessionStorage.getItem("idClinica");
+
+            if (!idClinica) {
+                throw new Error("ID da clínica não encontrado. Faça o login novamente.");
+            }
+
+            const dados = {
+                clinicaId: idClinica,
+                nome_completo: nomeInput.value,
+                email: emailInput.value,
+                senha: senhaInput.value,
+                cargoId: cargoSelect.value
+            };
+
             const resposta = await fetch("/usuarios/adicionar", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
@@ -84,7 +105,7 @@ document.addEventListener('DOMContentLoaded', () => {
             }
             
             mostrarFeedback("Funcionário cadastrado com sucesso!", "success");
-            form.reset(); // Limpa o formulário
+            form.reset();
 
         } catch (erro) {
             mostrarFeedback(erro.message, "error");
@@ -94,7 +115,8 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
-    // 5. ADICIONA O EVENTO AO FORMULÁRIO
-    form.addEventListener('submit', cadastrarUsuario);
-
+    // 5. INICIALIZAÇÃO DA PÁGINA
+    if (verificarPermissao()) {
+        form.addEventListener('submit', cadastrarUsuario);
+    }
 });
