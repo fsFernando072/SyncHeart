@@ -78,6 +78,8 @@ async function autenticar(req, res) { //(login)
     }
 }
 
+
+/* Função movida para "clinicaController"
 async function cadastrar(req, res) { //Cadastro de CLINICA (Onboarding)
     const { nome_empresa, cnpj, nome_representante, email, senha } = req.body;
 
@@ -112,6 +114,7 @@ async function cadastrar(req, res) { //Cadastro de CLINICA (Onboarding)
         res.status(500).json({ erro: 'Ocorreu uma falha no servidor ao tentar cadastrar.' });
     }
 }
+    */
 
 // Função para adicionar funcionário
 async function adicionarFuncionario(req, res) {
