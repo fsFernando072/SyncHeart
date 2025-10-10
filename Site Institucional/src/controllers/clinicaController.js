@@ -38,10 +38,10 @@ function atualizarStatus(req, res) {
 // Função de cadastro
 async function cadastrar(req, res) {
     // Coleta de todos os dados do formulário de cadastro
-    var { nomeFantasia, cnpj, emailContato, senha, nomeRepresentante } = req.body;
+    var { nome_empresa, nome_representante, email, senha, cnpj} = req.body;
 
     // Validação básica dos campos
-    if (!nomeFantasia || !cnpj || !emailContato || !senha || !nomeRepresentante) {
+    if (!nome_empresa || !cnpj || !email || !senha || !nome_representante) {
         return res.status(400).send("Dados incompletos! Verifique os campos do formulário.");
     }
 
@@ -49,7 +49,7 @@ async function cadastrar(req, res) {
     var senhaHash = senha; 
     try {
         // Passo 1: Criar a clínica no BD
-        const resultadoClinica = await clinicaModel.criar(nomeFantasia, cnpj, emailContato, senhaHash);
+        const resultadoClinica = await clinicaModel.criar(nome_empresa, cnpj, email, senhaHash);
         
         // passo 2: Pegar o id da clinica que acabou de ser inserida
         const idClinicaCriada = resultadoClinica.insertId;
@@ -59,7 +59,7 @@ async function cadastrar(req, res) {
             //#BE-ALTERACOES
             //Assumindo que o cargo 'Representante' tem o ID = 2 no BD.  - Isso pode ser buscado dinamicamente.
             const cargoRepresentanteId = 2; 
-            await usuarioModel.criar(nomeRepresentante, emailContato, senhaHash, cargoRepresentanteId, idClinicaCriada);
+            await usuarioModel.criar(nome_representante, email, senhaHash, cargoRepresentanteId, idClinicaCriada);
 
             //Se tudo deu certo, envia a resposta de sucesso
             res.status(201).send("Clínica e usuário representante cadastrados com sucesso!");

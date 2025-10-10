@@ -77,7 +77,7 @@ function cadastrar() {
         cnpj: cnpjInput.value
     };
 
-    fetch("/usuarios/cadastrar", {
+    fetch("/clinicas/cadastrar", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(dadosParaEnviar), // Envia o objeto 
