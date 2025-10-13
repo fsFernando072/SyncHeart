@@ -1,4 +1,4 @@
-// 1.SELEÇÃO DE ELEMENTOS
+// 1. SELEÇÃO DE ELEMENTOS
 const emailInput = document.getElementById('ipt_email');
 const senhaInput = document.getElementById('ipt_senha');
 const btnLogin = document.getElementById('btn_login');
@@ -6,7 +6,7 @@ const divFeedback = document.getElementById('div_feedback');
 
 let feedbackTimeout;
 
-// 2.FEEDBACK 
+// 2. FUNÇÃO DE FEEDBACK COMPLETA
 function mostrarFeedback(mensagem, tipo = 'error') {
     clearTimeout(feedbackTimeout);
     divFeedback.textContent = mensagem;
@@ -17,10 +17,14 @@ function mostrarFeedback(mensagem, tipo = 'error') {
     }, 5000);
 }
 
-// 3.VALIDAÇÃO DOS CAMPOS 
+// 3. FUNÇÃO DE VALIDAÇÃO DOS CAMPOS COMPLETA
 function validarCampos() {
+    // Limpa erros anteriores
     document.querySelectorAll('.erro').forEach(e => e.remove());
+    
     let erros = 0;
+    
+    // Validação do e-mail
     if (emailInput.value.trim() === '') {
         const spanErro = document.createElement('span');
         spanErro.classList.add('erro');
@@ -28,6 +32,8 @@ function validarCampos() {
         emailInput.insertAdjacentElement('afterend', spanErro);
         erros++;
     }
+
+    // Validação da senha
     if (senhaInput.value.trim() === '') {
         const spanErro = document.createElement('span');
         spanErro.classList.add('erro');
@@ -35,10 +41,11 @@ function validarCampos() {
         senhaInput.insertAdjacentElement('afterend', spanErro);
         erros++;
     }
+    
     return erros === 0;
 }
 
-// 4.FUNÇÃO PRINCIPAL DE LOGIN 
+// 4. FUNÇÃO PRINCIPAL DE LOGIN COMPLETA
 function login() {
     if (!validarCampos()) {
         return;
@@ -53,56 +60,52 @@ function login() {
     fetch("/usuarios/autenticar", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-            email: emailVar,
-            senha: senhaVar
-        })
+        body: JSON.stringify({ email: emailVar, senha: senhaVar })
     })
     .then(resposta => {
         if (!resposta.ok) {
-            return resposta.json().then(erroJson => {
-                throw erroJson;
-            });
+            return resposta.json().then(erroJson => { throw erroJson; });
         }
         return resposta.json();
     })
     .then(json => {
-        //console.log("Resposta de sucesso do back-end:", json);
-        mostrarFeedback("Login realizado com sucesso! Redirecionando...", 'success');
-        sessionStorage.setItem('USUARIO_LOGADO', JSON.stringify(json.dados));
-        
-        setTimeout(() => {
-            if (json.status === "sucesso_admin") {
-                window.location.href = "solicitacoes.html";
-            } else {
-                window.location.href = "dashboard_final.html";
-            }
-        }, 1500);
+        if (json.status === "sucesso" || json.status === "sucesso_admin") {
+            
+            mostrarFeedback("Login realizado com sucesso! Redirecionando...", 'success');
+
+            // Salva o token e os dados do usuário no session storage
+            sessionStorage.setItem('authToken', json.token);
+            sessionStorage.setItem('USUARIO_LOGADO', JSON.stringify(json.dados));
+            
+            setTimeout(() => {
+                if (json.status === "sucesso_admin") {
+                    window.location.href = "solicitacoes.html";
+                } else {
+                    // Corrigindo o caminho para a pasta dashboard
+                    window.location.href = "./dashboard/dashboard.html";
+                }
+            }, 1500);
+        }
     })
     .catch(erro => {
-        // O bloco .catch() agora recebe o JSON de erro do backend.
         console.error("Erro no login:", erro);
 
-        // Verifica se a aprovação já foi realizada
         if (erro.status === "aprovacao_pendente") {
-            mostrarFeedback(erro.mensagem, 'warning'); // Mostra a mensagem de "Aguarde aprovação"
+            mostrarFeedback(erro.mensagem, 'warning');
             setTimeout(() => {
-                // Redireciona para a tela de espera
                 window.location.href = "aguardando_validacao.html"; 
             }, 2000);
         } else {
-            // Para todos os outros erros mostra essa mensagem de erro.
             mostrarFeedback(erro.erro || "Usuário ou senha inválidos.", 'error');
         }
     })
     .finally(() => {
-        //reativa o botão de login
         btnLogin.disabled = false;
         btnLogin.textContent = 'Entrar';
     });
 }
 
-// Adiciona os eventos de clique e tecla
+// 5. CONFIGURAÇÃO DOS EVENTOS
 btnLogin.addEventListener('click', login);
 senhaInput.addEventListener('keyup', (event) => {
     if (event.key === 'Enter') {

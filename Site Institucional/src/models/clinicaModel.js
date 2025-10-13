@@ -1,7 +1,7 @@
 var database = require("../database/config");
 
 
-//Cria uma nova clínica no banco de dados com status 'Pendente'.
+//Cria uma nova clínica no banco de dados com status 'Pendente'
 function criar(nomeFantasia, cnpj, emailContato, senhaHash) {
     var instrucaoSql = `
         INSERT INTO Clinicas (nome_fantasia, cnpj, email_contato, senha_hash, status) 
@@ -10,9 +10,7 @@ function criar(nomeFantasia, cnpj, emailContato, senhaHash) {
     return database.executar(instrucaoSql, [nomeFantasia, cnpj, emailContato, senhaHash]);
 }
 
-
-//Lista todas as clínicas cadastradas, ordenando por status e data de criação. 
-//Ordenação serve para a tela de aprovação de clinicas pendentes
+// Lista todas as clínicas cadastradas, ordenando por status e data de criação
 function listarTodas() {
     var instrucaoSql = `
         SELECT 
@@ -20,7 +18,7 @@ function listarTodas() {
             nome_fantasia AS nome,
             cnpj,
             status,
-            DATE_FORMAT(data_cadastro, '%d/%m/%Y %H:%i') as data_criacao
+            DATE_FORMAT(criado_em, '%d/%m/%Y %H:%i') as data_criacao
         FROM Clinicas
         ORDER BY
             CASE
@@ -29,7 +27,7 @@ function listarTodas() {
                 WHEN status = 'Inativo' THEN 3
                 ELSE 4
             END,
-            data_cadastro DESC;
+            criado_em DESC;
     `;
     return database.executar(instrucaoSql);
 }
@@ -43,8 +41,7 @@ function atualizarStatus(idClinica, novoStatus) {
     return database.executar(instrucaoSql, [novoStatus, idClinica]);
 }
 
-/*Busca uma clínica específica pelo seu ID.
-Serve para verificar a clínica do usuário na autenticação (LOGIN)*/
+// Busca uma clínica específica pelo seu ID.
 function buscarPorId(idClinica) {
     var instrucaoSql = `SELECT * FROM Clinicas WHERE clinica_id = ?`;
     return database.executar(instrucaoSql, [idClinica]);

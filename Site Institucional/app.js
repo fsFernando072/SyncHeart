@@ -15,9 +15,12 @@ var app = express();
 var indexRouter = require("./src/routes/index");
 var usuarioRouter = require("./src/routes/usuarios");
 var aprovacaoRouter = require("./src/routes/aprovacao");
-var marcaPassoRouter = require("./src/routes/marcaPassos");
+var dispositivoRouter = require("./src/routes/dispositivos");
 // == NOVO == //
 const clinicaRoutes = require('./src/routes/clinicas'); 
+const equipeRouter = require("./src/routes/equipes");
+var modeloRouter = require("./src/routes/modelos");
+
 
 
 app.use(express.json());
@@ -29,10 +32,12 @@ app.use(cors());
 app.use("/", indexRouter);
 app.use("/usuarios", usuarioRouter);
 app.use("/aprovacao", aprovacaoRouter);
-app.use("/marcaPassos", marcaPassoRouter);
+app.use("/dispositivos", dispositivoRouter);
 
 // == NOVO == //
 app.use('/clinicas', clinicaRoutes);
+app.use("/equipes", equipeRouter);
+app.use("/modelos", modeloRouter);
 
 app.listen(PORTA_APP, function () {
     console.log(`
