@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Provisionar Dispositivo - SyncHeart</title>
+    <link rel="stylesheet" href="./css/dashboard.css">
+    <link rel="stylesheet" href="./css/provisionar_dispositivo.css"> 
+    <link href="https://fonts.googleapis.com/css2?family=Lexend:wght@100..900&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="app-container">
+        <nav class="sidebar"> ... </nav>
+
+        <main class="main-content">
+            <header class="page-header">
+                <div class="header-info">
+                    <h1 id="header_title">Provisionar Novo Dispositivo</h1>
+                    <div class="breadcrumb" id="breadcrumb_path"></div>
+                </div>
+                <div class="header-user" id="header_user_info"></div>
+            </header>
+
+            <div class="content-container">
+                <form id="form_provisionamento" class="form-module">
+                    <h2>Dados do Provisionamento</h2>
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label for="input_id_paciente">ID do Paciente na Clínica:</label>
+                            <input type="text" id="input_id_paciente" class="form-input" placeholder="Ex: 789546">
+                            <small>Este é um código interno da clínica, não use dados pessoais.</small>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="select_modelo">Modelo do Dispositivo:</label>
+                            <select id="select_modelo" class="form-input">
+                                <option value="">Carregando modelos...</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="select_equipe">Equipe de Cuidado Responsável:</label>
+                            <select id="select_equipe" class="form-input">
+                                <option value="">Carregando equipes...</option>
+                            </select>
+                        </div>
+                    </div>
+                    <button type="submit" class="btn-submit">Gerar Script de Instalação</button>
+                </form>
+
+                <div id="resultado_provisionamento" class="resultado-module" style="display: none;">
+                    <h3>Script Gerado com Sucesso!</h3>
+                    <p>O script de instalação customizado para este dispositivo está pronto para download.</p>
+                    <a href="#" id="link_download_script" class="btn-primary" download>Baixar Script</a>
+                </div>
+            </div>
+        </main>
+    </div>
+    
+    <div id="div_feedback"></div>
+    <script src="js/provisionar_dispositivo.js"></script>
+</body>
+</html>

@@ -13,25 +13,27 @@ document.addEventListener('DOMContentLoaded', () => {
     const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
     let feedbackTimeout;
 
-    // VERIFICA SE O USUARIO TEM PERMISSAO PARA CADASTRAR FUNCIONARIOS EM "idClinica"
+    // --- FUNÇÃO DE VERIFICAÇÃO DE PERMISSÃO ---
     function verificarPermissao() {
-        const idClinica = sessionStorage.getItem("idClinica");
+        const dadosUsuarioLogado = JSON.parse(sessionStorage.getItem("USUARIO_LOGADO"));
+        const CARGO_ADMIN_CLINICA = 2; // ID do cargo 'Admin da Clínica'
 
-      
-        if (!idClinica) {   //Verifica se é o admin que está logado
+        // Se não há usuário logado ou se o cargo não for o de Admin da Clínica...
+        if (!dadosUsuarioLogado || dadosUsuarioLogado.usuario.cargoId !== CARGO_ADMIN_CLINICA) {
+            // Mostra a mensagem de acesso negado e esconde o formulário.
             containerDireito.innerHTML = `
                 <div class="aviso-permissao">
                     <h2>Acesso Negado</h2>
-                    <p>Você está logado como Administrador do Sistema. Apenas usuários vinculados a uma clínica podem cadastrar novos funcionários.</p>
-                    <a href="solicitacoes.html" class="btn-voltar">← Voltar para a tela de aprovações</a>
+                    <p>Apenas um Administrador da Clínica pode cadastrar novos funcionários.</p>
+                    <a href="dashboard_final.html" class="btn-voltar">← Voltar para o dashboard</a>
                 </div>
             `;
-            return false; // Indica que não tem permissão
+            return false; 
         }
-        return true; // Indica que tem permissão
+        return true; 
     }
 
-    // 2.FEEDBACK
+    // --- FUNÇÃO DE FEEDBACK ---
     function mostrarFeedback(mensagem, tipo = 'error') {
         clearTimeout(feedbackTimeout);
         divFeedback.textContent = mensagem;
@@ -42,7 +44,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }, 4000);
     }
 
-    // 3.VALIDAÇÃO DO FORM
+    // --- FUNÇÃO DE VALIDAÇÃO DO FORMULÁRIO ---
     function validarFormulario() {
         document.querySelectorAll('.erro').forEach(e => e.remove());
         let erros = 0;
@@ -65,9 +67,9 @@ document.addEventListener('DOMContentLoaded', () => {
         return erros === 0;
     }
 
-    // 4.CADASTRO DE FUNCIONARIO
+    // --- FUNÇÃO PRINCIPAL DE CADASTRO DE USUÁRIO ---
     async function cadastrarUsuario(event) {
-        event.preventDefault();
+        event.preventDefault(); 
 
         if (!validarFormulario()) {
             mostrarFeedback("Por favor, corrija os erros no formulário.", "error");
@@ -78,10 +80,12 @@ document.addEventListener('DOMContentLoaded', () => {
         btnCadastrar.textContent = 'Aguarde...';
 
         try {
-            const idClinica = sessionStorage.getItem("idClinica");
+            const dadosUsuarioLogado = JSON.parse(sessionStorage.getItem("USUARIO_LOGADO"));
+            const idClinica = dadosUsuarioLogado.clinica.id;
+            const token = sessionStorage.getItem('authToken');
 
-            if (!idClinica) {
-                throw new Error("ID da clínica não encontrado. Faça o login novamente.");
+            if (!token) {
+                throw new Error("Token de autenticação não encontrado. Faça o login novamente.");
             }
 
             const dados = {
@@ -94,7 +98,10 @@ document.addEventListener('DOMContentLoaded', () => {
 
             const resposta = await fetch("/usuarios/adicionar", {
                 method: "POST",
-                headers: { "Content-Type": "application/json" },
+                headers: { 
+                    "Content-Type": "application/json",
+                    "Authorization": `Bearer ${token}`
+                },
                 body: JSON.stringify(dados),
             });
             
@@ -115,7 +122,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
-    // 5. INICIALIZAÇÃO DA PÁGINA
+    // --- INICIALIZAÇÃO DA PÁGINA ---
     if (verificarPermissao()) {
         form.addEventListener('submit', cadastrarUsuario);
     }

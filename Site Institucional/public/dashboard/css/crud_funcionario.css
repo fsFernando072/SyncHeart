@@ -1,0 +1,325 @@
+.content-container {
+    padding: 30px;
+    display: flex;
+    flex-direction: column;
+    gap: 30px;
+}
+.module-content {
+    min-height: auto; 
+    display: block;   
+    align-items: initial;
+    justify-content: initial;
+}
+.module-container {
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+}
+
+.module-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px 25px;
+    border-bottom: 1px solid #f0f0f0;
+}
+
+.module-header h2 {
+    font-size: 18px;
+    color: #4A154B;
+    margin: 0;
+}
+
+.toggle-btn {
+    background: #f0f0f0;
+    border: none;
+    width: 24px;
+    height: 24px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-weight: bold;
+    color: #888;
+}
+
+.module-content {
+    padding: 25px;
+    transition: all 0.3s ease-out;
+}
+
+/*Minimizar container*/
+.module-content.minimized {
+    height: 0;
+    padding-top: 0;
+    padding-bottom: 0;
+    overflow: hidden;
+    border-top: 1px solid transparent; 
+}
+
+.input-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 20px;
+    margin-bottom: 20px;
+}
+
+.form-group label {
+    display: block;
+    font-size: 14px;
+    color: #555;
+    margin-bottom: 8px;
+}
+
+.form-input {
+    width: 100%;
+    padding: 12px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    font-size: 14px;
+}
+
+.btn-submit {
+    background: #D6166F;
+    color: white;
+    border: none;
+    padding: 12px 30px;
+    border-radius: 8px;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    float: right;
+    transition: background-color 0.3s;
+    margin-bottom: 20px;
+}
+
+.btn-submit:hover {
+    background-color: #b81360;
+}
+
+/* Estilos para a tabela */
+.tabela-dados {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.tabela-dados th, .tabela-dados td {
+    text-align: left;
+    padding: 12px 15px;
+    border-bottom: 1px solid #f0f0f0;
+    vertical-align: middle;
+}
+
+.tabela-dados th {
+    color: #888;
+    font-size: 12px;
+    font-weight: 600;
+    text-transform: uppercase;
+}
+
+.tabela-dados td.acoes {
+    text-align: right;
+}
+
+.btn-acao {
+    padding: 6px 12px;
+    border: 1px solid #ddd;
+    background: #f5f5f5;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 12px;
+    margin-left: 5px;
+}
+.btn-acao:hover {
+    background-color: #e9e9e9;
+}
+
+/* --- Estilos da Toolbar --- */
+.toolbar {
+    margin-bottom: 20px;
+}
+
+.btn-primary {
+    background: #4A154B;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 8px;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+/* --- Estilos do Modal --- */
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.6);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+}
+
+.modal {
+    background: white;
+    width: 90%;
+    max-width: 500px;
+    border-radius: 12px;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+}
+
+.modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px 20px;
+    border-bottom: 1px solid #eee;
+}
+
+.modal-header h2 {
+    font-size: 18px;
+    color: #4A154B;
+    margin: 0;
+}
+
+.modal-close-btn {
+    background: none;
+    border: none;
+    font-size: 24px;
+    cursor: pointer;
+    color: #888;
+}
+
+.modal-body {
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 25px;
+}
+
+.equipes-list-container h4, .equipes-add-container h4 {
+    color: #555;
+    margin-bottom: 10px;
+}
+
+#lista_equipes_ul {
+    list-style: none;
+    padding: 0;
+}
+
+#lista_equipes_ul li {
+    display: flex;
+    justify-content: space-between;
+    padding: 8px 0;
+    border-bottom: 1px solid #f0f0f0;
+}
+
+#form_nova_equipe {
+    display: flex;
+    gap: 10px;
+}
+
+#form_nova_equipe .form-input {
+    flex-grow: 1;
+    margin-bottom: 0;
+}
+
+.btn-submit-small {
+    background: #D6166F;
+    color: white;
+    border: none;
+    padding: 12px 20px;
+    border-radius: 8px;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+/* ============================================ */
+/* ESTILO DE FEEDBACK (TOAST NOTIFICATION)      */
+/* ============================================ */
+#div_feedback {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    z-index: 9999;
+    padding: 16px 24px;
+    border-radius: 8px;
+    font-size: 1rem;
+    color: white;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    opacity: 0;
+    transform: translateX(100%);
+    visibility: hidden;
+    transition: all 0.4s ease;
+}
+
+#div_feedback.show {
+    opacity: 1;
+    transform: translateX(0);
+    visibility: visible;
+}
+
+#div_feedback.success {
+    background-color: #28a745; /* Verde para sucesso */
+}
+
+#div_feedback.error {
+    background-color: #dc3545; /* Vermelho para erro */
+}
+
+
+
+/* Animação de "pulso" */
+@keyframes pulse-glow {
+    0% {
+        box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+    }
+    50% {
+        box-shadow: 0 4px 20px rgba(214, 22, 111, 0.4); /
+    }
+    100% {
+        box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+    }
+}
+
+/* Classe que ativa o modo de edição */
+.module-container.edit-mode {
+    border: 2px solid #D6166F; 
+    animation: pulse-glow 1.5s ease-in-out;
+}
+
+
+.form-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+    margin-top: 10px;
+}
+.btn-secondary {
+    background: #f0f0f0;
+    color: #555;
+    border: 1px solid #ddd;
+    padding: 12px 30px;
+    border-radius: 8px;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+}
+.btn-secondary:hover {
+    background: #e0e0e0;
+}
+
+/* --- Estilos para a Linha de Usuário Inativo --- */
+.tabela-dados tr.inativo td {
+    color: #aaa;
+    text-decoration: line-through;
+}
+
+.tabela-dados tr.inativo .btn-acao {
+    background-color: #f0f0f0;
+    cursor: not-allowed;
+    border-color: #eee;
+}
