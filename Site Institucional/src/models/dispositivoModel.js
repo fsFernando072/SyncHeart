@@ -1,5 +1,3 @@
-// Arquivo: models/dispositivoModel.js
-
 var database = require("../database/config");
 
 /**

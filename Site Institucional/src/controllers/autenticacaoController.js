@@ -1,5 +1,3 @@
-// Arquivo: controllers/autenticacaoController.js
-
 const clinicaModel = require('../models/clinicaModel');
 const usuarioModel = require('../models/usuarioModel');
 const jwt = require('jsonwebtoken');

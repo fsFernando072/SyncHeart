@@ -1,5 +1,3 @@
-// Arquivo: routes/modeloRoutes.js
-
 var express = require('express');
 var router = express.Router();
 var modeloController = require('../controllers/modeloController');

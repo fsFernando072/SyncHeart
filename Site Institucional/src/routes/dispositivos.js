@@ -1,5 +1,3 @@
-// Arquivo: routes/dispositivoRoutes.js
-
 var express = require('express');
 var router = express.Router();
 var dispositivoController = require('../controllers/dispositivoController');

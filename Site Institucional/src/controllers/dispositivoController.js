@@ -1,5 +1,3 @@
-// Arquivo: controllers/dispositivoController.js
-
 const dispositivoModel = require("../models/dispositivoModel");
 const { v4: uuidv4 } = require('uuid'); // Para gerar o UUID do dispositivo
 const crypto = require('crypto'); // Para gerar o token de registro seguro
