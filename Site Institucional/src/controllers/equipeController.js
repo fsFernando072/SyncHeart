@@ -1,5 +1,3 @@
-// Arquivo: controllers/equipeController.js
-
 var equipeModel = require("../models/equipeModel");
 
 

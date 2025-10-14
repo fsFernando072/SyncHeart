@@ -1,5 +1,3 @@
-// Arquivo: src/routes/usuarios.js
-
 var express = require('express');
 var router = express.Router();
 var autenticacaoController = require('../controllers/autenticacaoController');
@@ -23,10 +21,8 @@ router.get('/:idUsuario', authMiddleware.verificarAdminClinica, autenticacaoCont
 // Rota para ATUALIZAR os dados de um funcionário 
 router.put('/:idUsuario', authMiddleware.verificarAdminClinica, autenticacaoController.atualizar);
 
-/**
- * Rota para INATIVAR um funcionário (exclusão lógica).
- * Ex: PUT /usuarios/15/inativar
- */
+
+// Rota para DESATIVAR um funcionário 
 router.put('/:idUsuario/inativar', authMiddleware.verificarAdminClinica, autenticacaoController.inativar);
 
 
