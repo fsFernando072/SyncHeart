@@ -31,7 +31,7 @@ document.addEventListener('DOMContentLoaded', () => {
             document.body.innerHTML = `<div style="text-align: center; padding: 50px;"><h2>Acesso Negado</h2><p>Apenas um Eletrofisiologista pode provisionar novos dispositivos.</p><a href="dashboard.html">← Voltar</a></div>`;
             return;
         }
-        
+
         // Preenche o cabeçalho
         document.getElementById('header_user_info').innerHTML = `<div class="user-info"><span class="user-name">${dadosUsuarioLogado.usuario.nome}</span><span class="user-email">${dadosUsuarioLogado.usuario.email}</span></div>`;
         document.getElementById('breadcrumb_path').textContent = dadosUsuarioLogado.clinica.nome;

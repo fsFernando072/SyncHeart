@@ -1,0 +1,581 @@
+/* ======================================================= */
+/* ARQUIVO DE ESTILO FINAL PARA O DASHBOARD - SYNC-HEART   */
+/* ======================================================= */
+
+/* --- 0. VARIÁVEIS GLOBAIS DE LARGURA --- */
+:root {
+  --sidebar-width: 90px;
+  /* largura da barra de ícones (fixa) */
+  --device-list-width: 340px;
+  /* espaço entre device-list e dashboard */
+  --app-padding-top: 12px;
+  /* distância do topo (para posicionamento na viewport) */
+  --gap-left: 18px;
+  --header-height: 76px;
+  /* altura do header */
+}
+
+/* --- 1. RESET E GERAL --- */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'Lexend', sans-serif;
+  background-color: #f4f7fa;
+  color: #3b3b3b;
+  height: 100vh;
+  overflow: hidden;
+}
+
+/* --- 2. LAYOUT PRINCIPAL (container) --- */
+.app-container {
+  display: flex;
+  height: 100vh;
+  /* necessário para posicionamento absoluto dos painéis */
+}
+
+/* --- 3. BARRA LATERAL (SIDEBAR) */
+.sidebar {
+  width: var(--sidebar-width);
+  /* min-width: var(--sidebar-width); */
+  background: linear-gradient(180deg, #412051 0%, #9b4b7e 100%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
+  transition: width 0.3s;
+  position: fixed;
+  height: 100vh;
+  z-index: 30;
+}
+
+/* Ajustes de blocos dentro da sidebar */
+.sidebar-top,
+.sidebar-bottom {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 15px;
+  margin-top: 20px;
+  margin-bottom: 20px;
+}
+
+/* Ícones/itens da sidebar */
+.nav-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 65px;
+  height: 65px;
+  border-radius: 12px;
+  cursor: pointer;
+  color: white;
+  text-decoration: none;
+  transition: background-color 0.2s, transform 0.12s;
+}
+
+.nav-item:hover {
+  background-color: rgba(255, 255, 255, 0.06);
+}
+
+.nav-item.active {
+  background-color: #D6166F;
+}
+
+.logo-item {
+  margin-bottom: 10px;
+}
+
+.nav-icon {
+  width: 28px;
+  height: 28px;
+  margin-bottom: 5px;
+}
+
+.nav-icon svg {
+  width: 100%;
+  height: 100%;
+}
+
+.nav-label {
+  font-size: 11px;
+  font-weight: 500;
+  line-height: 1.2;
+  text-align: center;
+}
+
+/* --- 4. LISTA DE DISPOSITIVOS: posicionada fixa imediatamente à direita da .sidebar --- */
+/* ======================================================= */
+/* 4. LISTA DE DISPOSITIVOS (versão reescrita completa)   */
+/* - fixa à direita da sidebar                             */
+/* - tabela com thead alinhado ao tbody (columns fixas)    */
+/* - tbody rolável, linhas estilo "cards", hover, selected */
+/* ======================================================= */
+
+/* wrapper fixo ao lado da sidebar */
+.sidebar-list-devices {
+  position: fixed;
+  /* alinha imediatamente à direita da sidebar (ajuste se sidebar.left mudar) */
+  left: calc(var(--sidebar-width) + 12px);
+  top: calc(var(--header-height) + 8px);
+  width: var(--device-list-width);
+  height: calc(100vh - (var(--header-height) + 28px));
+  padding: 12px;
+  z-index: 45;
+  -webkit-overflow-scrolling: touch;
+}
+
+/* card visual que envolve a tabela */
+.device-table {
+  width: 100%;
+  background: linear-gradient(180deg, #ffffff 0%, #fbfbff 100%);
+  border: 2px solid rgba(218,180,198,0.25);
+  border-radius: 12px;
+  box-shadow: 0 8px 28px rgba(36,18,36,0.06);
+  overflow: hidden;
+  /* Use table layout fixed to allow consistent column widths */
+  table-layout: fixed;
+  border-collapse: collapse;
+}
+
+/* THEAD: visual e alinhamento */
+.device-table thead {
+  display: table;
+  width: 100%;
+  table-layout: fixed;
+  background: transparent;
+}
+.device-table thead th {
+  padding: 12px 14px;
+  font-weight: 700;
+  color: #4a154b;
+  font-size: 13px;
+  text-align: left;
+  border-bottom: 1px solid rgba(218,180,198,0.28);
+}
+
+/* definir larguras fixas para colunas (ajuste se precisar) */
+.device-table th.col-device,
+.device-table td.col-device { width: calc(100% - 160px); }
+.device-table th.col-batt,
+.device-table td.col-batt { width: 90px; text-align:center; }
+.device-table th.col-alerts,
+.device-table td.col-alerts { width: 70px; text-align:center; }
+
+/* TBODY rolável - usamos display:block para controlar altura e scroll */
+.device-table tbody {
+  display: block;
+  width: 100%;
+  max-height: calc(100vh - (var(--header-height) + 180px)); /* ajusta conforme espaço disponível */
+  overflow-y: auto;
+  padding: 10px 8px;
+  box-sizing: border-box;
+}
+
+/* Cada linha do corpo renderizada como "row" (visualmente card) */
+/* usamos display: table para manter alinhamento com thead via table-layout */
+.device-table tbody tr {
+  display: table;
+  table-layout: fixed;
+  width: 100%;
+  margin-top: 10px;
+  background: #fff;
+  border-radius: 10px;
+  transition: transform .12s ease, background .12s ease, box-shadow .12s ease;
+  border: 1px solid rgba(0,0,0,0.02);
+  box-shadow: 0 6px 18px rgba(34,20,45,0.02);
+  cursor: pointer;
+}
+
+/* célulars mantêm o comportamento de tabela para alinharem com o thead */
+.device-table tbody tr td {
+  display: table-cell;
+  vertical-align: middle;
+  padding: 12px 14px;
+  box-sizing: border-box;
+}
+
+/* hover suave */
+.device-table tbody tr:hover {
+  background: rgba(246,225,235,0.55);
+  box-shadow: 0 10px 28px rgba(214,22,111,0.06);
+}
+
+/* estado selecionado */
+.device-table tbody tr.selected {
+  background: rgba(246,225,235,0.95);
+  box-shadow: 0 10px 28px rgba(214,22,111,0.08);
+  border-left: 6px solid #d6166f;
+}
+
+/* primeira coluna: empilha código do dispositivo + paciente */
+.device-table td.col-device {
+  padding-top: 10px;
+  padding-bottom: 10px;
+}
+.codigo-dispositivo {
+  display:block;
+  font-weight:700;
+  color:#3f2140;
+  font-size:14px;
+}
+.codigo-paciente {
+  display:block;
+  font-size:12px;
+  color:#9a8393;
+  margin-top:6px;
+}
+
+/* coluna bateria - badge centralizado */
+.device-table td.col-batt { text-align:center; vertical-align: middle; }
+.device-batt {
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  min-width:64px;
+  padding:8px 10px;
+  background:#fff;
+  color:#d6166f;
+  font-weight:800;
+  border-radius:8px;
+  border:1px solid rgba(214,22,111,0.06);
+  box-shadow: 0 6px 16px rgba(214,22,111,0.03);
+}
+
+/* coluna alertas - badge circular */
+.device-table td.col-alerts { text-align:center; vertical-align: middle; }
+.device-alerts {
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  min-width:42px;
+  padding:8px 10px;
+  background:#fff0f5;
+  color:#d6166f;
+  font-weight:800;
+  border-radius:18px;
+  border:1px solid rgba(214,22,111,0.06);
+}
+
+/* foco por teclado (acessibilidade) */
+.device-table tbody tr:focus {
+  outline: 3px solid rgba(214,22,111,0.10);
+  outline-offset: 2px;
+}
+
+/* botão oval vazio no rodapé (igual ao mock) */
+.device-list-empty-btn {
+  margin: 14px auto 6px auto;
+  height: 36px;
+  width: calc(100% - 24px);
+  max-width: 260px;
+  border-radius: 22px;
+  background: linear-gradient(180deg,#3a1337,#38162e);
+  box-shadow: inset 0 -8px 18px rgba(0,0,0,0.25);
+}
+
+/* ajuste para telas muito baixas */
+@media (max-height: 700px) {
+  .device-table tbody { max-height: 300px; }
+  .device-list-empty-btn { max-width: 220px; height: 32px; }
+}
+
+/* responsivo: em telas estreitas empilha as células (cada linha vira card vertical) */
+@media (max-width: 900px) {
+  .sidebar-list-devices {
+    position: static;
+    width: 100%;
+    margin: 8px 12px;
+    height: auto;
+    top: auto;
+  }
+
+  .device-table thead { display: none; }
+  .device-table tbody { display:block; max-height:none; overflow: visible; padding: 6px; }
+
+  .device-table tbody tr {
+    display: block;
+    margin: 10px 4px;
+    padding: 12px;
+  }
+
+  .device-table tbody tr td {
+    display: block;
+    padding: 8px 10px;
+  }
+
+  .device-batt, .device-alerts { display:inline-block; margin-right:8px; }
+  .device-list-empty-btn { max-width: 100%; margin-left: 12px; margin-right: 12px; }
+}
+
+/* --- 5. ÁREA PRINCIPAL (dashboard-container) --- */
+
+.main-content {
+  position: relative;
+  margin-left: calc(var(--sidebar-width) + var(--device-list-width) + 24px);
+  padding-top: calc(var(--header-height) + 24px);
+  display: flex;
+  flex-direction: column;
+  height: calc(100vh - var(--header-height));
+  overflow-y: auto;
+  background-color: #f4f7fa;
+  z-index: 5;
+}
+
+/* container do conteúdo do dashboard */
+.dashboard-container {
+  flex: 1;
+  padding: 20px 30px;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  box-sizing: border-box;
+  z-index: 5;
+}
+
+/* título e breadcrumb */
+.page-header {
+  position: fixed;
+  left: var(--sidebar-width);
+  right: 0;
+  top: 0;
+  height: var(--header-height);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  /* alinha o conteúdo com a área do dashboard */
+  padding-right: 22px;
+  padding: 20px 30px;
+  background: white;
+  box-shadow: 0 6px 20px rgba(44, 19, 39, 0.06);
+  z-index: 20;
+}
+
+.page-header h1 {
+  margin: 0;
+  font-size: 26px;
+  color: #4A154B;
+}
+
+.header-info {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.user-info {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+}
+
+.breadcrumb {
+  color: #412051;
+  font-size: 18px;
+  margin: 6px 0 18px 0;
+}
+
+/* --- 6. RESTANTE DOS ESTILOS (mantive os seus estilos originais para módulos/KPIs) --- */
+/* KPIs (mini cards) */
+.mini-kpis {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 12px;
+  margin-top: 8px;
+}
+
+.mini-kpi {
+  background: #fff;
+  border-radius: 8px;
+  padding: 12px;
+  text-align: left;
+  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.04);
+  border: 1px solid #f1e5ec;
+}
+
+.mini-label {
+  font-size: 12px;
+  color: #7d6a7d;
+  margin-bottom: 6px;
+}
+
+.mini-value {
+  font-size: 20px;
+  font-weight: 800;
+  color: #412051;
+}
+
+/* Grid principal (mantém espaçamento vertical entre os grupos) */
+.dashboard-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 24px;
+}
+
+/* top-row e middle-row: normalmente contém 2 módulos que devem ficar lado-a-lado */
+.top-row,
+.middle-row {
+  display: flex;
+  flex-direction: row;
+  gap: 16px;
+  align-items: stretch;
+  width: 100%;
+}
+
+/* side-column: contém 3 módulos que devem ficar lado-a-lado */
+.bottom-row {
+  display: flex;
+  flex-direction: row;
+  gap: 16px;
+  align-items: stretch;
+  width: 100%;
+}
+
+/* cada módulo dentro das colunas passa a ser flexível e dividir o espaço igualmente */
+.dashboard-module {
+  flex: 1 1 0;
+  /* crescer igualmente, encolher se necessário */
+  min-width: 0;
+  /* importante para permitir encolher dentro do flexbox */
+  background: white;
+  padding: 20px;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+  display: flex;
+  flex-direction: column;
+}
+
+/* garante que a área do canvas preencha o módulo e mantenha alturas consistentes */
+.module-content {
+  flex: 1 1 auto;
+  min-height: 130px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 30;
+}
+
+/* ajuste para os títulos manterem o espaçamento no layout horizontal */
+.dashboard-module h2 {
+  margin: 0 0 12px 0;
+  font-size: 18px;
+}
+
+/* --- RESPONSIVIDADE: em telas pequenas revertendo para coluna (mantive suas regras) --- */
+@media (max-width: 1100px) {
+  .dashboard-grid {
+    grid-template-columns: 1fr;
+    gap: 14px;
+  }
+
+  /* empilha módulos em vez de linha */
+  .top-row,
+  .middle-row,
+  .bottom-row {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    width: 100%;
+  }
+}
+
+/* TABELA / EVENTOS */
+/* EVENTS */
+.events-card {
+  background: white;
+  margin-top: 20px;
+  margin-bottom: 20px;
+  padding: 20px;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+  display: flex;
+  /* width: 100%; */
+}
+
+.events-table {
+  width: 100%;
+  border-collapse: collapse
+}
+
+.events-table th {
+  font-size: 13px;
+  color: var(--muted);
+  text-align: left;
+  padding: 10px
+}
+
+.events-table td {
+  padding: 10px;
+  border-top: 1px solid #f3f1f4
+}
+
+/* --- 7. RESPONSIVIDADE: desfaz o posicionamento fixo em telas pequenas --- */
+@media (max-width: 1100px) {
+
+  /* torna o layout em coluna: sidebar em cima e device list em fluxo normal */
+  .app-container {
+    flex-direction: column;
+    height: auto;
+  }
+
+  .sidebar-list-devices {
+    position: static;
+    width: auto;
+    height: auto;
+    margin-top: var(--header-height);
+    margin-bottom: 18px;
+    padding: 0;
+  }
+
+  .device-list {
+    max-height: 320px;
+  }
+
+  .main-content {
+    margin-left: calc(var(--sidebar-width) + 18px);
+    margin-right: 18px;
+  }
+
+  .mini-kpis {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .dashboard-grid {
+    grid-template-columns: 1fr;
+    grid-auto-rows: minmax(140px, auto);
+    gap: 14px;
+  }
+
+  .top-column,
+  .side-column {
+    flex-direction: row;
+    flex-wrap: wrap;
+    gap: 12px;
+  }
+
+  .donut {
+    width: 150px;
+    /* ⬅️ diminui ou aumenta aqui */
+    height: 150px;
+    /* ⬅️ mantém igual à largura para não deformar */
+    margin: 0;
+    /* centraliza o gráfico dentro do módulo */
+    position: relative;
+    /* necessário para o canvas ocupar 100% */
+  }
+
+  .donut canvas {
+    width: 100% !important;
+    height: 100% !important;
+  }
+}
+
+/* --- 8. Ajustes de overflow para evitar barras duplas --- */
+.sidebar-list-devices,
+.main-content {
+  -webkit-overflow-scrolling: touch;
+}
