@@ -135,7 +135,7 @@ span {
 
     color: white;
 
-    height: 9rem;
+    height: fit-content;
 }
 
 .titulo-missao h2 {
@@ -369,6 +369,34 @@ span {
     overflow: hidden;
     box-shadow: var(--shadow);
     transition: var(--transition);
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+    align-items: center;
+    text-align: center;
+    padding: 20px;
+}
+
+.resultado-numero {
+    font-size: clamp(2.5rem, 5vw, 3.5rem);
+    font-weight: 700;
+    background: linear-gradient(135deg, var(--purple), var(--red));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    display: block;
+}
+
+.card-res p {
+    font-size: clamp(1rem, 2.5vw, 1.1rem);
+    color: var(--dark);
+    width: 70%;
+}
+
+.resultado-meta {
+    font-size: clamp(0.8rem, 2vw, 0.9rem);
+    color: var(--purple);
+    font-weight: 500;
 }
 
 .card-res::before {
@@ -528,10 +556,6 @@ span {
     color: white;
     font-size: 1.3rem;
 }
-
-/* .card-beneficio:hover {
-    background: linear-gradient(135deg, #893E86, #D52636);
-} */
 
 .card-beneficio:hover p {
     display: block;
