@@ -30,10 +30,12 @@ document.addEventListener('DOMContentLoaded', () => {
     function iniciarPagina() {
         const dadosUsuarioLogado = JSON.parse(sessionStorage.getItem("USUARIO_LOGADO"));
         const CARGO_ENG_CLINICA = 4;
+    
         if (!dadosUsuarioLogado || dadosUsuarioLogado.usuario.cargoId !== CARGO_ENG_CLINICA) {
             document.body.innerHTML = `<div style="text-align: center; padding: 50px;"><h2>Acesso Negado</h2><p>Apenas um Engenheiro Clínico pode gerenciar os modelos de dispositivos.</p><a href="dashboard.html">← Voltar</a></div>`;
             return;
         }
+    
         
         document.getElementById('header_user_info').innerHTML = `<div class="user-info"><span class="user-name">${dadosUsuarioLogado.usuario.nome}</span><span class="user-email">${dadosUsuarioLogado.usuario.email}</span></div>`;
         document.getElementById('breadcrumb_path').textContent = dadosUsuarioLogado.clinica.nome;
