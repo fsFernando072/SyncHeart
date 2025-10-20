@@ -108,18 +108,11 @@ body {
   text-align: center;
 }
 
-/* --- 4. LISTA DE DISPOSITIVOS: posicionada fixa imediatamente à direita da .sidebar --- */
-/* ======================================================= */
-/* 4. LISTA DE DISPOSITIVOS (versão reescrita completa)   */
-/* - fixa à direita da sidebar                             */
-/* - tabela com thead alinhado ao tbody (columns fixas)    */
-/* - tbody rolável, linhas estilo "cards", hover, selected */
-/* ======================================================= */
+/* --- 4. LISTA DE DISPOSITIVOS --- */
 
 /* wrapper fixo ao lado da sidebar */
 .sidebar-list-devices {
   position: fixed;
-  /* alinha imediatamente à direita da sidebar (ajuste se sidebar.left mudar) */
   left: calc(var(--sidebar-width) + 12px);
   top: calc(var(--header-height) + 8px);
   width: var(--device-list-width);
@@ -320,7 +313,6 @@ body {
   padding-top: calc(var(--header-height) + 24px);
   display: flex;
   flex-direction: column;
-  height: calc(100vh - var(--header-height));
   overflow-y: auto;
   background-color: #f4f7fa;
   z-index: 5;
@@ -536,19 +528,6 @@ body {
 
   .mini-kpis {
     grid-template-columns: repeat(2, 1fr);
-  }
-
-  .dashboard-grid {
-    grid-template-columns: 1fr;
-    grid-auto-rows: minmax(140px, auto);
-    gap: 14px;
-  }
-
-  .top-column,
-  .side-column {
-    flex-direction: row;
-    flex-wrap: wrap;
-    gap: 12px;
   }
 }
 
