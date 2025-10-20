@@ -183,9 +183,3 @@ select * from ModelosAlertaParametros;
 select * from Modelos;
 
 select * from dispositivos;
-
-<<<<<<< HEAD
- 
-=======
- 
->>>>>>> 6a5c74158c696e60431bf745f6ebd7fc4a052859

@@ -520,7 +520,7 @@ body {
     position: static;
     width: auto;
     height: auto;
-    /* margin-top: var(--header-height); */
+    margin-right: 18px;
     margin-bottom: 18px;
     padding: 0;
   }
