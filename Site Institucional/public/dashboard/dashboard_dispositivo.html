@@ -68,7 +68,7 @@
         </div>
         <div class="header-user" id="header_user_info"></div>
       </header>
-      <div class="breadcrumb" id="breadcrumb_path">Clínica A &gt; Modelo Biotronik - Ilivia Neo7 VR-T</div>
+      <div class="breadcrumb" id="breadcrumb_path">Clínica A &gt; Modelo Biotronik A &gt; Ilivia Neo7 VR-T</div>
 
       <!-- LISTA DE DISPOSITIVOS -->
       <!-- <div class="sidebar-list-devices" aria-label="Lista de dispositivos">
@@ -101,7 +101,7 @@
         </ul>
       </div> -->
 
-      <!-- REPLACE: sidebar-list-devices -->
+      <!-- Substituindo: lista de dispositivos em formato de lista para formato de tabela -->
       <div class="sidebar-list-devices" aria-label="Lista de dispositivos">
         <table class="device-table" role="grid" aria-label="Dispositivos do modelo">
           <thead>
@@ -239,36 +239,34 @@
           </div>
 
           <!-- Eventos recentes / Tabela -->
-
+          <section class="card events-card" aria-label="Eventos recentes">
+            <div class="card-header">
+              <h2>Eventos recentes</h2>
+            </div>
+            <table class="events-table" aria-describedby="eventos-desc">
+              <caption id="eventos-desc" style="display:none">Lista de eventos recentes do dispositivo</caption>
+              <thead>
+                <tr>
+                  <th>Horário</th>
+                  <th>Evento</th>
+                  <th>Duração</th>
+                </tr>
+              </thead>
+              <tbody id="eventsBody">
+                <tr>
+                  <td>2025-10-12 03:12</td>
+                  <td>RAM &lt; 90%</td>
+                  <td>5 min</td>
+                </tr>
+                <tr>
+                  <td>2025-10-11 10:45</td>
+                  <td>CPU &gt; 80%</td>
+                  <td>2 min</td>
+                </tr>
+              </tbody>
+            </table>
+          </section>
         </div>
-        <section class="card events-card" aria-label="Eventos recentes">
-          <div class="card-header">
-            <h2>Eventos recentes</h2>
-          </div>
-          <table class="events-table" aria-describedby="eventos-desc">
-            <caption id="eventos-desc" style="display:none">Lista de eventos recentes do dispositivo</caption>
-            <thead>
-              <tr>
-                <th>Horário</th>
-                <th>Evento</th>
-                <th>Duração</th>
-              </tr>
-            </thead>
-            <tbody id="eventsBody">
-              <tr>
-                <td>2025-10-12 03:12</td>
-                <td>Bateria &lt; 20%</td>
-                <td>5 min</td>
-              </tr>
-              <tr>
-                <td>2025-10-11 10:45</td>
-                <td>CPU &gt; 80%</td>
-                <td>2 min</td>
-              </tr>
-            </tbody>
-          </table>
-        </section>
-
 
       </div>
     </main>
