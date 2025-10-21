@@ -3,6 +3,7 @@ create database if not exists sync_heart;
 use sync_heart;
 
 -- ===== TABELAS BASE =====
+
 create table Fabricante (
   id_fabricante int primary key auto_increment,
   nome_fabricante varchar(50),
@@ -15,9 +16,9 @@ create table Fabricante (
 create table Usuario (
   id_usuario int primary key auto_increment,
   nome_usuario varchar(50),
+  cpf_usuario varchar(50),
   email_usuario varchar(50),
   senha_usuario varchar(50),
-  cpf_usuario varchar(50),
   cargo_usuario varchar(50),
   fk_fabricante int,
   foreign key (fk_fabricante) references Fabricante(id_fabricante)
