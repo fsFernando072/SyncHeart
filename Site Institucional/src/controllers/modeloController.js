@@ -3,14 +3,14 @@ var database = require("../database/config");
 
 // --- FUNÇÃO DE CRIAÇÃO DE MODELO ---
 async function criar(req, res) {
-    const { clinicaId, fabricante_id, nome_modelo, vida_util, dimensoes, frequencia_basica, prazo_garantia, tipo_bateria, parametros } = req.body;
+    const { clinica_id, fabricante_id, nome_modelo, vida_util, dimensoes, frequencia_basica, prazo_garantia, tipo_bateria, parametros } = req.body;
 
     if (!fabricante_id || !nome_modelo || !vida_util) {
         return res.status(400).json({ erro: "Campos principais do modelo são obrigatórios." });
     }
 
     try {
-        const resultadoModelo = await modeloModel.criar(clinicaId, fabricante_id, nome_modelo, vida_util, dimensoes, frequencia_basica, prazo_garantia, tipo_bateria);
+        const resultadoModelo = await modeloModel.criar(clinica_id, fabricante_id, nome_modelo, vida_util, dimensoes, frequencia_basica, prazo_garantia, tipo_bateria);
         const novoModeloId = resultadoModelo.insertId;
 
         if (parametros && parametros.length > 0) {
