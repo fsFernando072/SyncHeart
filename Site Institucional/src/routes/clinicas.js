@@ -3,6 +3,9 @@ const router = express.Router();
 
 const clinicaController = require('../controllers/clinicaController');
 
+//Rota para cadastrar a clínica
+router.post('/cadastrar', clinicaController.cadastrar);
+
 //Rota para LISTAR todas as clínicas (para a tela de solicitações)
 router.get('/listar', function (req, res) {
     clinicaController.listarTodas(req, res);
