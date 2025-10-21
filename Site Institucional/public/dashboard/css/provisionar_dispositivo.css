@@ -1,0 +1,111 @@
+.content-container {
+    padding: 30px;
+    max-width: 900px;
+}
+
+.form-module {
+    background: white;
+    padding: 30px;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+}
+
+.form-module h2 {
+    font-size: 18px;
+    color: #4A154B;
+    margin-bottom: 25px;
+    border-bottom: 1px solid #f0f0f0;
+    padding-bottom: 15px;
+}
+
+.form-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 25px;
+}
+
+.form-group label {
+    display: block;
+    font-size: 14px;
+    color: #555;
+    font-weight: 500;
+    margin-bottom: 8px;
+}
+
+.form-group small {
+    font-size: 12px;
+    color: #999;
+    margin-top: 5px;
+}
+
+.form-input {
+    width: 100%;
+    padding: 12px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    font-size: 14px;
+}
+
+.btn-submit {
+    background: #D6166F;
+    color: white;
+    border: none;
+    padding: 15px 40px;
+    border-radius: 8px;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    float: right;
+    margin-top: 20px;
+    transition: background-color 0.3s;
+}
+
+.btn-submit:hover {
+    background-color: #b81360;
+}
+
+.resultado-module {
+    margin-top: 30px;
+    background-color: #e9f7ef;
+    border-left: 5px solid #28a745;
+    padding: 20px;
+    border-radius: 8px;
+}
+.resultado-module h3 {
+    color: #155724;
+    margin-bottom: 10px;
+}
+
+
+/* ============================================ */
+/* ESTILO DE FEEDBACK (TOAST NOTIFICATION)      */
+/* ============================================ */
+#div_feedback {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    z-index: 9999;
+    padding: 16px 24px;
+    border-radius: 8px;
+    font-size: 1rem;
+    color: white;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    opacity: 0;
+    transform: translateX(100%);
+    visibility: hidden;
+    transition: all 0.4s ease;
+}
+
+#div_feedback.show {
+    opacity: 1;
+    transform: translateX(0);
+    visibility: visible;
+}
+
+#div_feedback.success {
+    background-color: #28a745; /* Verde para sucesso */
+}
+
+#div_feedback.error {
+    background-color: #dc3545; /* Vermelho para erro */
+}

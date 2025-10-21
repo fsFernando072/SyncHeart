@@ -285,3 +285,15 @@
           transform: translateY(0);
           box-shadow: 0 6px 20px rgba(137, 62, 134, 0.4);
       }
+      #div_feedback {
+            position: fixed; top: 20px; right: 20px; z-index: 9999;
+            padding: 16px 24px; border-radius: 8px; font-size: 1rem;
+            color: white; box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+            opacity: 0; transform: translateX(100%); visibility: hidden;
+            transition: all 0.4s ease;
+        }
+        #div_feedback.show {
+            opacity: 1; transform: translateX(0); visibility: visible;
+        }
+        #div_feedback.success { background-color: #28a745; }
+        #div_feedback.error { background-color: #dc3545; }
