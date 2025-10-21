@@ -24,8 +24,8 @@
 
 body {
   font-family: 'Lexend', sans-serif;
-  background-color: #f4f7fa;
-  color: #3b3b3b;
+  background-color: #F4F7FA;
+  color: #3B3B3B;
   height: 100vh;
   overflow: hidden;
 }
@@ -41,7 +41,7 @@ body {
 .sidebar {
   width: var(--sidebar-width);
   /* min-width: var(--sidebar-width); */
-  background: linear-gradient(180deg, #412051 0%, #9b4b7e 100%);
+  background: linear-gradient(180deg, #412051 0%, #9B4B7E 100%);
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -130,9 +130,8 @@ body {
   border-radius: 12px;
   box-shadow: 0 8px 28px rgba(36, 18, 36, 0.06);
   overflow: hidden;
-  /* Use table layout fixed to allow consistent column widths */
   table-layout: fixed;
-  border-collapse: collapse;
+  border-collapse: separate;
 }
 
 /* THEAD: visual e alinhamento */
@@ -310,11 +309,12 @@ body {
 .main-content {
   position: relative;
   margin-left: calc(var(--sidebar-width) + var(--device-list-width) + 24px);
-  padding-top: calc(var(--header-height) + 24px);
+  margin-top: calc(var(--header-height) + 24px);
   display: flex;
   flex-direction: column;
   overflow-y: auto;
-  background-color: #f4f7fa;
+  height: calc(100vh - var(--header-height));
+  background-color: #F4F7FA;
   z-index: 5;
 }
 
@@ -366,9 +366,8 @@ body {
 }
 
 .breadcrumb {
-  color: #412051;
-  font-size: 18px;
-  margin: 6px 0 18px 0;
+  color: #4A154B;
+  font-size: 16px;
 }
 
 /* --- 6. RESTANTE DOS ESTILOS (mantive os seus estilos originais para módulos/KPIs) --- */
@@ -406,6 +405,11 @@ body {
   display: flexbox;
   grid-template-columns: 1fr;
   gap: 24px;
+  padding-top: 20px;
+  margin: 30px;
+  padding: 20px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
+;
 }
 
 /* top-row, middle-row e bottom row: contém módulos que devem ficar lado-a-lado */
@@ -455,7 +459,7 @@ body {
 }
 
 /* --- RESPONSIVIDADE: em telas pequenas revertendo para coluna (mantive suas regras) --- */
-@media (max-width: 1100px) {
+@media (max-width: 1000px) {
   .dashboard-grid {
     grid-template-columns: 1fr;
     gap: 14px;
@@ -472,6 +476,12 @@ body {
 }
 
 /* TABELA / EVENTOS */
+hr {
+  margin-top: 12px;
+  border: 2px solid #9B4B7E;
+  border-radius: 4px;
+}
+
 /* EVENTS */
 .events-card {
   background: white;
@@ -500,20 +510,20 @@ body {
 }
 
 /* --- 7. RESPONSIVIDADE: desfaz o posicionamento fixo em telas pequenas --- */
-@media (max-width: 1100px) {
+@media (max-width: 1000px) {
 
   /* torna o layout em coluna: sidebar em cima e device list em fluxo normal */
   .app-container {
     flex-direction: column;
     height: auto;
+
   }
 
   .sidebar-list-devices {
     position: static;
     width: auto;
     height: auto;
-    margin-right: 18px;
-    margin-bottom: 18px;
+    margin: 20px 18px 18px 0;
     padding: 0;
   }
 
@@ -523,16 +533,5 @@ body {
 
   .main-content {
     margin-left: calc(var(--sidebar-width) + 18px);
-    margin-right: 18px;
   }
-
-  .mini-kpis {
-    grid-template-columns: repeat(2, 1fr);
-  }
-}
-
-/* --- 8. Ajustes de overflow para evitar barras duplas --- */
-.sidebar-list-devices,
-.main-content {
-  -webkit-overflow-scrolling: touch;
 }
