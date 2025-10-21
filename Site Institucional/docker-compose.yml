@@ -31,7 +31,7 @@ services:
       MYSQL_PASSWORD: sync_heart100
     volumes:
       - dbdata:/var/lib/mysql
-      - ./src/database/Script-Final.sql:/docker-entrypoint-initdb.d/init.sql
+      - ./src/database/script-tabelas.sql:/docker-entrypoint-initdb.d/init.sql
     ports:
       - "3306:3306"
     networks:
