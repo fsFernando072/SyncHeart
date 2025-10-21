@@ -9,37 +9,20 @@ services:
     restart: always
     ports:
       - "3333:3333"
-    environment:
-      NODE_ENV: production
-      DB_HOST: db
-      DB_USER: aluno
-      DB_PASSWORD: sync_heart100
-      DB_NAME: sync_heart
     depends_on:
       - db
-    networks:
-      - app-network
 
   db:
     image: mysql:8.0.37
     container_name: syncheart_db
     restart: always
     environment:
-      MYSQL_ROOT_PASSWORD: sync_heart100root
-      MYSQL_DATABASE: sync_heart
-      MYSQL_USER: aluno
-      MYSQL_PASSWORD: sync_heart100
+      MYSQL_ROOT_PASSWORD: "SPTech#2024"
+      MYSQL_ROOT_HOST: "%"
+      MYSQL_DATABASE: "syncheart"
+      MYSQL_USER: "heart"
+      MYSQL_PASSWORD: "Sptech#2024"
     volumes:
-      - dbdata:/var/lib/mysql
       - ./src/database/script-tabelas.sql:/docker-entrypoint-initdb.d/init.sql
     ports:
-      - "3306:3306"
-    networks:
-      - app-network
-
-networks:
-  app-network:
-    driver: bridge
-
-volumes:
-  dbdata:
+      - "3307:3306"
