@@ -1,71 +1,90 @@
-var database = require("../database/config")
+var database = require("../database/config");
 
-function cadastrar(nome, email, senha, cnpj) {
+function criar(nomeCompleto, email, senhaHash, cargoId, clinicaId) {
     var instrucaoSql = `
-        INSERT INTO Fabricante (nome_fabricante, email_fabricante, senha_fabricante, cnpj_fabricante,acesso ) VALUES ('${nome}', '${email}', '${senha}', '${cnpj}',0);
+        INSERT INTO Usuarios (nome_completo, email, senha_hash, cargo_id, clinica_id) 
+        VALUES (?, ?, ?, ?, ?);
     `;
-    return database.executar(instrucaoSql);
+    return database.executar(instrucaoSql, [nomeCompleto, email, senhaHash, cargoId, clinicaId]);
 }
 
-function cadastrarAprovado(nomeAprovado, emailAprovado, senhaAprovado) {
+function buscarPorEmail(email) {
     var instrucaoSql = `
-        UPDATE Fabricante SET acesso = 1 WHERE nome_fabricante = '${nomeAprovado}' AND email_fabricante = '${emailAprovado}' AND senha_fabricante = '${senhaAprovado}'
+        SELECT 
+            usuario_id, nome_completo, email, senha_hash, cargo_id, clinica_id 
+        FROM Usuarios WHERE email = ?;
     `;
-    return database.executar(instrucaoSql);
+    return database.executar(instrucaoSql, [email]);
 }
 
-function autenticarFabricante(email, senha) {
+function listarPorClinica(idClinica) {
     var instrucaoSql = `
-        SELECT id_fabricante as Id, email_fabricante as Email, nome_fabricante as Nome, acesso
-        FROM Fabricante 
-        WHERE email_fabricante = '${email}' AND senha_fabricante = '${senha}';
+        SELECT 
+            u.usuario_id, u.nome_completo, u.email, u.ativo, 
+            c.nome_cargo,
+            eq.nome_equipe 
+        FROM Usuarios u
+        JOIN Cargos c ON u.cargo_id = c.cargo_id
+        LEFT JOIN UsuarioEquipe ue ON u.usuario_id = ue.usuario_id
+        LEFT JOIN EquipesCuidado eq ON ue.equipe_id = eq.equipe_id
+        WHERE u.clinica_id = ?;
     `;
-    return database.executar(instrucaoSql);
+    return database.executar(instrucaoSql, [idClinica]);
 }
 
-function autenticarEmpresa(email, senha) {
+function vincularEquipe(usuarioId, equipeId) {
     var instrucaoSql = `
-        SELECT id_UsuarioSyncHeart as Id, nome as Nome, 'empresa' as Tipo
-        FROM Usuario_Syncheart 
-        WHERE email = '${email}' AND senha = '${senha}';
+        INSERT INTO UsuarioEquipe (usuario_id, equipe_id) VALUES (?, ?);
     `;
-    return database.executar(instrucaoSql);
+    return database.executar(instrucaoSql, [usuarioId, equipeId]);
 }
 
-function autenticarUsuario(email, senha) {
+function buscarPorId(usuarioId) {
     var instrucaoSql = `
-        SELECT id_usuario as Id, nome_usuario as Nome, email_usuario as Email
-        FROM Usuario 
-        WHERE email_usuario = '${email}' AND senha_usuario = '${senha}';
+        SELECT 
+            u.usuario_id, u.nome_completo, u.email, u.cargo_id,
+            ue.equipe_id
+        FROM Usuarios u
+        LEFT JOIN UsuarioEquipe ue ON u.usuario_id = ue.usuario_id
+        WHERE u.usuario_id = ?;
     `;
-    return database.executar(instrucaoSql);
+    return database.executar(instrucaoSql, [usuarioId]);
 }
 
-function cadastrarUsuario(nome, cpf, email, senha, fk_fabricante) {
+function atualizar(usuarioId, nomeCompleto, cargoId) {
     var instrucaoSql = `
-        INSERT INTO Usuario (nome_usuario, cpf_usuario, email_usuario, senha_usuario, fk_fabricante) 
-        VALUES ('${nome}', '${cpf}', '${email}', '${senha}', ${fk_fabricante});
+        UPDATE Usuarios 
+        SET nome_completo = ?, cargo_id = ? 
+        WHERE usuario_id = ?;
     `;
-    return database.executar(instrucaoSql);
+    return database.executar(instrucaoSql, [nomeCompleto, cargoId, usuarioId]);
 }
 
-function limpar(idAprovado) {
+function atualizarVinculoEquipe(usuarioId, equipeId) {
     var instrucaoSql = `
-        DELETE FROM Fabricante WHERE id_fabricante = ${idAprovado};
+        INSERT INTO UsuarioEquipe (usuario_id, equipe_id) 
+        VALUES (?, ?)
+        ON DUPLICATE KEY UPDATE equipe_id = ?;
     `;
-    return database.executar(instrucaoSql);
+    return database.executar(instrucaoSql, [usuarioId, equipeId, equipeId]);
 }
 
-function limparUsuario(idAprovado) {
+
+function inativar(usuarioId) {
     var instrucaoSql = `
-        DELETE FROM Usuario WHERE fk_fabricante = ${idAprovado};
+        UPDATE Usuarios SET ativo = 0 WHERE usuario_id = ?;
     `;
-    return database.executar(instrucaoSql);
+    return database.executar(instrucaoSql, [usuarioId]);
 }
+
 
 module.exports = {
-    cadastrar, cadastrarAprovado,
-    autenticarFabricante, autenticarEmpresa,
-    cadastrarUsuario,limpar,limparUsuario,
-    autenticarUsuario
+    criar,
+    buscarPorEmail,
+    listarPorClinica,
+    vincularEquipe,
+    buscarPorId,
+    atualizar,
+    atualizarVinculoEquipe,
+    inativar
 };

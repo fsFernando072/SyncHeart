@@ -1,0 +1,352 @@
+/* ======================================================= */
+/* ARQUIVO DE ESTILO FINAL PARA O DASHBOARD - SYNC-HEART   */
+/* ======================================================= */
+
+/* --- 1. RESET E GERAL --- */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Lexend', sans-serif;
+    background-color: #f4f7fa;
+    color: #3b3b3b;
+    height: 100vh;
+    overflow: hidden;
+}
+
+.app-container {
+    display: flex;
+    height: 100%;
+}
+
+/* --- 2. BARRA LATERAL (SIDEBAR) --- */
+.sidebar {
+    width: 90px;
+ background: linear-gradient(180deg, #412051 0%, #9b4b7e 100%);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-between;
+    padding: 20px 0;
+    transition: width 0.3s;
+}
+
+.sidebar-top, .sidebar-bottom {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 15px;
+}
+
+.nav-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 65px;
+    height: 65px;
+    border-radius: 12px;
+    cursor: pointer;
+    color: white;
+    text-decoration: none;
+    transition: background-color 0.2s;
+}
+
+.nav-item:hover {
+    background-color: rgba(255, 255, 255, 0.1);
+}
+
+.nav-item.active {
+    background-color: #D6166F;
+}
+
+.logo-item {
+    margin-bottom: 10px;
+}
+
+.nav-icon {
+    width: 28px;
+    height: 28px;
+    margin-bottom: 5px;
+}
+
+.nav-icon svg {
+    width: 100%;
+    height: 100%;
+}
+
+.nav-label {
+    font-size: 11px;
+    font-weight: 500;
+    line-height: 1.2;
+    text-align: center;
+}
+
+/* --- 3. CONTEÚDO PRINCIPAL --- */
+.main-content {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    overflow-y: auto;
+}
+
+.page-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px 30px;
+    background: white;
+    border-bottom: 1px solid #e9ecef;
+}
+
+.page-header h1 {
+    margin: 0;
+    font-size: 26px;
+    color: #4A154B;
+}
+
+.breadcrumb {
+    color: #888;
+    font-size: 14px;
+}
+
+.user-info {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+}
+
+.dashboard-container {
+    padding: 30px;
+    flex: 1;
+    position: relative; 
+}
+
+/* --- 4. MÓDULOS DO DASHBOARD --- */
+
+/* KPIs */
+.kpi-line {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 20px;
+    margin-bottom: 30px;
+}
+
+.kpi-card {
+    background: white;
+    padding: 20px;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+    border-left: 5px solid;
+    transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.kpi-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 16px rgba(0,0,0,0.08);
+}
+
+.kpi-card h3 {
+    font-size: 16px;
+    color: #555;
+    margin: 0 0 10px 0;
+    font-weight: 500;
+}
+
+.kpi-card .kpi-value {
+    font-size: 36px;
+    font-weight: 700;
+    color: #333;
+    display: block;
+}
+
+.kpi-card .kpi-description {
+    font-size: 12px;
+    color: #999;
+}
+
+.kpi-card.alert { border-left-color: #e74c3c; }
+.kpi-card.devices { border-left-color: #3498db; }
+.kpi-card.battery { border-left-color: #f1c40f; }
+
+/* Grid Principal e Módulos */
+.dashboard-grid {
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+    gap: 30px;
+}
+
+.main-column, .side-column {
+    display: flex;
+    flex-direction: column;
+    gap: 30px;
+}
+
+.dashboard-module {
+    background: white;
+    padding: 25px;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+}
+
+.dashboard-module h2 {
+    font-size: 18px;
+    color: #4A154B;
+    margin-bottom: 20px;
+}
+
+.module-content {
+    min-height: 150px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* Tabela de Modelos em Destaque */
+.destaque-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 25px;
+    width: 100%;
+}
+
+.destaque-coluna h4 {
+    font-size: 14px;
+    color: #888;
+    margin-bottom: 15px;
+    border-bottom: 1px solid #eee;
+    padding-bottom: 10px;
+}
+
+.destaque-lista {
+    list-style: none;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.destaque-lista li {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 14px;
+}
+
+.modelo-nome {
+    font-weight: 500;
+    color: #333;
+}
+
+.modelo-valor {
+    font-size: 13px;
+    color: #999;
+    background-color: #f5f5f5;
+    padding: 3px 8px;
+    border-radius: 5px;
+}
+
+
+/* --- 5. WIDGET DE AÇÕES RÁPIDAS (CELULAR) --- */
+.mobile-section {
+    position: fixed; /* Posição fixa na tela */
+    right: 30px;
+    bottom: 20px;
+    transition: transform 0.5s ease-in-out;
+    z-index: 100;
+}
+
+/* Animação de esconder/mostrar */
+.mobile-section.hidden {
+    transform: translateY(calc(100% - 30px));
+}
+
+.phone-mockup {
+    width: 280px;
+    height: 500px;
+    background: #333;
+    border-radius: 25px;
+    padding: 10px;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+}
+
+.phone-screen {
+    width: 100%;
+    height: 100%;
+    background: white;
+    border-radius: 15px;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+}
+
+.phone-header {
+    height: 30px;
+    background: #333;
+    position: relative;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.phone-toggle-icon {
+    color: white;
+    font-size: 16px;
+    transition: transform 0.3s;
+}
+
+.mobile-section.hidden .phone-toggle-icon {
+    transform: rotate(180deg);
+}
+
+.phone-content {
+    flex: 1;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+}
+
+.phone-content h3 {
+    color: #4A154B;
+    font-size: 18px;
+    margin-bottom: 20px;
+    text-align: center;
+    font-weight: 600;
+}
+
+.action-buttons {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.action-btn {
+    background: #D6166F;
+    color: white;
+    border: none;
+    padding: 15px 20px;
+    border-radius: 8px;
+    font-size: 14px;
+    line-height: 1.4;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    text-align: center;
+    text-decoration: none;
+    display: block;
+}
+
+.action-btn:hover {
+    background: #b81360;
+    transform: translateY(-2px);
+}
+
+.no-actions {
+    color: #999;
+    font-size: 14px;
+    text-align: center;
+    margin-top: 20px;
+}

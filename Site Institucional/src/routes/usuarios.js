@@ -1,30 +1,29 @@
-var express = require("express");
+var express = require('express');
 var router = express.Router();
+var autenticacaoController = require('../controllers/autenticacaoController');
+const authMiddleware = require('../middleware/authMiddleware');
 
-var usuarioController = require("../controllers/usuarioController");
+// Rota de cadastro geral 
+router.post('/cadastrar', autenticacaoController.cadastrar);
 
-router.post("/cadastrar", function (req, res) {
-    usuarioController.cadastrar(req, res);
-})
+// Rota de login 
+router.post('/autenticar', autenticacaoController.autenticar);
 
-router.post("/cadastrarAprovado", function (req, res) {
-    usuarioController.cadastrarAprovado(req, res);
-})
+// Rota para adicionar um novo funcionário 
+router.post('/adicionar', authMiddleware.verificarAdminClinica, autenticacaoController.adicionarFuncionario);
 
-router.post("/autenticar", function (req, res) {
-    usuarioController.autenticar(req, res);
-})
+// Rota para listar todos os funcionários de uma clínica 
+router.get('/por-clinica/:idClinica', authMiddleware.verificarAdminClinica, autenticacaoController.listarPorClinica);
 
-router.post("/limpar", function (req, res) {
-    usuarioController.limpar(req, res);
-})
+// Rota para BUSCAR os dados de um único funcionário pelo ID 
+router.get('/:idUsuario', authMiddleware.verificarAdminClinica, autenticacaoController.buscarPorId);
 
-router.post("/cadastrarUsuario", function (req, res) {
-    usuarioController.cadastrarUsuario(req, res);
-});
+// Rota para ATUALIZAR os dados de um funcionário 
+router.put('/:idUsuario', authMiddleware.verificarAdminClinica, autenticacaoController.atualizar);
 
-router.post("/limparUsuario", function (req, res) {
-    usuarioController.limparUsuario(req, res);
-});
+
+// Rota para DESATIVAR um funcionário 
+router.put('/:idUsuario/inativar', authMiddleware.verificarAdminClinica, autenticacaoController.inativar);
+
 
 module.exports = router;

@@ -1,0 +1,119 @@
+.content-container { 
+    padding: 30px; 
+}
+.form-grid { 
+    display: grid; 
+    grid-template-columns: 2fr 1fr; 
+    gap: 30px; 
+    margin-bottom: 30px; 
+}
+.form-column-main, .form-column-side { 
+    display: flex; 
+    flex-direction: column; 
+    gap: 30px;
+ }
+.form-module { 
+    background: white; 
+    padding: 25px; 
+    border-radius: 12px;
+     box-shadow: 0 4px 12px rgba(0,0,0,0.05); 
+    }
+.form-module h2 { 
+    font-size: 18px; 
+    color: #4A154B; 
+    margin-bottom: 20px; }
+.form-input { 
+    width: 100%; 
+    padding: 12px; 
+    border: 1px solid #ddd;
+     border-radius: 8px; 
+     font-size: 14px; 
+     margin-bottom: 10px; }
+.info-grid { 
+    display: grid; 
+    grid-template-columns: 1fr 1fr;
+     gap: 20px; }
+.form-group label { 
+    display: block; 
+    font-size: 14px; 
+    color: #555; 
+    margin-bottom: 8px; }
+.btn-submit { 
+    background: #D6166F; 
+    color: white; 
+    border: none; 
+    padding: 15px; 
+    border-radius: 8px; 
+    font-size: 16px; 
+    font-weight: 600; 
+    cursor: pointer; 
+    width: 100%; }
+.list-module { 
+    background: white; 
+    padding: 25px; 
+    border-radius: 12px; 
+    box-shadow: 0 4px 12px rgba(0,0,0,0.05); }
+.tabela-dados { 
+    width: 100%;
+     border-collapse: 
+     collapse; }
+.tabela-dados th, .tabela-dados td { 
+    text-align: left;
+    padding: 12px 15px; 
+    border-bottom: 1px solid #f0f0f0; }
+.tabela-dados th { 
+    color: #888; 
+    font-size: 12px; 
+    font-weight: 600; 
+    text-transform: uppercase; }
+
+/* --- ESTILOS PARA O CONSTRUTOR DE PARAMETROS --- */
+.rule-builder-form { 
+    display: flex; 
+    flex-wrap: wrap; 
+    align-items: center; 
+    gap: 8px; 
+    background-color: #f9f9f9; 
+    padding: 15px; 
+    border-radius: 8px; }
+.rule-builder-form span { font-size: 14px; color: #555; }
+.form-input-small { padding: 8px; border: 1px solid #ddd; border-radius: 6px; font-size: 14px; }
+.btn-add-rule { background: #28a745; color: white; border: none; width: 36px; height: 36px; border-radius: 8px; font-size: 20px; font-weight: bold; cursor: pointer; }
+#regras_criadas_container { margin-bottom: 10px; }
+.lista-regras { list-style: none; padding: 0; display: flex; flex-direction: column; gap: 8px; }
+.lista-regras li { display: flex; justify-content: space-between; align-items: center; padding: 10px; background-color: #f0f0f0; border-radius: 5px; font-size: 13px; }
+.btn-remover-regra { background: #e74c3c; color: white; border: none; width: 24px; height: 24px; border-radius: 50%; cursor: pointer; }
+
+
+/* ============================================ */
+/* ESTILO DE FEEDBACK (TOAST NOTIFICATION)      */
+/* ============================================ */
+#div_feedback {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    z-index: 9999;
+    padding: 16px 24px;
+    border-radius: 8px;
+    font-size: 1rem;
+    color: white;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    opacity: 0;
+    transform: translateX(100%);
+    visibility: hidden;
+    transition: all 0.4s ease;
+}
+
+#div_feedback.show {
+    opacity: 1;
+    transform: translateX(0);
+    visibility: visible;
+}
+
+#div_feedback.success {
+    background-color: #28a745; /* Verde para sucesso */
+}
+
+#div_feedback.error {
+    background-color: #dc3545; /* Vermelho para erro */
+}

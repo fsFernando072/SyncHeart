@@ -9,10 +9,7 @@
 </head>
 
 <body>
-    <!--Wrapper geral-->
     <div class="wrapper">
-
-        <!--Header-->
         <div class="header">
             <img src="assets/Logo.png" width="70" alt="Logo SyncHeart">
             <div class="slogan">
@@ -21,25 +18,24 @@
             </div>
         </div>
 
-        <!--Container-->
         <div class="container">
             <div class="right">
                 <button class="btn-voltar" onclick="window.location.href='index.html'">← Voltar</button>
                 <h3>Login</h3>
-                <form>
+                <form onsubmit="return false;">
                     <div class="form-group">
                         <label>Email</label>
-                        <input type="email" placeholder="Digite o email de contato" id="ipt_email" required>
+                        <input type="email" placeholder="Digite o email de contato" id="ipt_email">
                     </div>
                     <div class="form-group">
                         <label>Senha</label>
-                        <input type="password" placeholder="Digite a senha" id="ipt_senha" required>
+                        <input type="password" placeholder="Digite a senha" id="ipt_senha">
                     </div>
                 </form>
 
                 <div class="signup-link">
-                    <button class="signup-btn" href="cadastro.html"><a href="cadastro.html">Ainda não possui
-                            cadastro?</a></button>
+                   <button class="signup-btn" href="cadastro.html"><a href="cadastro.html">Ainda não possui
+                            cadastro?</a></button> 
                 </div>
             </div>
 
@@ -47,51 +43,13 @@
                 <img src="assets/Logo_branco.png" width="150" alt="Logo SyncHeart branco">
                 <h2>Bem-vindo</h2>
                 <img src="assets/logo-escrita.png" width="300" class="logo-escrita" alt="SyncHeart escrito">
-                <button onclick="login()">Entrar</button>
+                <button id="btn_login">Entrar</button>
             </div>
         </div>
     </div>
+    
+    <div id="div_feedback"></div>
 </body>
 
-<script>
-    function login() {
-        var emailVar = ipt_email.value;
-        var senhaVar = ipt_senha.value;
-
-        fetch("/usuarios/autenticar", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({
-                emailServer: emailVar,
-                senhaServer: senhaVar
-            })
-        })
-            .then(resposta => resposta.json())
-            .then(json => {
-                if (json.status === "fabricante") {
-                    sessionStorage.setItem("idFabricante", json.dados.Id);
-                    sessionStorage.setItem("nomeFabricante", json.dados.Nome);
-                    sessionStorage.setItem("emailFabricante", json.dados.Email);
-                    console.log(sessionStorage.setItem("idFabricante", json.dados.Id))
-                    window.location = "dashboard_final.html";
-                } else if (json.status === "aprovacao") {
-                    window.location = "aguardando_validacao.html";
-                } else if (json.status === "empresa") {
-                    window.location = "aprovacao.html";
-                } else if (json.status === "usuario") {
-                    sessionStorage.setItem("nomeUsuario", json.dados.Nome);
-                    sessionStorage.setItem("emailUsuario", json.dados.Email);
-                    window.location = "dashboard_final_usuario.html";
-                } else {
-                    alert("Usuário ou senha inválidos.");
-                }
-            })
-            .catch(erro => {
-                console.log("Erro: ", erro);
-                alert("Erro ao tentar logar.");
-            });
-    }
-
-</script>
-
+<script src="js/login.js"></script>
 </html>
