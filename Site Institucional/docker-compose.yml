@@ -1,0 +1,45 @@
+version: '3.8'
+
+services:
+  web:
+    build:
+      context: . 
+      dockerfile: Dockerfile 
+    container_name: syncheart_server_web
+    restart: always
+    ports:
+      - "3000:3000"
+    environment:
+      NODE_ENV: production
+      DB_HOST: db
+      DB_USER: aluno
+      DB_PASSWORD: sync_heart100
+      DB_NAME: sync_heart
+    depends_on:
+      - db
+    networks:
+      - app-network
+
+  db:
+    image: mysql:8.0.37
+    container_name: syncheart_db
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: sync_heart100root
+      MYSQL_DATABASE: sync_heart
+      MYSQL_USER: aluno
+      MYSQL_PASSWORD: sync_heart100
+    volumes:
+      - dbdata:/var/lib/mysql
+      - ./src/database/Script-Final.sql:/docker-entrypoint-initdb.d/init.sql
+    ports:
+      - "3306:3306"
+    networks:
+      - app-network
+
+networks:
+  app-network:
+    driver: bridge
+
+volumes:
+  dbdata:
