@@ -17,11 +17,11 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // --- FUNÇÃO DE INICIALIZAÇÃO DA PÁGINA ---
     function iniciarDashboard() {
-        const dadosUsuarioLogado = JSON.parse(sessionStorage.getItem("USUARIO_LOGADO"));
-        if (!dadosUsuarioLogado) {
-            window.location.href = "login.html";
-            return;
-        }
+        // const dadosUsuarioLogado = JSON.parse(sessionStorage.getItem("USUARIO_LOGADO"));
+        // if (!dadosUsuarioLogado) {
+        //     window.location.href = "login.html";
+        //     return;
+        // }
 
         const nomeUsuario = dadosUsuarioLogado.usuario.nome;
         const emailUsuario = dadosUsuarioLogado.usuario.email;
