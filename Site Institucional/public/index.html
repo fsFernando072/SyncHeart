@@ -2,248 +2,311 @@
 <html lang="en">
 
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link rel="shortcut icon" href="assets/Logo.png" type="image/x-icon">
-  <link rel="stylesheet" href="css/style.css">
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Lexend:wght@100..900&display=swap" rel="stylesheet">
-  <title>SyncHeart</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Home - SyncHeart</title>
+    <link rel="stylesheet" href="./css/header.css">
+    <link rel="stylesheet" href="./css/body.css">
+    <link rel="stylesheet" href="./css/main.css">
+    <link rel="stylesheet" href="./css/footer.css">
+    <link rel="stylesheet" href="./css/responsividade.css">
 </head>
 
 <body>
-  <div class="container">
-    <!--Navegação-->
-    <div class="nav-bar">
-      <a href="#home" class="nav-logo"></a>
-      <div class="menu-toggle" onclick="toggleMenu()">☰</div>
-      <ul class="links-navegacao">
-        <li><a href="#sobre-nos">Sobre Nós</a></li>
-        <li><a href="#nossa-missao">Nossa Missão</a></li>
-        <li><a href="#nossos-diferenciais">Diferenciais</a></li>
-        <li><a href="#resultados-esperados">Resultados</a></li>
-        <li><a href="#cenario">Cenário</a></li>
-        <li><a href="#beneficios">Benefícios</a></li>
-      </ul>
-      <ul class="links-rota">
-        <li><a href="login.html">Entrar</a></li>
-        <li class="separator"></li>
-        <li><a href="#contato"><button class="btn-contato">Contato</button></a></li>
-      </ul>
-    </div>
+    <header>
+        <section class="container">
+            <nav class="menu">
+                <nav class="menu-responsivo">
+                    <input type="checkbox" name="chk_hamburguer" id="chk_hamburguer" class="check_hamburguer">
 
-    <!--Home-->
-    <div class="home" id="home">
-      <div class="banner">
-        <h1>SyncHeart</h1>
-        <h3>Sincronize sua Saúde</h3>
-      </div>
-    </div>
+                    <section class="hamburguer">
+                        <span></span>
+                        <span></span>
+                        <span></span>
+                    </section>
+                    <ul>
+                        <li><a href="#sobre-nos">Sobre Nós</a></li>
+                        <li><a href="#nossa-missao">Nossa Missão</a></li>
+                        <li><a href="#resultados">Resultados</a></li>
+                        <li><a href="#beneficios">Benefícios</a></li>
+                        <li><a href="#fale-conosco">Fale Conosco</a></li>
+                        <li><a href="login.html">Entrar</a></li>
+                    </ul>
+                </nav>
+                <a href="#home" class="titulo">SYNC<span>HEART</span></a>
+                <ul class="links">
+                    <li>
+                        <a href="#sobre-nos">Sobre Nós</a>
+                    </li>
+                    <li>
+                        <a href="#nossa-missao">Nossa Missão</a>
+                    </li>
+                    <li>
+                        <a href="#resultados">Resultados</a>
+                    </li>
+                    <li>
+                        <a href="#beneficios">Benefícios</a>
+                    </li>
+                    <li>
+                        <a href="#fale-conosco">Fale Conosco</a>
+                    </li>
+                    <li class="btn-entrar">
+                        <a class="entrar" href="login.html">Entrar</a>
+                    </li>
+                </ul>
+            </nav>
+        </section>
+    </header>
 
-    <!--Sobre Nós-->
-    <div class="sobre-nos" id="sobre-nos">
-      <div class="conteudo">
-        <div class="titulo-subtitulo">
-          <h2>Sobre Nós</h2>
-          <h3>Monitorar é <span>nossa paixão</span></h3>
+    <section id="home" class="home">
+        <div class="texto-home">
+            <h1>SyncHeart</h1>
+            <h3>Sincronize sua saúde</h3>
         </div>
-        <div class="info1-sobre-nos">
-          <p style="text-align: justify;">Somos movidos pela paixão em transformar tecnologia em cuidado humano. O SyncHeart nasceu para monitorar de
-            forma contínua e inteligente os componentes internos de marcapassos, garantindo mais segurança, confiança e
-            tranquilidade para pacientes, médicos e fabricantes. Nossa dedicação está em unir ciência, inovação e
-            responsabilidade para salvar vidas.</p>
-        </div>
-        <div class="segunda-div">
-          <div class="info2-sobre-nos">
-            <p style="text-align: justify;">Nossa missão é oferecer soluções inteligentes para que você tenha controle total sobre o que realmente importa. Trabalhamos para simplificar processos, otimizar resultados e garantir segurança, confiabilidade e inovação em cada detalhe.</p>
-          </div>
-          <div class="img-sobre-nos"></div>
-        </div>
-      </div>
-    </div>
+    </section>
 
-    <!--Nossa Missão-->
-    <div class="nossa-missao" id="nossa-missao">
-      <div class="titulo-subtitulo-nossa-missao">
-        <h2>Nossa Missão</h2>
-        <h3>Transformar dados em decisões inteligentes</h3>
-      </div>
-      <div class="cards">
-        <div class="card">
-          <div class="seguranca-img"></div>
-          <h4>Segurança</h4>
-          <p>Transformar dados em decisões inteligentes, garantindo o monitoramento contínuo e seguro dos componentes de
-            marcapassos para preservar vidas.</p>
+    <section id="sobre-nos" class="sobre-nos">
+        <div class="titulo-sobre">
+            <h2>Sobre Nós</h2>
+            <h3>Monitorar é nossa <span>paixão</span></h3>
         </div>
-        <div class="card">
-          <div class="saude-img"></div>
-          <h4>Saúde</h4>
-          <p>Oferecer soluções inovadoras que unem saúde, confiança e tecnologia, reduzindo riscos, custos e aumentando
-            a qualidade de vida de pacientes no mundo todo.</p>
-        </div>
-        <div class="card">
-          <div class="confianca-img"></div>
-          <h4>Confiança</h4>
-          <p>Promover a evolução da medicina preventiva com sistemas de monitoramento inteligentes, transformando falhas
-            em alertas e incertezas em segurança.</p>
-        </div>
-      </div>
-    </div>
+        <div class="slider-sobre-nos">
+            <div class="imagem-sobre">
 
-    <!--Nossos Diferenciais-->
-    <div class="nossos-diferenciais" id="nossos-diferenciais">
-      <div class="titulo-subtitulo">
-        <h2>Nossos Diferenciais</h2>
-        <h3>Tecnologia que <span>faz a diferença</span></h3>
-      </div>
-      <div class="diferenciais-container">
-        <div class="diferencial-item">
-          <div class="diferencial-icon">⚡</div>
-          <div class="diferencial-texto">
-            <p>Monitoramento em tempo real da CPU, memória e bateria dos marcapassos.</p>
-          </div>
+            </div>
+            <div class="texto-sobre">
+                <h3>Nossa <span>Motivação</span></h3>
+                <p>Somos movidos pela paixão em transformar tecnologia em cuidado humano. O SyncHeart nasceu para
+                    monitorar de
+                    forma contínua e inteligente os componentes internos de marcapassos, garantindo mais segurança,
+                    confiança e
+                    tranquilidade para pacientes, médicos e fabricantes. Nossa dedicação está em unir ciência, inovação
+                    e
+                    responsabilidade para salvar vidas.</p>
+            </div>
         </div>
-        <div class="diferencial-item">
-          <div class="diferencial-icon">💼</div>
-          <div class="diferencial-texto">
-            <p>Redução de riscos legais e financeiros para fabricantes.</p>
-          </div>
-        </div>
-        <div class="diferencial-item">
-          <div class="diferencial-icon">🔬</div>
-          <div class="diferencial-texto">
-            <p>Tecnologia confiável e fácil de usar, desenvolvida com foco na saúde.</p>
-          </div>
-        </div>
-      </div>
-    </div>
+    </section>
 
-    <!--Resultados Esperados-->
-    <div class="resultados-esperados" id="resultados-esperados">
-      <div class="titulo-subtitulo">
-        <h2>Resultados Esperados</h2>
-        <h3>O que você pode <span>alcançar</span></h3>
-      </div>
+    <section id="nossa-missao" class="nossa-missao">
+        <div class="titulo-missao">
+            <h2>Nossa Missão</h2>
+            <h3>Transformar dados em decisões inteligentes</h3>
+        </div>
+        <div class="cards">
+            <div class="card">
+                <div class="seguranca-img"></div>
+                <h4>Segurança</h4>
+                <p>Transformar dados em decisões inteligentes, garantindo o monitoramento contínuo e seguro dos
+                    componentes de
+                    marcapassos para preservar vidas.</p>
+            </div>
+            <div class="card">
+                <div class="saude-img"></div>
+                <h4>Saúde</h4>
+                <p>Oferecer soluções inovadoras que unem saúde, confiança e tecnologia, reduzindo riscos, custos e
+                    aumentando
+                    a qualidade de vida de pacientes no mundo todo.</p>
+            </div>
+            <div class="card">
+                <div class="confianca-img"></div>
+                <h4>Confiança</h4>
+                <p>Promover a evolução da medicina preventiva com sistemas de monitoramento inteligentes, transformando
+                    falhas
+                    em alertas e incertezas em segurança.</p>
+            </div>
+        </div>
+    </section>
 
-      <div class="resultados-grid">
-        <div class="resultado-card">
-          <span class="resultado-numero">15%</span>
-          <p>Diminuição dos custos com manutenções corretivas e recalls</p>
-          <span class="resultado-meta">em até 1 ano</span>
+    <section id="nossos-diferenciais" class="nossos-diferenciais">
+        <div class="titulo-diferenciais">
+            <h2>Nossos Diferenciais</h2>
+            <h3>Tecnologia que faz a <span>diferença</span></h3>
+        </div>
+        <div class="cards-dif">
+            <div class="card-dif">
+                <div class="dif-icon">⚡</div>
+                <div class="dif-texto">
+                    Monitoramento em tempo real da CPU, memória e bateria dos marcapassos.
+                </div>
+            </div>
+            <div class="card-dif">
+                <div class="dif-icon">💼</div>
+                <div class="dif-texto">
+                    Redução de riscos legais e financeiros para fabricantes.
+                </div>
+            </div>
+            <div class="card-dif">
+                <div class="dif-icon">🔬</div>
+                <div class="dif-texto">
+                    Tecnologia confiável e fácil de usar, desenvolvida com foco na saúde.
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="resultados" class="resultados">
+        <div class="titulo-resultados">
+            <h2>Resultados Esperados</h2>
+            <h3>O que você pode <span>alcançar</span></h3>
+        </div>
+        <div class="cards-res">
+            <div class="card-res">
+                <span class="resultado-numero">15%</span>
+                <p>Diminuição dos custos com manutenções corretivas e recalls</p>
+                <span class="resultado-meta">em até 1 ano</span>
+            </div>
+            <div class="card-res">
+                <span class="resultado-numero">25%</span>
+                <p>Redução das falhas não detectadas em laboratório</p>
+                <span class="resultado-meta">em até 6 meses</span>
+            </div>
+            <div class="card-res">
+                <span class="resultado-numero">8%</span>
+                <p>Melhoria na satisfação do cliente final</p>
+                <span class="resultado-meta">em até 8 meses</span>
+            </div>
+            <div class="card-res">
+                <span class="resultado-numero">15%</span>
+                <p>Aumento na eficiência dos processos de qualidade</p>
+                <span class="resultado-meta">em até 10 meses</span>
+            </div>
+        </div>
+    </section>
+
+    <section id="solucoes" class="solucoes">
+        <div class="titulo-solucoes">
+            <h2>Soluções Monitoradas</h2>
+            <h3>Seguindo Regulamentos <span>de Fiscalização</span></h3>
         </div>
 
-        <div class="resultado-card">
-          <span class="resultado-numero">25%</span>
-          <p>Redução das falhas não detectadas em laboratório</p>
-          <span class="resultado-meta">em até 6 meses</span>
+        <div class="container-empresas">
+            <div class="empresa-placeholder">
+                <img src="assets/anvisa.png" alt="Empresa 1">
+            </div>
+            <div class="empresa-placeholder">
+                <img src="assets/oms.jpg" alt="Empresa 2">
+            </div>
+            <div class="empresa-placeholder">
+                <img src="assets/fda.jpg" alt="Empresa 3">
+            </div>
+            <div class="empresa-placeholder">
+                <img src="assets/abimo.png" alt="Empresa 4">
+            </div>
+            <div class="empresa-placeholder">
+                <img src="assets/ods.png" alt="Empresa 5">
+            </div>
+        </div>
+        </div>
+    </section>
+
+    <section id="beneficios" class="beneficios">
+        <div class="titulo-beneficios">
+            <h2>Benefícios</h2>
+            <h3>Vantagens que fazem <span>a diferença para você</span></h3>
         </div>
 
-        <div class="resultado-card">
-          <span class="resultado-numero">8%</span>
-          <p>Melhoria na satisfação do cliente final</p>
-          <span class="resultado-meta">em até 8 meses</span>
+        <div class="cards-beneficios">
+            <div class="card-beneficio card-esquerda">
+                <div class="beneficio-texto">
+                    <h3>Mais Segurança</h3>
+                    <p>Identificação precoce de falhas nos componentes do marcapasso,
+                        protegendo pacientes e evitando riscos graves.</p>
+                    <img src="./assets/beneficio1.png" alt="">
+                </div>
+            </div>
+            <div class="card-beneficio">
+                <div class="beneficio-texto">
+                    <h3>Eficiência</h3>
+                    <p>Redução de custos com manutenções corretivas e
+                        recalls, fortalecendo a imagem e competitividade no mercado.</p>
+                    <img src="./assets/beneficio2.png" alt="">
+                </div>
+            </div>
+            <div class="card-beneficio card-esquerda card-baixo">
+                <div class="beneficio-texto">
+                    <h3>Confiança no Cuidado</h3>
+                    <p>Monitoramento inteligente que gera tranquilidade para
+                        médicos, pacientes e familiares, com decisões rápidas e assertivas.</p>
+                    <img src="./assets/beneficio3.png" alt="">
+                </div>
+            </div>
+            <div class="card-beneficio card-baixo">
+                <div class="beneficio-texto">
+                    <h3>Monitoramento Constante</h3>
+                    <p>Sistema com o foco em mapear os status dos marcapassos dentro de intervalos de tempo,
+                        garantindo controle e análise da situação.
+                    </p>
+                    <img src="./assets/beneficio4.png" alt="">
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="fale-conosco" class="fale-conosco">
+        <div class="titulo-fale-conosco">
+            <h2>Fale Conosco</h2>
+            <h3>Faça comentários e <span>esclareça dúvidas</span></h3>
         </div>
 
-        <div class="resultado-card">
-          <span class="resultado-numero">15%</span>
-          <p>Aumento na eficiência dos processos de qualidade</p>
-          <span class="resultado-meta">em até 10 meses</span>
-        </div>
-      </div>
-    </div>
+        <div class="corpo-fale-conosco">
 
-    <div class="cenario" id="cenario">
-      <div class="texto-cenario">
-        <h2>Soluções Monitoradas</h2>
-        <h3>Seguindo Regulamentos <span> de Fiscalização </span></h3>
-      </div>
+            <div class="campo-fale-conosco">
+                <label for="assunto">Assunto:</label>
+                <select name="assunto" id="assunto">
+                    <option value="#">Selecione um assunto</option>
+                    <option value="duvida">Dúvida</option>
+                    <option value="sugestao">Sugestão</option>
+                    <option value="comentario">Comentário</option>
+                </select>
+            </div>
 
-      <!-- Container único para todas as empresas -->
-      <div id="container-empresas">
-        <div class="empresa-placeholder">
-          <img src="assets/anvisa.png" alt="Empresa 1">
-        </div>
-        <div class="empresa-placeholder">
-          <img src="assets/oms.jpg" alt="Empresa 2">
-        </div>
-        <div class="empresa-placeholder">
-          <img src="assets/fda.jpg" alt="Empresa 3">
-        </div>
-        <div class="empresa-placeholder">
-          <img src="assets/abimo.png" alt="Empresa 4">
-        </div>
-        <div class="empresa-placeholder">
-          <img src="assets/ods.png" alt="Empresa 5">
-        </div>
-      </div>
-    </div>
+            <div class="campo-fale-conosco">
+                <label for="nome">Nome:</label>
+                <input type="text" id="nome" placeholder="Digite seu nome">
+            </div>
+            <div class="campo-fale-conosco">
+                <label for="email">Email:</label>
+                <input type="text" id="email" placeholder="Digite seu email">
+            </div>
+            <div class="campo-fale-conosco texto-mensagem">
+                <label for="mensagem">Mensagem:</label>
+                <textarea name="mensagem" id="mensagem" maxlength="250" wrap="hard"
+                    placeholder="Digite sua mensagem"></textarea>
+            </div>
+            <div class="btn-fale-conosco">
+                <button>Enviar</button>
+            </div>
 
-    <!--Benefícios-->
-    <div id="beneficios">
-      <div id="beneficios-titulo-subtitulo">
-        <h2>Benefícios</h2>
-        <h3 id="beneficios-subtitulo">Vantagens que fazem <span>a diferença para você</span></h3>
-      </div>
-      <div id="quadro-beneficios">
-        <div class="info-beneficios" id="beneficio1">
-          <p class="beneficios-texto">Mais segurança – Identificação precoce de falhas nos componentes do marcapasso,
-            protegendo pacientes e evitando riscos graves.</p>
-          <div class="logo-placeholder"></div>
         </div>
-        <div class="info-beneficios" id="beneficio2">
-          <div class="logo-placeholder"></div>
-          <p class="beneficios-texto">Eficiência para fabricantes – Redução de custos com manutenções corretivas e
-            recalls, fortalecendo a imagem e competitividade no mercado.</p>
-        </div>
-        <div class="info-beneficios" id="beneficio3">
-          <p class="beneficios-texto">Confiança no cuidado – Monitoramento inteligente que gera tranquilidade para
-            médicos, pacientes e familiares, com decisões rápidas e assertivas.</p>
-          <div class="logo-placeholder"></div>
-        </div>
-      </div>
-    </div>
+    </section>
 
-    <!--Contato-->
-    <div id="contato">
-      <div id="contato-primeira-fileira">
-        <div id="logo-contato">
-          <div id="img-coracao"></div>
-          <div id="img-logo-escrita"></div>
-          <p>Sincronize sua Saúde</p>
+    <footer>
+        <div class="parte-contatos">
+            <div class="parte-logo">
+                <div class="coracao"></div>
+                <div class="logo-escrita"></div>
+                <div class="texto-sincronize">
+                    Sincronize sua saúde
+                </div>
+            </div>
+            <div class="links-rapidos">
+                <h3>Links Rápidos</h3>
+                <a href="#sobre-nos">Sobre Nós</a>
+                <a href="#nossa-missao">Nossa Missão</a>
+                <a href="#nossos-diferenciais">Diferenciais</a>
+                <a href="#resultados">Resultados</a>
+                <a href="solucoes">Cenário</a>
+                <a href="beneficios">Benefícios</a>
+            </div>
+            <div class="contatos">
+                <h3>Contatos</h3>
+                <p class="contato-email">syncheart@gmail.com</p>
+                <p class="contato-cel">+55 (11) 4002-8922</p>
+                <p class="contato-end">Rua Haddock Lobo 305</p>
+                <p class="contato-sp">São Paulo 01414-905</p>
+            </div>
         </div>
-        <div id="contatos-links">
-          <h3>Links Rápidos</h3>
-          <a href="#sobre-nos">Sobre nós</a>
-          <a href="#nossa-missao">Nossa missão</a>
-          <a href="#nossos-diferenciais">Diferenciais</a>
-          <a href="#resultados-esperados">Resultados</a>
-          <a href="#cenario">Cenário</a>
-          <a href="#beneficios">Benefícios</a>
-        </div>
-        <div id="contatos-contatos">
-          <h3>Contatos</h3>
-          <p><span>syncheart@gmail.com</span></p>
-          <p>+55 (11) 4002-8922</p>
-          <p>Rua Haddock Lobo 305</p>
-          <p>São Paulo 01414-905</p>
-        </div>
-      </div>
-      <div id="texto-contato">
-        <p>Acreditamos no poder da tecnologia e assumimos
-          a missão de transformá-la em soluções de
-          monitoramento de marcapasso que promovem a
-          saúde e a qualidade de vida de todos.</p>
-      </div>
-    </div>
-  </div>
+    </footer>
 </body>
-
-<script>
-  function toggleMenu() {
-    document.querySelector(".links-navegacao").classList.toggle("active");
-    document.querySelector(".links-rota").classList.toggle("active");
-  }
-</script>
 
 </html>

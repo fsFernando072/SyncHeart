@@ -1,0 +1,149 @@
+footer {
+    padding-top: 2rem;
+    width: 100%;
+    height: 30rem;
+    background: linear-gradient(135deg, #D52636, #893E86);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: white;
+}
+
+footer a {
+    font-weight: 400;
+    color: white;
+    opacity: 0.7;
+    transition: var(--transition);
+}
+
+footer a:hover {
+    opacity: 1;
+}
+
+.parte-logo {
+    width: fit-content;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: center;
+    padding-top: 3rem;
+    font-weight: 700;
+}
+
+.coracao {
+    background-image: url('../assets/Logo_branco.png');
+    width: 120px;
+    height: 100px;
+    background-repeat: no-repeat;
+    background-size: contain;
+}
+
+.logo-escrita {
+    background-image: url('../assets/logo-escrita.png');
+    width: 120px;
+    height: 25px;
+    background-repeat: no-repeat;
+    background-size: contain;
+}
+
+.texto-sincronize {
+    width: 100%;
+    text-align: center;
+}
+
+.parte-contatos {
+    width: 70%;
+    height: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+}
+
+.links-rapidos {
+    width: fit-content;
+    height:70%;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: flex-start;
+    gap: 1rem;
+    padding-top: 3rem;
+
+}
+
+.contatos {
+    width: fit-content;
+    height: 70%;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: flex-start;
+    gap: 1rem;
+    padding-top: 3rem;
+}
+
+.contato-email::before {
+    content: '';
+    display: inline-block;
+    margin-right: 0.5rem;
+
+    width: 30px;
+    height: 30px;
+
+    background-image: url('../assets/email-icon.png');
+    filter: invert(100%);
+    background-size: contain;
+    background-repeat: no-repeat;
+    vertical-align: middle;
+}
+
+.contato-cel::before {
+    content: '';
+    display: inline-block;
+
+    width: 20px;
+    height: 20px;
+
+    background-image: url('../assets/telefone-icon.png');
+    background-size: contain;
+    background-repeat: no-repeat;
+    vertical-align: middle;
+    margin-left: 0.3rem;
+    margin-bottom: 0.2rem;
+    margin-right: 0.5rem;
+    filter: invert(100%);
+}
+
+.contato-end::before {
+    content: '';
+    display: inline-block;
+
+    width: 30px;
+    height: 30px;
+
+    background-image: url('../assets/endereco-icon.png');
+    background-size: contain;
+    background-repeat: no-repeat;
+    vertical-align: middle;
+    margin-bottom: 0.2rem;
+    margin-right: 0.5rem;
+    filter: invert(100%);
+}
+
+.contato-sp::before {
+    content: '';
+    display: inline-block;
+
+    width: 25px;
+    height: 25px;
+
+    background-image: url('../assets/sp-icon.png');
+    background-size: contain;
+    background-repeat: no-repeat;
+    vertical-align: middle;
+    margin-left: 0.3rem;
+    margin-bottom: 0.2rem;
+    margin-right: 0.5rem;
+    filter: invert(100%);
+}
