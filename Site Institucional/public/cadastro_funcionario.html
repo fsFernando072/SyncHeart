@@ -1,16 +1,16 @@
 <!DOCTYPE html>
-<html lang="en">
-
+<html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="css/cadastro_funcionario.css">
-    <title>Document</title>
+    <style>
+        .erro {color: #e74c3c;font-size: 0.8rem; margin-top: 4px;}
+    </style>
+    <title>Cadastro de Funcionário - SyncHeart</title>
 </head>
-
 <body>
     <div class="wrapper">
-        <!-- Header -->
         <div class="header">
             <img src="assets/Logo.png" width="70" alt="Logo SyncHeart">
             <div class="slogan">
@@ -18,84 +18,49 @@
                 <h2><span>Monitorar é</span> nossa paixão</h2>
             </div>
         </div>
-
-        <!-- Container -->
         <div class="container" style="transform: scale(0.95);">
-            <!-- Lado esquerdo com branding -->
             <div class="left">
-                <h2>Cadastro</h2>
-                <p>Adicione novos membros à sua equipe e mantenha seu time sempre conectado ao SyncHeart</p>
+                <h2>Cadastro de Equipe</h2>
+                <p>Adicione novos membros à sua equipe e mantenha seu time sempre conectado ao SyncHeart.</p>
             </div>
-
-            <!-- Lado direito com formulário -->
             <div class="right">
-                <a href="dashboard_final.html" class="btn-voltar">← Voltar à Dashboard</a>
-
+                <a href="dashboard_final.html" class="btn-voltar">← Voltar</a>
                 <h3>Cadastrar Funcionário</h3>
 
-                <form onsubmit="return cadastrarUsuario()">
+                <form id="form_cadastro">
                     <div class="form-group">
-                        <label for="ipt_nomeUsuario">Nome Completo:</label>
-                        <input type="text" id="ipt_nomeUsuario" placeholder="Digite o nome completo" required
-                            value="Gabriel Silva">
+                        <label for="ipt_nome">Nome Completo:</label>
+                        <input type="text" id="ipt_nome" placeholder="Digite o nome completo">
                     </div>
 
                     <div class="form-group">
-                        <label for="ipt_cpfUsuario">CPF:</label>
-                        <input type="text" id="ipt_cpfUsuario" placeholder="000.000.000-00" required
-                            value="123.123.123-00">
+                        <label for="ipt_email">Email:</label>
+                        <input type="email" id="ipt_email" placeholder="email@empresa.com">
                     </div>
 
                     <div class="form-group">
-                        <label for="ipt_emailUsuario">Email:</label>
-                        <input type="email" id="ipt_emailUsuario" placeholder="email@empresa.com" required
-                            value="gabriel@gmail.com">
+                        <label for="ipt_senha">Senha Provisória:</label>
+                        <input type="password" id="ipt_senha" placeholder="******">
                     </div>
 
                     <div class="form-group">
-                        <label for="ipt_emailUsuario">Senha:</label>
-                        <input type="password" id="ipt_senhaUsuario" placeholder="******" required
-                            value="12345">
+                        <label for="sel_cargo">Cargo:</label>
+                        <select id="sel_cargo">
+                            <option value="">Selecione um cargo...</option>
+                            <option value="2">Admin (da Clínica)</option>
+                            <option value="3">Eletrofisiologista</option>
+                            <option value="4">Engenharia Clínica</option>
+                            <option value="5">Visualizador</option>
+                        </select>
                     </div>
 
-                    <button type="submit" class="btn-submit">Cadastrar Funcionário</button>
+                    <button type="submit" id="btn_cadastrar" class="btn-submit">Cadastrar Funcionário</button>
                 </form>
+                <div id="div_feedback"></div>
             </div>
         </div>
     </div>
+
+    <script src="js/cadastro_funcionario.js"></script>
 </body>
-
-<script>
-    function cadastrarUsuario() {
-        var nomeVar = ipt_nomeUsuario.value;
-        var cpfVar = ipt_cpfUsuario.value;
-        var emailVar = ipt_emailUsuario.value;
-        var senhaVar = ipt_senhaUsuario.value;
-        var fkFabricante = sessionStorage.getItem("idFabricante");
-
-        fetch("/usuarios/cadastrarUsuario", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({
-                nomeServer: nomeVar,
-                cpfServer: cpfVar,
-                emailServer: emailVar,
-                senhaServer: senhaVar,
-                fkFabricante: fkFabricante
-            })
-        })
-            .then(res => {
-                if (res.ok) {
-                    alert("Usuário cadastrado com sucesso!");
-                    document.querySelector("form").reset();
-                } else {
-                    alert("Erro ao cadastrar usuário!");
-                }
-            })
-            .catch(erro => console.error("Erro:", erro));
-
-        return false;
-    }
-</script>
-
 </html>
