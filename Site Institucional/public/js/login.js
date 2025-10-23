@@ -91,7 +91,7 @@ function login() {
         console.error("Erro no login:", erro);
 
         if (erro.status === "aprovacao_pendente") {
-            mostrarFeedback(erro.mensagem, 'warning');
+            mostrarFeedback(erro.mensagem, 'error');
             setTimeout(() => {
                 window.location.href = "aguardando_validacao.html"; 
             }, 2000);
