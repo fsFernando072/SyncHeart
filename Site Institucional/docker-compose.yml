@@ -3,6 +3,7 @@ services:
     build:
       context: . 
       dockerfile: Dockerfile 
+    image: fsfernando072/syncheart-web:latest
     container_name: syncheart_server_web
     restart: always
     ports:
@@ -14,6 +15,7 @@ services:
     build:
       context: . 
       dockerfile: Dockerfile.db 
+    image: fsfernando072/syncheart-db:latest
     container_name: syncheart_db
     restart: always
     ports:
