@@ -46,7 +46,7 @@ body {
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    width: 65px;
+    width: 75px;
     height: 65px;
     border-radius: 12px;
     cursor: pointer;
@@ -68,8 +68,8 @@ body {
 }
 
 .nav-icon {
-    width: 28px;
-    height: 28px;
+    width: 30px;
+    height: 30px;
     margin-bottom: 5px;
 }
 
@@ -354,4 +354,12 @@ body {
 
 #atividade_recente_container{
     padding-left: 10px;
+}
+
+.tempo-atividade{
+    margin-bottom: 20px;
+    color:#555
+}
+.item-atividade{
+    margin-bottom: 10px;
 }

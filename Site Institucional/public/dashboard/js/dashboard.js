@@ -45,7 +45,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // --- FUNÇÃO PARA CARREGAR OS KPIS ---
     function carregarKPIs() {
-        // ... (código da função sem alterações)
+
         const kpiData = { alertasAtivos: 7, dispositivosMonitorados: 352, bateriaBaixa: 14 };
         kpiContainer.innerHTML = '';
         kpiContainer.innerHTML += `<div class="kpi-card alert"><h3>Alertas Ativos</h3><span class="kpi-value">${kpiData.alertasAtivos}</span><span class="kpi-description">Alertas que requerem atenção</span></div>`;
@@ -55,7 +55,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // --- FUNÇÃO PARA CARREGAR OS GRÁFICOS ---
     function carregarGraficos() {
-        // ... (código da função sem alterações)
+ 
         const dadosHistoricoAlertas = { labels: ['Dom', 'Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sáb'], valores: [3, 5, 2, 8, 4, 6, 3] };
         const dadosTiposAlertas = { labels: ['CPU', 'Bateria', 'RAM', 'Disco'], valores: [4, 2, 1, 0] };
         const ctxHistorico = document.getElementById('graficoHistoricoAlertas').getContext('2d');
@@ -116,11 +116,11 @@ document.addEventListener('DOMContentLoaded', () => {
         
         let htmlBotoes = '';
 
-        // Usamos um 'switch' para decidir quais botões mostrar com base no cargoId
+        // 'switch' para decidir quais botões mostrar com base no cargoId
         switch (cargoId) {
             case 2: // Admin da Clínica
                 htmlBotoes = `
-                    <a href="cadastro_funcionario.html" class="action-btn">
+                    <a href="crud_funcionario.html" class="action-btn">
                         (Admin)<br>
                         Gerenciar Funcionários
                     </a>
@@ -128,7 +128,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 break;
             case 3: // Eletrofisiologista
                 htmlBotoes = `
-                    <a href="#" class="action-btn">
+                    <a href="provisionar_dispositivo..html" class="action-btn">
                         (Eletrofisiologista)<br>
                         Provisionar Marcapasso
                     </a>
@@ -136,14 +136,14 @@ document.addEventListener('DOMContentLoaded', () => {
                 break;
             case 4: // Engenharia Clínica
                 htmlBotoes = `
-                    <a href="#" class="action-btn">
+                    <a href="crud_modelo.html" class="action-btn">
                         (Eng. Clínica)<br>
                         Cadastrar Modelo de MP
                     </a>
                 `;
                 break;
             default:
-                // Para o Admin SyncHeart ou outros cargos, não mostramos ações rápidas
+                // Para o Admin SyncHeart ou outros cargos, sem ações rápidas
                 htmlBotoes = `<p class="no-actions">Nenhuma ação rápida disponível para este perfil.</p>`;
                 break;
         }
