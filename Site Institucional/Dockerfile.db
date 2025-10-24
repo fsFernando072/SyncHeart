@@ -1,10 +1,10 @@
 FROM mysql:8.0.37
 
-ENV MYSQL_ROOT_PASSWORD: "SPTech#2024"
-ENV MYSQL_ROOT_HOST: "%"
-ENV MYSQL_DATABASE: "syncheart"
-ENV MYSQL_USER: "heart"
-ENV MYSQL_PASSWORD: "Sptech#2024"
+ENV MYSQL_ROOT_PASSWORD="SPTech#2024"
+ENV MYSQL_ROOT_HOST="%"
+ENV MYSQL_DATABASE="syncheart"
+ENV MYSQL_USER="heart"
+ENV MYSQL_PASSWORD="Sptech#2024"
 
 COPY ./src/database/script-tabelas.sql /docker-entrypoint-initdb.d/init.sql
 
