@@ -223,3 +223,31 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 });
+
+// --- Toggle Sidebar Device List ---
+document.addEventListener("DOMContentLoaded", () => {
+  const btn = document.getElementById("toggleDeviceListBtn");
+  const list = document.querySelector(".sidebar-list-devices");
+  const main = document.querySelector(".main-content");
+
+  if (btn && list && main) {
+    btn.addEventListener("click", () => {
+      list.classList.toggle("hidden");
+      main.classList.toggle("expanded");
+    });
+  }
+
+  // Corrige comportamento quando a janela é redimensionada
+  function handleResize() {
+    if (window.innerWidth <= 1000) {
+      // força mostrar a lista e remove estado expandido
+      list.classList.remove("hidden");
+      main.classList.remove("expanded");
+    }
+  }
+
+  // executa uma vez no início
+  handleResize();
+  // e sempre que a tela muda de tamanho
+  window.addEventListener("resize", handleResize);
+});

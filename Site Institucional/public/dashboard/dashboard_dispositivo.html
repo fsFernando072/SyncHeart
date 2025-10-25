@@ -5,8 +5,8 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Dashboard - SyncHeart</title>
-  
-  <link rel="shortcut icon" href="../assets/Logo.png" type="image/x-icon">
+
+  <link rel="shortcut icon" href="../assets/Logo_contornada.png" type="image/x-icon">
   <link rel="stylesheet" href="./css/dashboard_dispositivo.css">
   <link href="https://fonts.googleapis.com/css2?family=Lexend:wght@100..900&display=swap" rel="stylesheet">
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
@@ -73,7 +73,16 @@
       </header>
 
       <!-- LISTA DE DISPOSITIVOS -->
+
+      <!-- Botão para ocultar/mostrar lista -->
+      <button id="toggleDeviceListBtn" class="toggle-device-list-btn" title="Mostrar/ocultar lista">
+        ☰
+      </button>
+
+      <!-- Lista em si -->
       <div class="sidebar-list-devices" aria-label="Lista de dispositivos">
+
+        <!-- Head da lista -->
         <table class="device-table" role="grid" aria-label="Dispositivos do modelo">
           <thead>
             <tr role="row" class="device-table-head">
@@ -83,10 +92,17 @@
             </tr>
           </thead>
 
+          <!-- Input de busca -->
+          <div class="searchbar">
+            <span class="magnify-icon">🔍︎</span>
+            <input type="text" id="searchbar_input" placeholder="Buscar">
+          </div>
+
+          <!-- Corpo da lista -->
           <tbody id="listaBody">
             <tr role="row" class="device-row" data-device="02314" tabindex="0">
               <td role="gridcell" class="col-device">
-                <span class="codigo-dispositivo">02314</span>
+                <span class="codigo-dispositivo">002314</span>
                 <span class="codigo-paciente">123MP1287512312</span>
               </td>
               <td role="gridcell" class="col-batt"><span class="device-batt">10%</span></td>
@@ -94,7 +110,7 @@
             </tr>
             <tr role="row" class="device-row selected" data-device="02315" tabindex="0" aria-selected="true">
               <td role="gridcell" class="col-device">
-                <span class="codigo-dispositivo">02315</span>
+                <span class="codigo-dispositivo">002315</span>
                 <span class="codigo-paciente">123MP1287512312</span>
               </td>
               <td role="gridcell" class="col-batt"><span class="device-batt">10%</span></td>
@@ -102,7 +118,7 @@
             </tr>
             <tr role="row" class="device-row" data-device="02316" tabindex="0">
               <td role="gridcell" class="col-device">
-                <span class="codigo-dispositivo">02316</span>
+                <span class="codigo-dispositivo">002316</span>
                 <span class="codigo-paciente">123MP1287512312</span>
               </td>
               <td role="gridcell" class="col-batt"><span class="device-batt">10%</span></td>
@@ -110,7 +126,7 @@
             </tr>
             <tr role="row" class="device-row" data-device="02317" tabindex="0">
               <td role="gridcell" class="col-device">
-                <span class="codigo-dispositivo">02317</span>
+                <span class="codigo-dispositivo">002317</span>
                 <span class="codigo-paciente">123MP1287512312</span>
               </td>
               <td role="gridcell" class="col-batt"><span class="device-batt">10%</span></td>
@@ -207,7 +223,7 @@
               </div>
             </section>
           </div>
-<hr>
+          <hr>
           <!-- Eventos recentes / Tabela -->
           <section class="card events-card" aria-label="Eventos recentes">
             <div class="card-header">
