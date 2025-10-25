@@ -1,40 +1,60 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Gerenciar Modelos - SyncHeart</title>
+    <link rel="shortcut icon" href="../assets/Logo_contornada.png" type="image/x-icon">
     <link rel="stylesheet" href="./css/dashboard.css">
-    <link rel="stylesheet" href="./css/crud_modelo.css"> 
+    <link rel="stylesheet" href="./css/crud_modelo.css">
     <link href="https://fonts.googleapis.com/css2?family=Lexend:wght@100..900&display=swap" rel="stylesheet">
 </head>
+
 <body>
     <div class="app-container">
         <nav class="sidebar">
             <div class="sidebar-top">
                 <a href="dashboard.html" class="nav-item logo-item">
-                    <div class="nav-icon"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z" /></svg></div>
+                    <div class="nav-icon"><svg viewBox="0 0 24 24" fill="currentColor">
+                            <path
+                                d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z" />
+                        </svg></div>
                 </a>
                 <a href="dashboard.html" class="nav-item" title="Tela Inicial">
-                    <div class="nav-icon"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z" /></svg></div>
+                    <div class="nav-icon"><svg viewBox="0 0 24 24" fill="currentColor">
+                            <path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z" />
+                        </svg></div>
                     <span class="nav-label">Tela Inicial</span>
                 </a>
                 <a href="#" class="nav-item" title="Dashboard Detalhado">
-                    <div class="nav-icon"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z" /></svg></div>
+                    <div class="nav-icon"><svg viewBox="0 0 24 24" fill="currentColor">
+                            <path
+                                d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z" />
+                        </svg></div>
                     <span class="nav-label">Dashboard</span>
                 </a>
                 <a href="#" class="nav-item active" title="Cadastrar" id="nav_cadastrar">
-                    <div class="nav-icon"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M14 2H6c-1.1 0-1.99.9-1.99 2L4 20c0 1.1.89 2 2 2h8c1.1 0 2-.9 2-2V8l-6-6zm2 16H8v-2h8v2zm0-4H8v-2h8v2zm-3-5V3.5L18.5 9H13z" /></svg></div>
+                    <div class="nav-icon"><svg viewBox="0 0 24 24" fill="currentColor">
+                            <path
+                                d="M14 2H6c-1.1 0-1.99.9-1.99 2L4 20c0 1.1.89 2 2 2h8c1.1 0 2-.9 2-2V8l-6-6zm2 16H8v-2h8v2zm0-4H8v-2h8v2zm-3-5V3.5L18.5 9H13z" />
+                        </svg></div>
                     <span class="nav-label" id="nav_cadastrar_label">Modelos</span>
                 </a>
             </div>
             <div class="sidebar-bottom">
                 <a href="#" class="nav-item" title="Minha Conta">
-                    <div class="nav-icon"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z" /></svg></div>
+                    <div class="nav-icon"><svg viewBox="0 0 24 24" fill="currentColor">
+                            <path
+                                d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z" />
+                        </svg></div>
                     <span class="nav-label">Conta</span>
                 </a>
                 <a href="login.html" class="nav-item" title="Sair" id="btn_sair">
-                    <div class="nav-icon"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M10.09 15.59L11.5 17l5-5-5-5-1.41 1.41L12.67 11H3v2h9.67l-2.58 2.59zM19 3H5c-1.11 0-2 .9-2 2v4h2V5h14v14H5v-4H3v4c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2z" /></svg></div>
+                    <div class="nav-icon"><svg viewBox="0 0 24 24" fill="currentColor">
+                            <path
+                                d="M10.09 15.59L11.5 17l5-5-5-5-1.41 1.41L12.67 11H3v2h9.67l-2.58 2.59zM19 3H5c-1.11 0-2 .9-2 2v4h2V5h14v14H5v-4H3v4c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2z" />
+                        </svg></div>
                     <span class="nav-label">Sair</span>
                 </a>
             </div>
@@ -61,12 +81,20 @@
                             <section class="form-module">
                                 <h2>Informações de Modelo</h2>
                                 <div class="info-grid">
-                                    <div class="form-group"><label for="input_nome_modelo">Nome do modelo:</label><input type="text" id="input_nome_modelo" class="form-input"></div>
-                                    <div class="form-group"><label for="input_dimensoes">Dimensões (mm):</label><input type="text" id="input_dimensoes" class="form-input"></div>
-                                    <div class="form-group"><label for="input_frequencia">Frequência básica:</label><input type="text" id="input_frequencia" class="form-input"></div>
-                                    <div class="form-group"><label for="input_garantia">Prazo de garantia:</label><input type="text" id="input_garantia" class="form-input"></div>
-                                    <div class="form-group"><label for="input_vida_util">Vida útil projetada:</label><input type="text" id="input_vida_util" class="form-input"></div>
-                                    <div class="form-group"><label for="input_bateria">Tipo de bateria:</label><input type="text" id="input_bateria" class="form-input"></div>
+                                    <div class="form-group"><label for="input_nome_modelo">Nome do modelo:</label><input
+                                            type="text" id="input_nome_modelo" class="form-input"></div>
+                                    <div class="form-group"><label for="input_dimensoes">Dimensões (mm):</label><input
+                                            type="text" id="input_dimensoes" class="form-input"></div>
+                                    <div class="form-group"><label for="input_frequencia">Frequência
+                                            básica:</label><input type="text" id="input_frequencia" class="form-input">
+                                    </div>
+                                    <div class="form-group"><label for="input_garantia">Prazo de garantia:</label><input
+                                            type="text" id="input_garantia" class="form-input"></div>
+                                    <div class="form-group"><label for="input_vida_util">Vida útil
+                                            projetada:</label><input type="text" id="input_vida_util"
+                                            class="form-input"></div>
+                                    <div class="form-group"><label for="input_bateria">Tipo de bateria:</label><input
+                                            type="text" id="input_bateria" class="form-input"></div>
                                 </div>
                             </section>
                         </div>
@@ -79,12 +107,21 @@
                                 <hr style="margin: 20px 0;">
                                 <div id="form_nova_regra" class="rule-builder-form">
                                     <span>SE a</span>
-                                    <select id="param_metrica" class="form-input-small"><option value="CPU">CPU</option><option value="RAM">RAM</option></select>
+                                    <select id="param_metrica" class="form-input-small">
+                                        <option value="CPU">CPU</option>
+                                        <option value="RAM">RAM</option>
+                                    </select>
                                     <span>for</span>
-                                    <select id="param_condicao" class="form-input-small"><option value="MAIOR_QUE"> > </option><option value="MENOR_QUE"> < </option></select>
-                                    <input type="number" id="param_valor" placeholder="Valor" class="form-input-small" style="width: 70px;">
+                                    <select id="param_condicao" class="form-input-small">
+                                        <option value="MAIOR_QUE"> > </option>
+                                        <option value="MENOR_QUE">
+                                            < </option>
+                                    </select>
+                                    <input type="number" id="param_valor" placeholder="Valor" class="form-input-small"
+                                        style="width: 70px;">
                                     <span>% por</span>
-                                    <input type="number" id="param_duracao" placeholder="Mins" class="form-input-small" style="width: 70px;">
+                                    <input type="number" id="param_duracao" placeholder="Mins" class="form-input-small"
+                                        style="width: 70px;">
                                     <span>min</span>
                                     <button type="button" class="btn-add-rule" id="btn_adicionar_regra">+</button>
                                 </div>
@@ -97,7 +134,7 @@
                 <section class="list-module">
                     <h2>Modelos Cadastrados</h2>
                     <div id="lista_modelos_container">
-                        </div>
+                    </div>
                 </section>
             </div>
         </main>
@@ -105,4 +142,5 @@
     <div id="div_feedback"></div>
     <script src="js/crud_modelo.js"></script>
 </body>
+
 </html>
