@@ -2,6 +2,9 @@ DROP DATABASE IF EXISTS syncheart;
 CREATE DATABASE IF NOT EXISTS syncheart;
 USE syncheart;
 
+SET NAMES 'utf8mb4';
+SET CHARACTER SET utf8mb4;
+
 -- ============================================
 -- Estrutura das Tabelas
 -- ============================================
@@ -183,3 +186,7 @@ select * from ModelosAlertaParametros;
 select * from Modelos;
 
 select * from dispositivos;
+
+ 
+
+
