@@ -1,6 +1,6 @@
 const jwt = require('jsonwebtoken');
 
-// Este é o "guarda" que verifica se o usuário é um 'Admin da Clínica'
+// "guarda" que verifica se o usuário é um 'Admin da Clínica'
 function verificarAdminClinica(req, res, next) {
     const authHeader = req.headers['authorization'];
     const token = authHeader && authHeader.split(' ')[1]; // Formato esperado: "Bearer TOKEN"

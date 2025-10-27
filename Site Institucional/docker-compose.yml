@@ -1,0 +1,22 @@
+services:
+  web:
+    build:
+      context: . 
+      dockerfile: Dockerfile 
+    image: fsfernando072/syncheart-web:latest
+    container_name: syncheart_server_web
+    restart: always
+    ports:
+      - "3333:3333"
+    depends_on:
+      - db
+
+  db:
+    build:
+      context: . 
+      dockerfile: Dockerfile.db 
+    image: fsfernando072/syncheart-db:latest
+    container_name: syncheart_db
+    restart: always
+    ports:
+      - "3307:3306"

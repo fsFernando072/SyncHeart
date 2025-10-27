@@ -1,11 +1,11 @@
 var database = require("../database/config");
 
-function criar(fabricanteId, nomeModelo, vidaUtil, dimensoes, frequencia, garantia, bateria) {
+function criar(clinicaId, fabricanteId, nomeModelo, vidaUtil, dimensoes, frequencia, garantia, bateria) {
     var instrucaoSql = `
         INSERT INTO Modelos (clinica_id, fabricante_id, nome_modelo, vida_util_projetada_anos, dimensoes, frequencia_basica, prazo_garantia, tipo_bateria) 
-        VALUES ( (SELECT clinica_id FROM Fabricantes WHERE fabricante_id = ?), ?, ?, ?, ?, ?, ?, ?);
+        VALUES ( ?, ?, ?, ?, ?, ?, ?, ?);
     `;
-    return database.executar(instrucaoSql, [fabricanteId, fabricanteId, nomeModelo, vidaUtil, dimensoes, frequencia, garantia, bateria]);
+    return database.executar(instrucaoSql, [clinicaId, fabricanteId, nomeModelo, vidaUtil, dimensoes, frequencia, garantia, bateria]);
 }
 
 function criarParametro(modeloId, metrica, condicao, limiar, duracao, criticidade) {
