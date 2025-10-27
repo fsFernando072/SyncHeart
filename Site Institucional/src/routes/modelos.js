@@ -7,7 +7,7 @@ const authMiddleware = require('../middleware/authMiddleware');
 router.post('/criar', authMiddleware.verificarEngClinico, modeloController.criar);
 
 // Rota para LISTAR todos os modelos de uma clínica
-router.get('/listar', authMiddleware.verificarEngClinico, modeloController.listar);
+router.get('/listar', authMiddleware.verificarUsuarioAutenticado, modeloController.listar);
 
 // Rota para LISTAR todos os fabricantes
 router.get('/fabricantes', authMiddleware.verificarEngClinico, modeloController.listarFabricantes);

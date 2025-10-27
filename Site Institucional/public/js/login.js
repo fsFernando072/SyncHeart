@@ -6,7 +6,7 @@ const divFeedback = document.getElementById('div_feedback');
 
 let feedbackTimeout;
 
-// 2. FUNÇÃO DE FEEDBACK COMPLETA
+// 2. FUNÇÃO DE FEEDBACK 
 function mostrarFeedback(mensagem, tipo = 'error') {
     clearTimeout(feedbackTimeout);
     divFeedback.textContent = mensagem;
@@ -17,7 +17,7 @@ function mostrarFeedback(mensagem, tipo = 'error') {
     }, 5000);
 }
 
-// 3. FUNÇÃO DE VALIDAÇÃO DOS CAMPOS COMPLETA
+// 3. FUNÇÃO DE VALIDAÇÃO DOS CAMPOS 
 function validarCampos() {
     // Limpa erros anteriores
     document.querySelectorAll('.erro').forEach(e => e.remove());
@@ -45,7 +45,7 @@ function validarCampos() {
     return erros === 0;
 }
 
-// 4. FUNÇÃO PRINCIPAL DE LOGIN COMPLETA
+// 4. FUNÇÃO PRINCIPAL DE LOGIN 
 function login() {
     if (!validarCampos()) {
         return;
@@ -91,7 +91,7 @@ function login() {
         console.error("Erro no login:", erro);
 
         if (erro.status === "aprovacao_pendente") {
-            mostrarFeedback(erro.mensagem, 'warning');
+            mostrarFeedback(erro.mensagem, 'error');
             setTimeout(() => {
                 window.location.href = "aguardando_validacao.html"; 
             }, 2000);

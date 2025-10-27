@@ -203,9 +203,12 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
-    async function salvarNovoModelo() {
+   async function salvarNovoModelo() {
         const token = sessionStorage.getItem('authToken');
+         const dadosUsuarioLogado = JSON.parse(sessionStorage.getItem("USUARIO_LOGADO"));
+         const idClinica = dadosUsuarioLogado.clinica.id;
         const dadosModelo = {
+           clinica_id: idClinica,
             fabricante_id: document.getElementById('select_fabricante').value,
             nome_modelo: document.getElementById('input_nome_modelo').value,
             vida_util: document.getElementById('input_vida_util').value,
@@ -214,7 +217,7 @@ document.addEventListener('DOMContentLoaded', () => {
             prazo_garantia: document.getElementById('input_garantia').value,
             tipo_bateria: document.getElementById('input_bateria').value
         };
-        const payloadCompleto = { ...dadosModelo, parametros: parametrosCriados };
+        const payloadCompleto = {...dadosModelo, parametros: parametrosCriados };
         if (!payloadCompleto.fabricante_id || !payloadCompleto.nome_modelo || !payloadCompleto.vida_util) {
             mostrarFeedback("Fabricante, nome do modelo e vida útil são obrigatórios.", "error");
             return;

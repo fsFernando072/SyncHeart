@@ -1,0 +1,240 @@
+@media screen and (max-width: 768px) {
+   header .menu-responsivo {
+      display: flex;
+   }
+
+   header .links {
+      display: none;
+   }
+
+   header .menu {
+      justify-content: flex-start;
+      gap: 4rem;
+   }
+
+   .home {
+      height: 60rem;
+      background-position: center;
+   }
+
+   .home .texto-home {
+      align-items: center;
+      text-align: center;
+   }
+
+
+   .slider-sobre-nos {
+    flex-direction: column;
+    width: 85%;
+   }
+
+   .imagem-sobre {
+      height: 50%;
+      width: 100%;
+   }
+
+   .texto-sobre {
+      height: fit-content;
+      width: 100%;
+      padding: 10px;
+      align-items: center;
+      justify-content: center;
+   }
+
+   .texto-sobre p {
+      font-size: 20px;
+   }
+
+   .texto-sobre h3 {
+      font-size: 30px;
+   }
+
+   .nossa-missao {
+    height: fit-content;
+    padding: 25px;
+    gap: 3rem;
+   }
+
+   .titulo-missao {
+      text-align: center;
+      gap: 10px;
+   }
+
+   .nossa-missao .cards {
+      width: 85%;
+      flex-direction: column;
+      height: fit-content;
+      gap: 2rem;
+   }
+
+   .cards .card {
+      width: 100%;
+      height: 20%;
+   }
+
+   .nossos-diferenciais {
+      height: fit-content;
+      padding: 25px;
+      gap: 3rem;
+   }
+
+   .titulo-diferenciais {
+      text-align: center;
+      gap: 10px;
+   }
+
+   .cards-dif {
+      flex-direction: column;
+      height: fit-content;
+      gap: 2rem;
+   }
+
+   .card-dif {
+      flex-direction: column;
+      text-align: center;
+      width: 100%;
+      height: 20%;
+   }
+
+   .titulo-resultados {
+      text-align: center;
+      gap: 10px;
+   }
+
+   .cards-res {
+      width: 80%;
+      height: 80%;
+      flex-direction: column;
+      flex-wrap: nowrap;
+      gap: 2rem;
+   }
+
+   .card-res {
+      width: 100%;
+      height: 25%;
+   }
+
+   .titulo-solucoes {
+      text-align: center;
+      gap: 10px;
+      width: 80%;
+   }
+   
+   .container-empresas {
+      width: 80%;
+      height: 40%;
+      flex-wrap: wrap;
+   }
+
+   .empresa-placeholder {
+      max-width: 120px;
+   }
+
+   .empresa-placeholder img {
+      max-width: clamp(120px, 25vw, 160px);
+   }
+
+   .titulo-beneficios {
+      text-align: center;
+      width: 80%;
+      gap: 10px;
+   }
+
+   .beneficios {
+      height: fit-content;
+      gap: 2rem;
+      padding: 25px;
+   }
+
+   .cards-beneficios {
+      flex-direction: column;
+      flex-wrap: nowrap;
+      width: 85%;
+      height: fit-content;
+   }
+
+   .card-beneficio {
+      width: 100%;
+      height: fit-content;
+   }
+
+   .card-esquerda {
+      border-right: 1px solid gray;
+   }
+
+   .card-beneficio:hover {
+      height: fit-content;
+   }
+
+   .card-beneficio:hover h3 {
+      display: block;
+      color: white;
+   }
+
+   .card-beneficio:hover p {
+      color: white;
+   }
+
+   .beneficio-texto p {
+      display: flex;
+      color: black;
+   }
+
+   .beneficio-texto {
+      height: fit-content;
+      padding: 15px;
+      gap: 2rem;
+   }
+
+   .beneficio-texto h3 {
+      font-size: 1.3rem;
+   }
+
+   .beneficio-texto p {
+      font-size: 1rem;
+   }
+
+   .beneficio-texto img {
+      height: 40px;
+      width: 40px;
+   }
+
+   .titulo-fale-conosco {
+      width: 80%;
+      text-align: center;
+   }
+
+   .corpo-fale-conosco {
+      width: 90%;
+   }
+
+   .campo-fale-conosco select {
+      width: 80%;
+   }
+
+   .btn-fale-conosco button {
+      width: 25%;
+   }
+
+   footer {
+      height: fit-content;
+      padding-bottom: 2rem;
+   }
+
+   .parte-contatos {
+      flex-direction: column;
+      align-items: center;
+   }
+
+   .links-rapidos {
+      text-align: center;
+      justify-content: center;
+      align-items: center;
+   }
+
+   .contatos {
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+   }
+}
