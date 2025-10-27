@@ -5,6 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Tela Inicial - SyncHeart</title>
+    <link rel="shortcut icon" href="../assets/Logo_contornada.png" type="image/x-icon">
     <link rel="stylesheet" href="./css/dashboard.css">
     <link href="https://fonts.googleapis.com/css2?family=Lexend:wght@100..900&display=swap" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
@@ -28,7 +29,7 @@
                         </svg></div>
                     <span class="nav-label">Tela Inicial</span>
                 </a>
-                <a href="#" class="nav-item" title="Dashboard Detalhado">
+                <a href="dashboard_dispositivo.html" class="nav-item" title="Dashboard Detalhado">
                     <div class="nav-icon"><svg viewBox="0 0 24 24" fill="currentColor">
                             <path
                                 d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z" />
@@ -36,9 +37,12 @@
                     <span class="nav-label">Dashboard</span>
                 </a>
                 <a href="#" class="nav-item" title="Cadastrar" id="nav_cadastrar">
-    <div class="nav-icon"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M14 2H6c-1.1 0-1.99.9-1.99 2L4 20c0 1.1.89 2 2 2h8c1.1 0 2-.9 2-2V8l-6-6zm2 16H8v-2h8v2zm0-4H8v-2h8v2zm-3-5V3.5L18.5 9H13z"/></svg></div>
-    <span class="nav-label" id="nav_cadastrar_label">Cadastrar</span>
-</a>
+                    <div class="nav-icon"><svg viewBox="0 0 24 24" fill="currentColor">
+                            <path
+                                d="M14 2H6c-1.1 0-1.99.9-1.99 2L4 20c0 1.1.89 2 2 2h8c1.1 0 2-.9 2-2V8l-6-6zm2 16H8v-2h8v2zm0-4H8v-2h8v2zm-3-5V3.5L18.5 9H13z" />
+                        </svg></div>
+                    <span class="nav-label" id="nav_cadastrar_label">Cadastrar</span>
+                </a>
             </div>
             <div class="sidebar-bottom">
                 <a href="#" class="nav-item" title="Minha Conta">
@@ -62,14 +66,14 @@
             <header class="page-header">
                 <div class="header-info">
                     <h1 id="header_title">Tela Inicial</h1>
-                    <div class="breadcrumb" id="breadcrumb_path"></div>
                 </div>
                 <div class="header-user" id="header_user_info"></div>
             </header>
-         
+            <div class="breadcrumb" id="breadcrumb_path"></div>
+            
             <div class="dashboard-container">
                 <section class="kpi-line" id="kpi_container"></section>
-
+                
                 <div class="dashboard-grid">
                     <div class="main-column">
                             <section class="dashboard-module" id="module_saude_bateria">

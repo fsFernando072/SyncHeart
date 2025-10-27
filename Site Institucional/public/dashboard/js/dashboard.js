@@ -3,7 +3,7 @@
 document.addEventListener('DOMContentLoaded', () => {
 
     // Selecionando os novos elementos
-   const headerUserInfoEl = document.getElementById('header_user_info');
+    const headerUserInfoEl = document.getElementById('header_user_info');
     const breadcrumbPathEl = document.getElementById('breadcrumb_path');
     const kpiContainer = document.getElementById('kpi_container');
     const acoesRapidasContainer = document.getElementById('acoes_rapidas_container');
@@ -11,7 +11,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const atividadeRecenteContainer = document.getElementById('atividade_recente_container'); 
      
 
-      const mobileSection = document.querySelector('.mobile-section');
+    const mobileSection = document.querySelector('.mobile-section');
     const phoneToggleBtn = document.getElementById('phone_toggle_btn'); 
     const phoneToggleIcon = document.getElementById('phone_toggle_icon'); 
 
@@ -40,7 +40,7 @@ document.addEventListener('DOMContentLoaded', () => {
         carregarGraficoBateria();
         carregarAtividadeRecente();
         configurarToggleAcoesRapidas(); 
-         configurarBotaoCadastrar();
+        configurarBotaoCadastrar();
     }
 
     // --- FUNÇÃO PARA CARREGAR OS KPIS ---

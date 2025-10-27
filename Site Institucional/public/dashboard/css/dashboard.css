@@ -108,15 +108,15 @@ body {
     color: #4A154B;
 }
 
-.breadcrumb {
-    color: #888;
-    font-size: 14px;
-}
-
 .user-info {
     display: flex;
     flex-direction: column;
     align-items: flex-end;
+}
+
+.breadcrumb {
+    color: #888;
+    font-size: 14px;
 }
 
 .dashboard-container {
