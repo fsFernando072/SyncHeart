@@ -363,3 +363,7 @@ body {
 .item-atividade{
     margin-bottom: 10px;
 }
+.breadcrumb {
+  color: #4A154B;
+  font-size: 16px;
+}

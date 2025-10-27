@@ -423,15 +423,14 @@ input {
   left: var(--sidebar-width);
   right: 0;
   top: 0;
-  height: var(--header-height);
+  padding: 17px 30px;
   display: flex;
   align-items: center;
   justify-content: space-between;
   /* alinha o conteúdo com a área do dashboard */
   padding-right: 22px;
-  padding: 20px 30px;
+    border-bottom: 1px solid #e9ecef;
   background: white;
-  box-shadow: 0 6px 20px rgba(44, 19, 39, 0.06);
   z-index: 20;
 }
 

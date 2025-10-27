@@ -1,5 +1,7 @@
 // js/dashboard_dispositivo.js
 
+
+ const headerUserInfoEl = document.getElementById('header_user_info');
 // --- Helpers simples ---
 const rnd = (min, max) => Math.round(min + Math.random() * (max - min));
 const avg = arr => Math.round(arr.reduce((a, b) => a + b, 0) / arr.length);
@@ -35,6 +37,14 @@ let chartFlashSmall = null;
 
 // --- Inicializa todos os charts com dados iniciais ---
 function initAllCharts(sample) {
+
+   const dadosUsuarioLogado = JSON.parse(sessionStorage.getItem("USUARIO_LOGADO"));
+  const nomeUsuario = dadosUsuarioLogado.usuario.nome;
+        const emailUsuario = dadosUsuarioLogado.usuario.email;
+        headerUserInfoEl.innerHTML = `<div class="user-info"><span class="user-name">${nomeUsuario}</span><span class="user-email">${emailUsuario}</span></div>`;
+
+
+ 
   // Trend (CPU/RAM/Flash)
   try {
     const ctxTrend = document.getElementById('graficoCpu%PorHora') ? document.getElementById('graficoCpu%PorHora').getContext('2d') : null;
@@ -248,6 +258,49 @@ document.addEventListener("DOMContentLoaded", () => {
 
   // executa uma vez no início
   handleResize();
+
+
+
+  function configurarBotaoCadastrar() {
+        const dadosUsuarioLogado = JSON.parse(sessionStorage.getItem("USUARIO_LOGADO"));
+        const cargoId = dadosUsuarioLogado.usuario.cargoId;
+
+        const botaoCadastrar = document.getElementById('nav_cadastrar');
+        const labelCadastrar = document.getElementById('nav_cadastrar_label');
+
+        // Garante que os elementos existem antes de tentar alterar
+        if (!botaoCadastrar || !labelCadastrar) {
+            return;
+        }
+
+        // Esconde o botão por padrão. Ele só será exibido se o cargo tiver uma função de cadastro.
+        botaoCadastrar.style.display = 'none';
+
+        switch (cargoId) {
+            case 2: // Admin da Clínica
+                labelCadastrar.textContent = 'Funcionários';
+                botaoCadastrar.href = 'crud_funcionario.html';
+                botaoCadastrar.title = 'Gerenciar Funcionários';
+                botaoCadastrar.style.display = 'flex'; // Torna o botão visível
+                break;
+            case 4: // Engenharia Clínica
+                labelCadastrar.textContent = 'Modelos';
+                botaoCadastrar.href = 'crud_modelo.html';
+                botaoCadastrar.title = 'Gerenciar Modelos de MP';
+                botaoCadastrar.style.display = 'flex';
+                break;
+            case 3: // Eletrofisiologista
+                labelCadastrar.textContent = 'Marcapassos';
+                botaoCadastrar.href = 'provisionar_dispositivo.html'; 
+                botaoCadastrar.title = 'Provisionar Marcapassos';
+                botaoCadastrar.style.display = 'flex';
+                break;
+        }
+    }
+
+
+
+     configurarBotaoCadastrar()
   // e sempre que a tela muda de tamanho
   window.addEventListener("resize", handleResize);
 });
