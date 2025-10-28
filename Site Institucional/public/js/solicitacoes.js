@@ -89,7 +89,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // 4. ATUALIZA O STATUS DA CLÍNICA NO BD
     async function atualizarStatus(idClinica, novoStatus) {
-        const endpoint = `http://localhost:3333/clinicas/atualizarStatus/${idClinica}`;
+        const endpoint = `/clinicas/atualizarStatus/${idClinica}`;
         try {
             const resposta = await fetch(endpoint, {
                 method: 'PUT', 
