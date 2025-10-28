@@ -26,7 +26,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // 2. BUSCA DE SOLICITAÇÕES NO BACK-END
     async function carregarSolicitacoes() {
-        const endpoint = 'http://localhost:3333/clinicas/listar';
+        const endpoint = '/clinicas/listar';
         try {
             const resposta = await fetch(endpoint);
             if (!resposta.ok) {
