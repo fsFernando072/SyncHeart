@@ -1,0 +1,286 @@
+/* ======================================================= */
+/* ARQUIVO DE ESTILO FINAL PARA O DASHBOARD - SPRINT 3     */
+/* ======================================================= */
+
+/* --- 1. RESET E GERAL --- */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Lexend', sans-serif;
+    background-color: #f4f7fa;
+    color: #3b3b3b;
+    height: 100vh;
+    overflow: hidden;
+}
+
+.app-container {
+    display: flex;
+    height: 100%;
+}
+
+/* --- 2. BARRA LATERAL (SIDEBAR) --- */
+.sidebar {
+    width: 90px;
+    background: #4A154B;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-between;
+    padding: 20px 0;
+    transition: width 0.3s;
+}
+
+.sidebar-top, .sidebar-bottom {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 15px;
+}
+
+.nav-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 65px;
+    height: 65px;
+    border-radius: 12px;
+    cursor: pointer;
+    color: white;
+    text-decoration: none;
+    transition: background-color 0.2s;
+}
+
+.nav-item:hover {
+    background-color: rgba(255, 255, 255, 0.1);
+}
+
+.nav-item.active {
+    background-color: #D6166F;
+}
+
+.logo-item {
+    margin-bottom: 10px;
+}
+
+.nav-icon {
+    width: 28px;
+    height: 28px;
+    margin-bottom: 5px;
+}
+
+.nav-icon svg {
+    width: 100%;
+    height: 100%;
+}
+
+.nav-label {
+    font-size: 11px;
+    font-weight: 500;
+    line-height: 1.2;
+    text-align: center;
+}
+
+/* --- 3. CONTEÚDO PRINCIPAL --- */
+.main-content {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    overflow-y: auto;
+}
+
+.page-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px 30px;
+    background: white;
+    border-bottom: 1px solid #e9ecef;
+}
+
+.page-header h1 {
+    margin: 0;
+    font-size: 26px;
+    color: #4A154B;
+}
+
+.breadcrumb {
+    color: #888;
+    font-size: 14px;
+}
+
+.header-right {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+}
+
+.user-info {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+}
+.user-name {
+    font-weight: 600;
+    color: #333;
+}
+.user-email {
+    font-size: 12px;
+    color: #888;
+}
+
+.btn-filtro {
+    background-color: #e74c3c;
+    color: white;
+    border: none;
+    padding: 8px 15px;
+    border-radius: 8px;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+.btn-filtro:hover {
+    background-color: #c0392b;
+}
+
+.dashboard-container {
+    padding: 30px;
+    flex: 1;
+    position: relative; 
+}
+
+/* --- 4. Estilos para o "Funil de Risco" --- */
+.funil-risco-container {
+    display: grid;
+    grid-template-columns: 1fr auto 1fr auto 1fr;
+    align-items: center;
+    gap: 15px;
+    background-color: white;
+    padding: 25px;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+    margin-bottom: 30px;
+}
+.funil-etapa { text-align: center; padding: 10px; border-radius: 8px; }
+.funil-valor { font-size: 36px; font-weight: 700; display: block; color: #4A154B; }
+.funil-label { font-size: 14px; color: #555; }
+.funil-seta { font-size: 24px; color: #aaa; font-weight: bold; }
+.funil-etapa.status-critico { background-color: #f8d7da; }
+.funil-etapa.status-critico .funil-valor { color: #dc3545; }
+.funil-etapa.status-critico .funil-label { color: #721c24; }
+
+/* --- 5. Grid Principal e Módulos --- */
+.dashboard-grid {
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+    gap: 30px;
+    margin-bottom: 30px;
+}
+
+.dashboard-grid-secundaria {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 30px;
+    margin-bottom: 30px;
+}
+
+.main-column, .side-column {
+    display: flex;
+    flex-direction: column;
+    gap: 30px;
+}
+
+.dashboard-module {
+    background: white;
+    padding: 25px;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+}
+
+.dashboard-module h2 {
+    font-size: 18px;
+    color: #4A154B;
+    margin-bottom: 20px;
+}
+
+.module-content {
+    min-height: 250px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: none;
+    padding: 0;
+}
+
+/* --- 6. Estilos para Módulos Específicos --- */
+
+/* Fila de Triagem e Modelos em Destaque */
+#module_fila_triagem .module-content, #module_modelos_destaque .module-content {
+    align-items: flex-start;
+    justify-content: flex-start;
+    width: 100%;
+}
+.lista-fila-triagem { list-style: none; padding: 0; width: 100%; }
+.fila-item { display: flex; align-items: center; gap: 15px; padding: 12px 5px; cursor: pointer; transition: background-color 0.2s; }
+.fila-item:hover { background-color: #f9f9f9; }
+.fila-item:not(:last-child) { border-bottom: 1px solid #f0f0f0; }
+.fila-item .icone-tipo { width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0; }
+.fila-item.tipo-critico .icone-tipo { background-color: #e74c3c; }
+.fila-item.tipo-atencao .icone-tipo { background-color: #f1c40f; }
+.fila-item .texto-alerta { font-size: 14px; color: #555; line-height: 1.4; }
+.fila-item .tempo-alerta { font-size: 12px; color: #aaa; margin-left: auto; flex-shrink: 0; }
+.placeholder-text { font-style: italic; color: #aaa; width: 100%; text-align: center; }
+
+/* Modelos em Destaque */
+.destaque-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 25px; width: 100%; }
+.destaque-coluna h4 { font-size: 14px; color: #888; font-weight: 500; margin-bottom: 15px; border-bottom: 1px solid #eee; padding-bottom: 10px; }
+.destaque-lista { list-style: none; padding: 0; display: flex; flex-direction: column; gap: 12px; }
+.destaque-lista li { display: flex; justify-content: space-between; align-items: center; font-size: 14px; }
+.modelo-nome { font-weight: 500; color: #333; }
+.modelo-valor { font-size: 13px; color: #999; background-color: #f5f5f5; padding: 3px 8px; border-radius: 5px; }
+
+
+/* --- 7. WIDGET DE AÇÕES RÁPIDAS (Celular) --- */
+.mobile-section {
+    position: fixed; right: 30px; bottom: 20px;
+    transition: transform 0.5s ease-in-out; z-index: 100;
+}
+.mobile-section.hidden { transform: translateY(calc(100% - 30px)); }
+.phone-mockup { width: 280px; height: 500px; background: #333; border-radius: 25px; padding: 10px; box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3); }
+.phone-screen { width: 100%; height: 100%; background: white; border-radius: 15px; overflow: hidden; display: flex; flex-direction: column; }
+.phone-header { height: 30px; background: #333; position: relative; cursor: pointer; display: flex; align-items: center; justify-content: center; }
+.phone-toggle-icon { color: white; font-size: 16px; transition: transform 0.3s; }
+.mobile-section.hidden .phone-toggle-icon { transform: rotate(180deg); }
+.phone-content { flex: 1; padding: 20px; display: flex; flex-direction: column; }
+.phone-content h3 { color: #4A154B; font-size: 18px; margin-bottom: 20px; text-align: center; font-weight: 600; }
+.action-buttons { display: flex; flex-direction: column; gap: 15px; }
+.action-btn { background: #D6166F; color: white; border: none; padding: 15px 20px; border-radius: 8px; font-size: 14px; line-height: 1.4; cursor: pointer; transition: all 0.3s ease; text-align: center; text-decoration: none; display: block; }
+.action-btn:hover { background: #b81360; transform: translateY(-2px); }
+.no-actions { color: #999; font-size: 14px; text-align: center; margin-top: 20px; }
+
+/* --- 8. FEEDBACK GLOBAL --- */
+#div_feedback { position: fixed; top: 20px; right: 20px; z-index: 9999; padding: 16px 24px; border-radius: 8px; font-size: 1rem; color: white; box-shadow: 0 4px 12px rgba(0,0,0,0.15); opacity: 0; transform: translateX(100%); visibility: hidden; transition: all 0.4s ease; }
+#div_feedback.show { opacity: 1; transform: translateX(0); visibility: visible; }
+#div_feedback.success { background-color: #28a745; }
+#div_feedback.error { background-color: #dc3545; }
+
+/* --- 9. MODAL DE TRIAGEM --- */
+.modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(0, 0, 0, 0.6); display: flex; align-items: center; justify-content: center; z-index: 1000; opacity: 0; visibility: hidden; transition: opacity 0.3s, visibility 0.3s; }
+.modal-overlay.show { opacity: 1; visibility: visible; }
+.modal { background: white; width: 90%; max-width: 500px; border-radius: 12px; box-shadow: 0 5px 15px rgba(0,0,0,0.3); transform: scale(0.9); transition: transform 0.3s; }
+.modal-overlay.show .modal { transform: scale(1); }
+.modal-header { display: flex; justify-content: space-between; align-items: center; padding: 15px 25px; border-bottom: 1px solid #eee; }
+.modal-header h2 { font-size: 18px; color: #4A154B; margin: 0; }
+.modal-close-btn { background: none; border: none; font-size: 28px; font-weight: bold; cursor: pointer; color: #aaa; transition: color 0.2s; }
+.modal-close-btn:hover { color: #333; }
+.modal-body { padding: 25px; }
+.modal-footer { display: flex; justify-content: flex-end; gap: 10px; padding: 15px 25px; border-top: 1px solid #eee; }
+.btn-primary { background: #D6166F; color: white; border: none; padding: 10px 20px; border-radius: 8px; font-size: 14px; font-weight: 600; cursor: pointer; transition: background-color 0.3s; }
+.btn-primary:hover { background: #b81360; }
+.btn-secondary { background: #f0f0f0; color: #555; border: 1px solid #ddd; padding: 10px 20px; border-radius: 8px; font-size: 14px; font-weight: 600; cursor: pointer; transition: background-color 0.3s; }
+.btn-secondary:hover { background: #e0e0e0; }
