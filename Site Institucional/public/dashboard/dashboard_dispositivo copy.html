@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dashboard - SyncHeart</title>
+
+  <link rel="shortcut icon" href="../assets/Logo_contornada.png" type="image/x-icon">
+  <link rel="stylesheet" href="./css/dashboard_dispositivo copy.css">
+  <link href="https://fonts.googleapis.com/css2?family=Lexend:wght@100..900&display=swap" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+
+<body>
+  <div class="app-container">
+    <nav class="sidebar">
+            <div class="sidebar-top">
+                <a href="dashboard.html" class="nav-item logo-item">
+                    <div class="nav-icon">
+                        <svg viewBox="0 0 24 24" fill="currentColor">
+                            <path
+                                d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z" />
+                        </svg>
+                    </div>
+                </a>
+                <a href="dashboard.html" class="nav-item active" title="Tela Inicial">
+                    <div class="nav-icon"><svg viewBox="0 0 24 24" fill="currentColor">
+                            <path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z" />
+                        </svg></div>
+                    <span class="nav-label">Tela Inicial</span>
+                </a>
+                <a href="dashboard_dispositivo.html" class="nav-item" title="Dashboard Detalhado">
+                    <div class="nav-icon"><svg viewBox="0 0 24 24" fill="currentColor">
+                            <path
+                                d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z" />
+                        </svg></div>
+                    <span class="nav-label">Dashboard</span>
+                </a>
+                <a href="#" class="nav-item" title="Cadastrar" id="nav_cadastrar">
+                    <div class="nav-icon"><svg viewBox="0 0 24 24" fill="currentColor">
+                            <path
+                                d="M14 2H6c-1.1 0-1.99.9-1.99 2L4 20c0 1.1.89 2 2 2h8c1.1 0 2-.9 2-2V8l-6-6zm2 16H8v-2h8v2zm0-4H8v-2h8v2zm-3-5V3.5L18.5 9H13z" />
+                        </svg></div>
+                    <span class="nav-label" id="nav_cadastrar_label">Cadastrar</span>
+                </a>
+            </div>
+            <div class="sidebar-bottom">
+                <a href="#" class="nav-item" title="Minha Conta">
+                    <div class="nav-icon"><svg viewBox="0 0 24 24" fill="currentColor">
+                            <path
+                                d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z" />
+                        </svg></div>
+                    <span class="nav-label">Conta</span>
+                </a>
+                 <a href="../index.html" class="nav-item" title="Sair" id="btn_sair">
+                    <div class="nav-icon"><svg viewBox="0 0 24 24" fill="currentColor">
+                            <path
+                                d="M10.09 15.59L11.5 17l5-5-5-5-1.41 1.41L12.67 11H3v2h9.67l-2.58 2.59zM19 3H5c-1.11 0-2 .9-2 2v4h2V5h14v14H5v-4H3v4c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2z" />
+                        </svg></div>
+                    <span class="nav-label">Sair</span>
+                </a>
+            </div>
+        </nav>
+
+        <main class="main-content">
+          <header class="page-header">
+                <div class="header-info">
+                    <h1 id="header_title">Modelo x &gt; Dispositivos</h1>
+                      <div class="breadcrumb" id="breadcrumb_path"></div>
+                </div>
+                <div class="header-user" id="header_user_info"></div>
+            </header>
+
+            <div class="dash-content">
+
+              <div class="lista-dispositivos">
+                <div class="lista-cima">
+                    <h3>Dispositivos</h3>
+                </div>
+
+                <div class="lista-baixo">
+                    <div class="dispositivo-card">
+                        <div class="card-container">
+                            <div class="card-cima">
+                                <h3>Dispositivo 1</h3>
+                                <h4>123MP1287512312</h4>
+                            </div>
+                            <div class="card-baixo">
+                                <h4>Alertas recentes: <span>3</span></h4>
+                                <h5>1 hora atrás</h5>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="dispositivo-card">
+                        <div class="card-container">
+                            <div class="card-cima">
+                                <h3>Dispositivo 2</h3>
+                                <h4>123MP1287512312</h4>
+                            </div>
+                            <div class="card-baixo">
+                                <h4>Alertas recentes: <span>1</span></h4>
+                                <h5>10 minutos atrás</h5>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="dispositivo-card">
+                        <div class="card-container">
+                            <div class="card-cima">
+                                <h3>Dispositivo 3</h3>
+                                <h4>123MP1287512312</h4>
+                            </div>
+                            <div class="card-baixo">
+                                <h4>Alertas recentes: <span>0</span></h4>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="dispositivo-card">
+                        <div class="card-container">
+                            <div class="card-cima">
+                                <h3>Dispositivo 4</h3>
+                                <h4>123MP1287512312</h4>
+                            </div>
+                            <div class="card-baixo">
+                                <h4>Alertas recentes: <span>2</span></h4>
+                                <h5>2 minutos atrás</h5>
+                            </div>
+                        </div>
+                    </div>
+                    
+                </div>
+                        
+                
+              </div>
+
+              <div class="dashboard">
+                <div class="dispositivo-info">
+                    <div class="card-info">
+                        <div class="info-esquerda">
+                            <h3>Dispositivo x</h3>
+                            <h4>UUID: 1234567</h4>
+                            <h4>Paciente: 123MP1287512312</h4>
+                        </div>
+                        <div class="info-direita">
+                            <div class="info-kpi">
+                                <h3>Alertas ativos</h3>
+                                <span class="valor-info">4</span>
+                            </div>
+                            <div class="info-kpi">
+                                <h3>Taxa de resolução</h3>
+                                <span class="valor-info">96%</span>
+                            </div>
+                            <div class="info-kpi">
+                                <h3>Criticidade média</h3>
+                                <span class="valor-info">Crítico</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="kpi-top">
+                  <div class="dado">
+                    <div class="dado-container">
+                        <div class="dado-cima">
+                            <h3>Bateria</h3>
+                        </div>
+                        <div class="dado-baixo">
+                            <h4>Nível de bateria atual:</h4>
+                            <div class="barra-container">
+                                <div class="barra-progresso valor-bateria"></div>
+                            </div>
+                        </div>
+                    </div>
+                  </div>
+                  <div class="dado">
+                    <div class="dado-container">
+                        <div class="dado-cima">
+                            <h3>CPU</h3>
+                        </div>
+                        <div class="dado-baixo">
+                            <h4>Portentagem de CPU:</h4>
+                            <div class="barra-container">
+                                <div class="barra-progresso valor-cpu"></div>
+                            </div>
+                        </div>
+                    </div>
+                  </div>
+                  <div class="dado">
+                    <div class="dado-container">
+                        <div class="dado-cima">
+                            <h3>Memória RAM</h3>
+                        </div>
+                        <div class="dado-baixo">
+                            <h4>Porcentagem de RAM:</h4>
+                            <div class="barra-container">
+                                <div class="barra-progresso valor-ram"></div>
+                            </div>
+                        </div>
+                    </div>
+                  </div>
+                  <div class="dado">
+                    <div class="dado-container">
+                        <div class="dado-cima">
+                            <h3>Armazenamento</h3>
+                        </div>
+                        <div class="dado-baixo">
+                            <h4>Espaço ocupado:</h4>
+                            <div class="barra-container">
+                                <div class="barra-progresso valor-flash"></div>
+                            </div>
+                        </div>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="graficos">
+                  <section class="grafico-bateria">
+
+                  </section>
+                </div>
+              </div>
+
+            </div>
+        </main>
+
+
+  </div>
+</body>
+
+</html>
