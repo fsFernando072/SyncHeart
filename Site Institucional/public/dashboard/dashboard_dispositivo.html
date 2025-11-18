@@ -4,7 +4,10 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Dashboard - SyncHeart</title>
+  <title>Dashboard - Syn
+  if (elCpu) elCpu.textContent = cpuPct + '%';
+  if (elRam) elRam.textContent = ramPct + '%';
+  if (elDisk) elDisk.textContent = flashPct + '%';cHeart</title>
 
   <link rel="shortcut icon" href="../assets/Logo_contornada.png" type="image/x-icon">
   <link rel="stylesheet" href="./css/dashboard_dispositivo.css">
@@ -67,7 +70,6 @@
       <header class="page-header">
         <div class="header-info">
           <h1 id="header_title">Visão do paciente</h1>
-          <div class="breadcrumb" id="breadcrumb_path">Clínica A &gt; Modelo Biotronik A &gt; Ilivia Neo7 VR-T</div>
         </div>
         <div class="header-user" id="header_user_info"></div>
       </header>
@@ -153,29 +155,16 @@
                   <div class="mini-value" id="mini_batt">XX%</div>
                 </div>
                 <div class="mini-kpi">
-                  <div class="mini-label">CPU</div>
+                  <div class="mini-label">Média de uso de bateria no dia</div>
                   <div class="mini-value" id="mini_cpu">XX%</div>
                 </div>
                 <div class="mini-kpi">
-                  <div class="mini-label">Memória RAM</div>
-                  <div class="mini-value" id="mini_ram">XX%</div>
-                </div>
-                <div class="mini-kpi">
-                  <div class="mini-label">Memória Flash</div>
-                  <div class="mini-value" id="mini_flash">XX%</div>
+                  <div class="mini-label">Total de alertas no dia</div>
+                  <div class="mini-value" id="mini_flash">XX</div>
                 </div>
               </div>
             </section>
 
-            <!-- Gráfico Donut: De onde estão vindo os alertas -->
-            <section class="dashboard-module" id="module_from_where_alertas">
-              <h2>De onde estão vindo os alertas:</h2>
-              <div class="module-content">
-                <div class="donut">
-                  <canvas id="graficoDonutsWhereFromAlertas"></canvas>
-                </div>
-              </div>
-            </section>
           </div>
 
           <div class="middle-row">
@@ -197,32 +186,7 @@
             </section>
           </div>
 
-          <div class="bottom-row">
-            <!-- Gráfico Linha: Uso de CPU (média % por hora) -->
-            <section class="dashboard-module" id="module_cpu_%_por_hora">
-              <h2>Uso de CPU (média % por hora):</h2>
-              <div class="module-content">
-                <canvas id="graficoCpu%PorHora"></canvas>
-              </div>
-            </section>
-
-
-            <!-- Gráfico Linha: Atividade de memória RAM (média GB por hora) -->
-            <section class="dashboard-module" id="module_ram_gb_por_hora">
-              <h2>Atividade de memória RAM (média GB por hora):</h2>
-              <div class="module-content">
-                <canvas id="graficoRamGbPorHora"></canvas>
-              </div>
-            </section>
-
-            <!-- Gráfico Linha: Consumo de memória flash (média GB por hora) -->
-            <section class="dashboard-module" id="module_flash_gb_por_hora">
-              <h2>Consumo de memória flash (média GB por hora):</h2>
-              <div class="module-content">
-                <canvas id="graficoFlashGbPorHora"></canvas>
-              </div>
-            </section>
-          </div>
+          
           <hr>
           <!-- Eventos recentes / Tabela -->
           <section class="card events-card" aria-label="Eventos recentes">
