@@ -143,27 +143,31 @@
         <!-- <section class="kpi-line" id="kpi_container"></section> -->
 
         <div class="dashboard-grid">
+          <h2>Últimos dados:</h2>
           <div class="top-row">
 
             <!-- KPIs: Últimos dados -->
-            <section class="dashboard-module" id="module_ultimos_dados">
-              <h2>Últimos dados:</h2>
               <!-- 4 mini cards (bateriaXX%, cpuXX%, memoriaramXX%, memoriaflashXX%) -->
-              <div class="mini-kpis">
-                <div class="mini-kpi">
-                  <div class="mini-label">Bateria</div>
-                  <div class="mini-value" id="mini_batt">XX%</div>
-                </div>
-                <div class="mini-kpi">
-                  <div class="mini-label">Média de uso de bateria no dia</div>
-                  <div class="mini-value" id="mini_cpu">XX%</div>
-                </div>
-                <div class="mini-kpi">
-                  <div class="mini-label">Total de alertas no dia</div>
-                  <div class="mini-value" id="mini_flash">XX</div>
-                </div>
-              </div>
-            </section>
+               <section class="kpi-line" id="kpi_container">
+                    <div class="kpi-card devices">
+                        <h2>Bateria atual</h2>
+                        <span class="kpi-value"></span>
+                    </div>
+
+                    <div class="kpi-card alert">
+                        <h2>Média de consumo de Bateria</h2>
+                        <span class="kpi-value"></span>
+                        <span class="kpi-description"><span></span> Vs. semana anterior</span>
+                    </div>
+
+                    <div class="kpi-card battery">
+                        <h2>Total de alertas(últimos 7 dias)</h2>
+                        <span class="kpi-value"></span>
+                        <span class="kpi-description"><span></span> Vs. semana anterior</span>
+                    </div>
+                </section>
+
+            
 
           </div>
 
@@ -179,7 +183,7 @@
 
             <!-- Gráfico Linha: Quantidade de alertas de criticidades (por dia) -->
             <section class="dashboard-module" id="module_alertas_por_dia">
-              <h2>Quantidade de alertas de criticidades (por dia):</h2>
+              <h2>Quantidade de alertas de Severidade (por dia):</h2>
               <div class="module-content">
                 <canvas id="graficoAlertasPorDia"></canvas>
               </div>
@@ -198,7 +202,7 @@
               <thead>
                 <tr>
                   <th>Horário</th>
-                  <th>Evento</th>
+                  <th>Severidade</th>
                   <th>Duração</th>
                 </tr>
               </thead>
@@ -217,6 +221,8 @@
             </table>
           </section>
         </div>
+
+        <section class="button delete"></section>
 
       </div>
     </main>

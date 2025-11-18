@@ -27,7 +27,7 @@ body {
   background-color: #F4F7FA;
   color: #3B3B3B;
   height: 100vh;
-  overflow: hidden;
+  
 }
 
 /* --- 2. LAYOUT PRINCIPAL (container) --- */
@@ -396,25 +396,20 @@ input {
 
 .main-content {
   position: relative;
-  margin-left: calc(var(--sidebar-width) + var(--device-list-width) + 24px);
+  margin-left: calc(var(--sidebar-width) + var(--device-list-width));
   margin-top: calc(var(--header-height) + 24px);
   display: flex;
   flex-direction: column;
-  overflow-y: auto;
   height: calc(100vh - var(--header-height));
   background-color: #F4F7FA;
-  z-index: 5;
+  z-index: 3;
 }
 
 /* container do conteúdo do dashboard */
 .dashboard-container {
-  flex: 1;
-  padding-right: 18px;
   display: flex;
   flex-direction: column;
-  gap: 24px;
-  box-sizing: border-box;
-  z-index: 5;
+  align-items: center;
 }
 
 /* título e breadcrumb */
@@ -431,7 +426,6 @@ input {
   padding-right: 22px;
     border-bottom: 1px solid #e9ecef;
   background: white;
-  z-index: 20;
 }
 
 .page-header h1 {
@@ -459,43 +453,66 @@ input {
 
 /* --- 6. RESTANTE DOS ESTILOS (mantive os seus estilos originais para módulos/KPIs) --- */
 /* KPIs (mini cards) */
-.mini-kpis {
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: 12px;
-  margin-top: 8px;
+/* KPIs */
+.kpi-line {
+    display: flex;
+    gap: 40px;
+    margin-bottom: 20px;
+    margin-top: 50px;
 }
 
-.mini-kpi {
-  background: #fff;
-  border-radius: 8px;
-  padding: 12px;
-  text-align: left;
-  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.04);
-  border: 1px solid #f1e5ec;
+.kpi-card {
+    background: white;
+    padding: 20px;
+    margin-left: 20px;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+    border-left: 5px solid;
+    transition: transform 0.2s, box-shadow 0.2s;
+    height: 7rem;
 }
 
-.mini-label {
-  font-size: 12px;
-  color: #7d6a7d;
-  margin-bottom: 6px;
+.kpi-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.08);
 }
 
-.mini-value {
-  font-size: 20px;
-  font-weight: 800;
-  color: #412051;
+.kpi-card h2 {
+    font-size: 18px;
+    color: #555;
+    margin: 0 0 10px 0;
+    font-weight: 500;
 }
+
+.kpi-card .kpi-value {
+    font-size: 36px;
+    font-weight: 700;
+    color: #333;
+    display: block;
+}
+
+.kpi-card .kpi-description {
+    font-size: 12px;
+    color: #999;
+}
+
+.kpi-card.alert {
+    border-left-color: #e74c3c;
+}
+
+.kpi-card.devices {
+    border-left-color: #34db55;
+}
+
+.kpi-card.battery {
+    border-left-color: #f1c40f;
+}
+
+
 
 /* Grid principal (mantém espaçamento vertical entre os grupos) */
 .dashboard-grid {
   display: flexbox;
-  grid-template-columns: 1fr;
-  padding: 20px;
-  margin: 12px;
-  margin-top: 20px;
-  box-shadow: 0 0 12px rgba(0, 0, 0, 0.2);
-  border-radius: 18px;
 }
 
 /* top-row, middle-row e bottom row: contém módulos que devem ficar lado-a-lado */
@@ -506,7 +523,7 @@ input {
   flex-direction: row;
   gap: 12px;
   padding-bottom: 12px;
-  align-items: stretch;
+  align-items: center;
   width: 100%;
 }
 
@@ -514,7 +531,7 @@ input {
 .dashboard-module {
   flex: 1 1 0;
   /* crescer igualmente, encolher se necessário */
-  min-width: 0;
+  min-width: 2;
   /* importante para permitir encolher dentro do flexbox */
   background: white;
   padding: 20px;
@@ -557,6 +574,7 @@ input {
   .bottom-row {
     display: flex;
     flex-direction: column;
+
     width: 100%;
   }
 }
