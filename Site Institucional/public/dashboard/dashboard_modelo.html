@@ -75,16 +75,53 @@
             <!-- LISTA DE DISPOSITIVOS -->
 
 
-             <div class="dashboard-container">
-                <section class="kpi-line" id="kpi_container"></section>
-                
+            <div class="dashboard-container">
+                <section class="kpi-line" id="kpi_container">
+                    <div class="kpi-card devices">
+                        <h3>Dispositivos Offline</h3>
+                        <span class="kpi-value"></span>
+                        <span class="kpi-description"><span></span> Vs. semana anterior</span>
+                    </div>
+
+                    <div class="kpi-card alert">
+                        <h3>Alertas Ativos</h3>
+                        <span class="kpi-value"></span>
+                        <span class="kpi-description"><span></span> Vs. semana anterior</span>
+                    </div>
+
+                    <div class="kpi-card battery">
+                        <h3>Alertas Críticos</h3>
+                        <span class="kpi-value"></span>
+                        <span class="kpi-description"><span></span> Vs. semana anterior</span>
+                    </div>
+                </section>
+
                 <div class="dashboard-grid">
                     <div class="main-column">
-                        
+
                         <section class="dashboard-module" id="module_historico_alertas">
                             <h2>Histórico de Alertas </h2>
                             <div class="module-content">
                                 <canvas id="graficoHistoricoAlertas"></canvas>
+                            </div>
+                        </section>
+
+                        <section class="list-module">
+                            <h2>Alertas Ativos</h2>
+                            <div id="lista_alertas_container">
+                                <table class="tabela-dados">
+                                    <thead>
+                                        <tr>
+                                            <th>UUID</th>
+                                            <th>Componente</th>
+                                            <th>Severidade</th>
+                                            <th>Ações</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        
+                                    </tbody>
+                                </table>
                             </div>
                         </section>
 
@@ -95,6 +132,25 @@
                             <h2>Tipos de Alertas Ativos</h2>
                             <div class="module-content">
                                 <canvas id="graficoTiposAlertas"></canvas>
+                            </div>
+                        </section>
+
+                        <section class="list-module">
+                            <h2>Limite Parâmetros</h2>
+                            <div id="lista_parametros_container">
+                                <table class="tabela-dados">
+                                    <thead>
+                                        <tr>
+                                            <th>Componente</th>
+                                            <th>Minimo</th>
+                                            <th>Máximo</th>
+                                            <th>Tempo (minutos)</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        
+                                    </tbody>
+                                </table>
                             </div>
                         </section>
                     </div>

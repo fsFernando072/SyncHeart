@@ -98,6 +98,9 @@ body {
     display: flex;
     justify-content: space-between;
     align-items: center;
+    position: sticky;
+    top: 0;
+    z-index: 2;
     padding: 20px 30px;
     background: white;
     border-bottom: 1px solid #e9ecef;
@@ -174,7 +177,7 @@ body {
 }
 
 .kpi-card.devices {
-    border-left-color: #3498db;
+    border-left-color: #34db55;
 }
 
 .kpi-card.battery {
@@ -262,4 +265,40 @@ body {
 .breadcrumb {
     color: #4A154B;
     font-size: 16px;
+}
+
+/* Lista de Dispositivos */
+.list-module {
+    background: white;
+    padding: 25px;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+}
+
+.tabela-dados {
+    width: 100%;
+    border-collapse:
+        collapse;
+}
+
+.tabela-dados th,
+.tabela-dados td {
+    text-align: left;
+    padding: 12px 15px;
+    border-bottom: 1px solid #f0f0f0;
+}
+
+.tabela-dados th {
+    color: #888;
+    font-size: 12px;
+    font-weight: 600;
+    text-transform: uppercase;
+}
+
+.critico {
+    background-color: #c34d4030;
+}
+
+.critico td {
+    color: #e74c3c;
 }
