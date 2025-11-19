@@ -15,6 +15,66 @@ document.addEventListener('DOMContentLoaded', () => {
     let idModeloEmEdicao = null;
     let parametrosCriados = [];
 
+    function adicionarRegraPadrao() {
+        const metrica = document.getElementById('param_metrica').value;
+        const condicao = document.getElementById('param_condicao').value;
+        const valor = document.getElementById('param_valor').value;
+        const duracao = document.getElementById('param_duracao').value;
+
+      
+
+        let novaRegra = {
+            id: Date.now(),
+            metrica: "CPU",
+            condicao: "MAIOR_QUE",
+            limiar_valor: 18,
+            duracao_minutos: 3,
+            criticidade: 'ATENCAO'
+        };
+        
+        parametrosCriados.push(novaRegra);
+        
+        novaRegra = {
+            id: Date.now(),
+            metrica: "RAM",
+            condicao: "MAIOR_QUE",
+            limiar_valor: 70,
+            duracao_minutos: 3,
+            criticidade: 'ATENCAO'
+        };
+
+        parametrosCriados.push(novaRegra);
+
+
+        novaRegra = {
+            id: Date.now(),
+            metrica: "CPU",
+            condicao: "MAIOR_QUE",
+            limiar_valor: 20,
+            duracao_minutos: 3,
+            criticidade: 'CRITICO'
+        };
+        
+        parametrosCriados.push(novaRegra);
+        
+        novaRegra = {
+            id: Date.now(),
+            metrica: "RAM",
+            condicao: "MAIOR_QUE",
+            limiar_valor: 80,
+            duracao_minutos: 3,
+            criticidade: 'CRITICO'
+        };
+
+        parametrosCriados.push(novaRegra);
+
+        renderizarRegras();
+        console.log("Parametros padrão" + parametrosCriados)
+    }
+    adicionarRegraPadrao()
+
+    
+
     // --- 2. FUNÇÃO DE FEEDBACK ---
     function mostrarFeedback(mensagem, tipo = 'error') {
         clearTimeout(feedbackTimeout);
@@ -124,6 +184,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const condicao = document.getElementById('param_condicao').value;
         const valor = document.getElementById('param_valor').value;
         const duracao = document.getElementById('param_duracao').value;
+        const criticidade = document.getElementById('param_criticidade').value;
 
         if (!valor || !duracao) {
             mostrarFeedback("Preencha o valor e a duração para adicionar uma regra.", "error");
@@ -136,7 +197,7 @@ document.addEventListener('DOMContentLoaded', () => {
             condicao: condicao,
             limiar_valor: valor,
             duracao_minutos: duracao,
-            criticidade: 'Atencao'
+            criticidade: criticidade
         };
         
         parametrosCriados.push(novaRegra);
@@ -151,7 +212,7 @@ document.addEventListener('DOMContentLoaded', () => {
         regrasCriadasContainer.innerHTML = `<ul class="lista-regras">
             ${parametrosCriados.map(regra => `
                 <li>
-                    <span>SE ${regra.metrica} for ${regra.condicao === 'MAIOR_QUE' ? '>' : '<'} ${regra.limiar_valor}% por ${regra.duracao_minutos} min</span>
+                   <span>SE ${regra.metrica} for ${regra.condicao === 'MAIOR_QUE' ? '>' : '<'} ${regra.limiar_valor}% por ${regra.duracao_minutos} min, emitir alerta: ${regra.criticidade}</span>
                     <button type="button" class="btn-remover-regra" data-id="${regra.id}">X</button>
                 </li>
             `).join('')}
