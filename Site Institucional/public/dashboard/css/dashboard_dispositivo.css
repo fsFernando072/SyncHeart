@@ -159,10 +159,11 @@ input {
 
 /* THEAD: visual e alinhamento */
 .device-table thead {
-  display: table;
+  display: flex;
   width: 100%;
-  table-layout: fixed;
   background: transparent;
+  flex-direction: column;
+
 }
 
 .device-table thead th {
@@ -447,18 +448,20 @@ input {
     display: flex;
     gap: 40px;
     margin-bottom: 20px;
-    margin-top: 50px;
+    margin-top: 20px;
+    padding-left: 20px;
 }
 
 .kpi-card {
     background: white;
     padding: 20px;
-    margin-left: 20px;
+    
     border-radius: 12px;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
     border-left: 5px solid;
     transition: transform 0.2s, box-shadow 0.2s;
-    height: 7rem;
+    height: 7.5rem;
+    width: 20rem;
 }
 
 .kpi-card:hover {
@@ -523,7 +526,7 @@ input {
   min-width: 2;
   /* importante para permitir encolher dentro do flexbox */
   background: white;
-  padding: 20px;
+  padding: 15px;
   border-radius: 12px;
   box-shadow: 0px 0px 12px rgba(0, 0, 0, 0.05);
   display: flex;
@@ -532,7 +535,7 @@ input {
 
 /* garante que a área do canvas preencha o módulo e mantenha alturas consistentes */
 .module-content {
-  height: 230px;
+  height: 280px;
   width: 500px;
   display: flex;
   align-items: center;
@@ -541,9 +544,13 @@ input {
 }
 
 /* ajuste para os títulos manterem o espaçamento no layout horizontal */
-.dashboard-module h2 {
+.dashboard-module h2{
   margin: 0 0 12px 0;
   font-size: 18px;
+}
+
+.dashboard-grid h2 {
+  margin-left: 20px;
 }
 
 .donut {

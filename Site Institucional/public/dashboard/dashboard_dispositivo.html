@@ -83,21 +83,16 @@
 
       <!-- Lista em si -->
       <div class="sidebar-list-devices" aria-label="Lista de dispositivos">
-
         <!-- Head da lista -->
-        <table class="device-table" role="grid" aria-label="Dispositivos do modelo">
+        <table class="device-table" aria-label="Dispositivos do modelo">
           <thead>
-            <tr role="row" class="device-table-head">
-              <th role="columnheader" class="col-device">Lista de dispositivos:</th>
-              <th role="columnheader" class="col-batt">🔋</th>
-              <th role="columnheader" class="col-alerts">⚠️</th>
+            <tr class="device-table-head">
+              <!-- Input de busca -->
+              <th  class="col-device">Lista de dispositivos:</th>
+              <th  class="col-batt">🔋</th>
+              <th  class="col-alerts">⚠️</th>
             </tr>
           </thead>
-
-          <!-- Input de busca -->
-          <div class="searchbar">
-            <input type="text" id="searchbar_input" placeholder="Buscar">
-          </div>
 
           <!-- Corpo da lista -->
           <tbody id="listaBody">
