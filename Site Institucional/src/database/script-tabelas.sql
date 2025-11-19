@@ -168,11 +168,6 @@ INSERT INTO Cargos (cargo_id, nome_cargo, descricao) VALUES
 INSERT INTO Usuarios (nome_completo, email, senha_hash, cargo_id, clinica_id, ativo) VALUES
 ('Administrador SyncHeart', 'admin@syncheart.com', 'admin123', 1, NULL, 1);
 
-SELECT * FROM cargos;
-SELECT * FROM usuarios;
-SELECT * FROM usuarioEquipe;
-SELECT * FROM EquipesCuidado;
-
 
 -- ============================================
 -- Criação do usuário de banco
@@ -180,9 +175,3 @@ SELECT * FROM EquipesCuidado;
 CREATE USER IF NOT EXISTS 'heart'@'%' IDENTIFIED BY 'Sptech#2024';
 GRANT ALL PRIVILEGES ON syncheart.* TO 'heart'@'%';
 FLUSH PRIVILEGES;
-
-
-select * from ModelosAlertaParametros;
-select * from Modelos;
-
-select * from dispositivos;
