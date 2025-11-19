@@ -107,20 +107,28 @@
                                     <select id="param_metrica" class="form-input-small">
                                         <option value="CPU">CPU</option>
                                         <option value="RAM">RAM</option>
+                                         <option value="BATERIA">BATERIA</option>
                                     </select>
                                     <span>for</span>
                                     <select id="param_condicao" class="form-input-small">
-                                        <option value="MAIOR_QUE"> > </option>
+                                        <option value="MAIOR_QUE"> maior que </option>
                                         <option value="MENOR_QUE">
-                                            < </option>
+                                            menor que </option>
                                     </select>
                                     <input type="number" id="param_valor" placeholder="Valor" class="form-input-small"
                                         style="width: 70px;">
-                                    <span>% por</span>
+                                    <span style="margin-right: 40px;"> % por </span>
                                     <input type="number" id="param_duracao" placeholder="Mins" class="form-input-small"
                                         style="width: 70px;">
                                     <span>min</span>
+                                    <span>, emitir alerta: </span>
+                                     <select id="param_criticidade" class="form-input-small">
+                                        <option value="ATENCAO"> Atenção </option>
+                                        <option value="CRITICO">
+                                            Crítico </option>
+                                    </select>
                                     <button type="button" class="btn-add-rule" id="btn_adicionar_regra">+</button>
+
                                 </div>
                             </section>
                             <button type="submit" class="btn-submit">Cadastrar Modelo e Regras</button>
