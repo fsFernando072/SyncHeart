@@ -5,9 +5,9 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Dashboard - Syn
-  if (elCpu) elCpu.textContent = cpuPct + '%';
-  if (elRam) elRam.textContent = ramPct + '%';
-  if (elDisk) elDisk.textContent = flashPct + '%';cHeart</title>
+    if (elCpu) elCpu.textContent = cpuPct + '%';
+    if (elRam) elRam.textContent = ramPct + '%';
+    if (elDisk) elDisk.textContent = flashPct + '%';cHeart</title>
 
   <link rel="shortcut icon" href="../assets/Logo_contornada.png" type="image/x-icon">
   <link rel="stylesheet" href="./css/dashboard_dispositivo.css">
@@ -96,7 +96,6 @@
 
           <!-- Input de busca -->
           <div class="searchbar">
-            <span class="magnify-icon">🔍︎</span>
             <input type="text" id="searchbar_input" placeholder="Buscar">
           </div>
 
@@ -140,34 +139,32 @@
 
 
       <div class="dashboard-container">
-        <!-- <section class="kpi-line" id="kpi_container"></section> -->
-
         <div class="dashboard-grid">
           <h2>Últimos dados:</h2>
           <div class="top-row">
 
             <!-- KPIs: Últimos dados -->
-              <!-- 4 mini cards (bateriaXX%, cpuXX%, memoriaramXX%, memoriaflashXX%) -->
-               <section class="kpi-line" id="kpi_container">
-                    <div class="kpi-card devices">
-                        <h2>Bateria atual</h2>
-                        <span class="kpi-value"></span>
-                    </div>
+            <!-- 4 mini cards (bateriaXX%, cpuXX%, memoriaramXX%, memoriaflashXX%) -->
+            <section class="kpi-line" id="kpi_container">
+              <div class="kpi-card devices">
+                <h2>Bateria atual</h2>
+                <span class="kpi-value"></span>
+              </div>
 
-                    <div class="kpi-card alert">
-                        <h2>Média de consumo de Bateria</h2>
-                        <span class="kpi-value"></span>
-                        <span class="kpi-description"><span></span> Vs. semana anterior</span>
-                    </div>
+              <div class="kpi-card alert">
+                <h2>Média de consumo de Bateria</h2>
+                <span class="kpi-value"></span>
+                <span class="kpi-description"><span></span> Vs. semana anterior</span>
+              </div>
 
-                    <div class="kpi-card battery">
-                        <h2>Total de alertas(últimos 7 dias)</h2>
-                        <span class="kpi-value"></span>
-                        <span class="kpi-description"><span></span> Vs. semana anterior</span>
-                    </div>
-                </section>
+              <div class="kpi-card battery">
+                <h2>Total de alertas(últimos 7 dias)</h2>
+                <span class="kpi-value"></span>
+                <span class="kpi-description"><span></span> Vs. semana anterior</span>
+              </div>
+            </section>
 
-            
+
 
           </div>
 
@@ -190,7 +187,7 @@
             </section>
           </div>
 
-          
+
           <hr>
           <!-- Eventos recentes / Tabela -->
           <section class="card events-card" aria-label="Eventos recentes">
