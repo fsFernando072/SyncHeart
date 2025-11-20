@@ -1,0 +1,371 @@
+/* ======================================================= */
+/* ARQUIVO DE ESTILO DASHBOARD DO ADMINISTRADOR - SYNC-HEART   */
+/* ======================================================= */
+
+/* --- 0. VARIÁVEIS GLOBAIS DE LARGURA --- */
+:root {
+  --sidebar-width: 90px;
+  /* largura da barra de ícones (fixa) */
+  --app-padding-top: 12px;
+  /* distância do topo (para posicionamento na viewport) */
+  --gap-left: 18px;
+  --header-height: 56px;
+  /* altura do header */
+}
+
+/* --- 1. RESET E GERAL --- */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'Lexend', sans-serif;
+  background-color: #F4F7FA;
+  color: #3B3B3B;
+  height: 100vh;
+  overflow: hidden;
+}
+
+h2 {
+  font-size: 26px;
+  padding-top: 22px;
+  margin-bottom: 16px;
+}
+
+h3 {
+  margin-bottom: 10px;
+}
+
+hr {
+  margin-top: 22px;
+  margin-bottom: 28px;
+  border: 3px solid #9B4B7E;
+  border-radius: 4px;
+}
+
+select {
+  font-family: 'Lexend', sans-serif;
+  font-size: 18px;
+  font-weight: 700;
+  color: #3B3B3B;
+  background-color: #e9ecef;
+  outline: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+/* --- 2. LAYOUT PRINCIPAL (container) --- */
+.app-container {
+  display: flex;
+  height: 100vh;
+  /* necessário para posicionamento absoluto dos painéis */
+}
+
+/* --- 3. BARRA LATERAL (SIDEBAR) */
+.sidebar {
+  width: var(--sidebar-width);
+  min-width: var(--sidebar-width);
+  background: linear-gradient(180deg, #412051 0%, #9B4B7E 100%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
+  transition: width 0.3s;
+  position: fixed;
+  height: 100vh;
+  z-index: 30;
+}
+
+/* Ajustes de blocos dentro da sidebar */
+.sidebar-top,
+.sidebar-bottom {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 15px;
+  margin-top: 20px;
+  margin-bottom: 20px;
+}
+
+/* Ícones/itens da sidebar */
+.nav-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 65px;
+  height: 65px;
+  border-radius: 12px;
+  cursor: pointer;
+  color: white;
+  text-decoration: none;
+  transition: background-color 0.2s, transform 0.12s;
+}
+
+.nav-item:hover {
+  background-color: rgba(255, 255, 255, 0.06);
+}
+
+.nav-item.active {
+  background-color: #D6166F;
+}
+
+.logo-item {
+  margin-bottom: 10px;
+}
+
+.nav-icon {
+  width: 28px;
+  height: 28px;
+  margin-bottom: 5px;
+}
+
+.nav-icon svg {
+  width: 100%;
+  height: 100%;
+}
+
+.nav-label {
+  font-size: 11px;
+  font-weight: 500;
+  line-height: 1.2;
+  text-align: center;
+}
+
+/* --- 4. ÁREA PRINCIPAL --- */
+/* --- 4.1. Geral --- */
+
+.main-content {
+  position: relative;
+  margin-left: var(--sidebar-width);
+  margin-top: calc(var(--header-height) + 24px);
+  display: flex;
+  flex-direction: column;
+  overflow-y: auto;
+  height: calc(100vh - var(--header-height));
+  background-color: #F4F7FA;
+  z-index: 5;
+}
+
+/* --- 4.2. Header --- */
+
+/* título e breadcrumb */
+.page-header {
+  position: fixed;
+  left: var(--sidebar-width);
+  right: 0;
+  top: 0;
+  padding: 17px 30px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  /* alinha o conteúdo com a área do dashboard */
+  padding-right: 22px;
+  border-bottom: 1px solid #e9ecef;
+  background: white;
+  z-index: 20;
+}
+
+.page-header h1 {
+  margin: 0;
+  font-size: 26px;
+  color: #4A154B;
+}
+
+.header-info {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.user-info {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+}
+
+.breadcrumb {
+  color: #4A154B;
+  font-size: 16px;
+}
+
+/* --- 4.3. Painéis --- */
+
+
+/* container do conteúdo do dashboard */
+.dashboard-container {
+  flex: 1;
+  /* padding-left: var(--sidebar-width); */
+  padding-right: 18px;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  box-sizing: border-box;
+  z-index: 5;
+}
+
+/* Grid principal (mantém espaçamento vertical entre os grupos) */
+.dashboard-grid {
+  display: flexbox;
+  grid-template-columns: 1fr;
+  padding: 20px;
+  margin: 20px;
+  margin-top: var(--header-height);
+  box-shadow: 0 0 12px rgba(0, 0, 0, 0.2);
+  border-radius: 18px;
+}
+
+/* top-row, middle-row e bottom row: contém módulos que devem ficar lado-a-lado */
+.segment-row {
+  display: flex;
+  flex-direction: row;
+  gap: 12px;
+  padding-bottom: 12px;
+  align-items: stretch;
+  width: 100%;
+}
+
+.segment-1 {
+  height: 180px;
+  display: flex;
+  justify-content: space-evenly;
+}
+
+#segment-2 {
+  /* height: 180px; */
+}
+
+#segment-3 {}
+
+/* cada módulo dentro das colunas passa a ser flexível e dividir o espaço igualmente */
+.dashboard-module {
+  flex: 1 1 0;
+  /* crescer igualmente, encolher se necessário */
+  min-width: 0;
+  /* importante para permitir encolher dentro do flexbox */
+  background: white;
+  padding: 20px;
+  border-radius: 12px;
+  box-shadow: 0px 0px 12px rgba(0, 0, 0, 0.05);
+  display: flex;
+  flex-direction: column;
+}
+
+/* garante que a área do canvas preencha o módulo e mantenha alturas consistentes */
+.module-content {
+  flex: 1 1 auto;
+  min-height: 130px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 30;
+}
+
+/* ajuste para os títulos manterem o espaçamento no layout horizontal */
+.dashboard-module h2 {
+  margin: 0 0 12px 0;
+  font-size: 18px;
+}
+
+/* --- 4.3.1 KPIs --- */
+.kpis {
+  /* text-align: center; */
+}
+
+.kpi {
+  font-weight: 800;
+  color: #412051;
+}
+
+#kpi_qtd_devices,
+#kpi_qtd_models,
+#kpi_qtd_squads {
+  font-size: 50px;
+  text-align: center;
+}
+
+ul {
+  margin-left: 26px;
+}
+
+#kpi_alerts_total,
+#kpi_alerts_solved,
+#kpi_alerts_on_progress,
+#kpi_alerts_active {
+  font-size: 20px;
+}
+
+
+.mini-kpis {
+  display: flex;
+  /* align-items: stretch; */
+  gap: 12px;
+  margin-top: 8px;
+}
+
+.mini-kpi {
+  background: #fff;
+  border-radius: 8px;
+  padding: 12px;
+  text-align: left;
+  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.04);
+  border: 1px solid #f1e5ec;
+  text-align: center;
+}
+
+.mini-label {
+  font-size: 12px;
+  color: #7d6a7d;
+  margin-bottom: 6px;
+}
+
+.mini-value {
+  font-size: 30px;
+  font-weight: 800;
+  color: #412051;
+}
+
+/* --- 4.3.1.1 KPIs Barra indicadora de nível --- */
+
+.level-indicator-bar {
+  background-color: #E9ECEF;
+  height: 10px;
+  border-radius: 10px;
+}
+.colored-level {
+  background-color: #ffb028;
+  height: 100%;
+  width: 40%;
+  border-radius: 10px;
+}
+
+
+/* --- 4.4. Tabela lista de alertas --- */
+
+/* EVENTS */
+.events-card {
+  background: white;
+  margin-bottom: 20px;
+  padding: 20px;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+  display: flex;
+}
+
+.events-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.events-table th {
+  font-size: 13px;
+  text-align: left;
+  padding: 10px;
+}
+
+.events-table td {
+  padding: 10px;
+  border-top: 1px solid #F3F1F4;
+}
