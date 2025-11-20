@@ -1,0 +1,369 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dashboard Admin - SyncHeart</title>
+
+  <link rel="shortcut icon" href="../assets/Logo_contornada.png" type="image/x-icon">
+  <link rel="stylesheet" href="./css/dashboard_admin.css">
+  <link href="https://fonts.googleapis.com/css2?family=Lexend:wght@100..900&display=swap" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+
+<body>
+  <div class="app-container">
+    <nav class="sidebar">
+      <div class="sidebar-top">
+        <a href="dashboard.html" class="nav-item logo-item">
+          <div class="nav-icon">
+            <svg viewBox="0 0 24 24" fill="currentColor">
+              <path
+                d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z" />
+            </svg>
+          </div>
+        </a>
+        <a href="dashboard.html" class="nav-item" title="Tela Inicial">
+          <div class="nav-icon"><svg viewBox="0 0 24 24" fill="currentColor">
+              <path d="M10 20v-6h4v6h5v-8h4L12 3 2 12h4v8z" />
+            </svg></div>
+          <span class="nav-label">Tela Inicial</span>
+        </a>
+        <a href="dashboard_admin.html" class="nav-item active" title="Dashboard Detalhado">
+          <div class="nav-icon"><svg viewBox="0 0 24 24" fill="currentColor">
+              <path
+                d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z" />
+            </svg></div>
+          <span class="nav-label">Dashboard</span>
+        </a>
+        <a href="#" class="nav-item" title="Cadastrar" id="nav_cadastrar">
+          <div class="nav-icon"><svg viewBox="0 0 24 24" fill="currentColor">
+              <path
+                d="M14 2H6c-1.1 0-1.99.9-1.99 2L4 20c0 1.1.89 2 2 2h8c1.1 0 2-.9 2-2V8l-6-6zm2 16H8v-2h8v2zm0-4H8v-2h8v2zm-3-5V3.5L18.5 9H13z" />
+            </svg></div>
+          <span class="nav-label" id="nav_cadastrar_label">Cadastrar</span>
+        </a>
+      </div>
+      <div class="sidebar-bottom">
+        <a href="#" class="nav-item" title="Minha Conta">
+          <div class="nav-icon"><svg viewBox="0 0 24 24" fill="currentColor">
+              <path
+                d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z" />
+            </svg></div>
+          <span class="nav-label">Conta</span>
+        </a>
+        <a href="login.html" class="nav-item" title="Sair" id="btn_sair">
+          <div class="nav-icon"><svg viewBox="0 0 24 24" fill="currentColor">
+              <path
+                d="M10.09 15.59L11.5 17l5-5-5-5-1.41 1.41L12.67 11H4v2h9.67l-2.58 2.59zM19 3H5c-1.11 0-2 .9-2 2v4h4V5h14v14H5v-4H4v4c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2z" />
+            </svg></div>
+          <span class="nav-label">Sair</span>
+        </a>
+      </div>
+    </nav>
+
+    <main class="main-content">
+      <header class="page-header">
+        <div class="header-info">
+          <h1 id="header_title">Painel do Administrador da Clínica</h1>
+          <div class="breadcrumb" id="breadcrumb_path">Clínica A</div>
+          <!-- provavelmente esse breadcrumb vai ser dinâmico e não mockado -->
+        </div>
+        <div class="header-user" id="header_user_info"></div>
+      </header>
+
+      <div class="dashboard-container">
+
+        <div class="dashboard-grid">
+          <!-- SEGMENTO 1: para informações mais 'absolutas' sobre a clínica -->
+          <div id="segment-1">
+            <h2>Geral da clínica:</h2>
+
+            <div class="segment-row">
+
+              <!-- KPI: Aaaaaaaaaaaaaaaaaaaaa -->
+              <section class="dashboard-module" id="module_cpu_%_por_hora">
+                <h4>Aaaaaaaaaaaaaaaaaaaaa:</h4>
+                <div class="mini-kpis">
+                  <!-- KPI: Quantidade de dispositivos acompanhados na clínica -->
+                  <div class="mini-kpi">
+                    <div class="mini-label">Quantidade de dispositivos acompanhados na clínica:</div>
+                    <div class="mini-value" id="kpi_qtd_devices">XX</div>
+                  </div>
+                  <!-- KPI: Quantidade de modelos de marca-passo na clínica -->
+                  <div class="mini-kpi">
+                    <div class="mini-label">Quantidade de modelos de marca-passo na clínica:</div>
+                    <div class="mini-value" id="kpi_qtd_models">XX</div>
+                  </div>
+                  <!-- KPI: Quantidade de equipes na clínica -->
+                  <div class="mini-kpi">
+                    <div class="mini-label">Quantidade de equipes de cuidado na clínica:</div>
+                    <div class="mini-value" id="kpi_qtd_squads">XX</div>
+                  </div>
+                </div>
+              </section>
+              
+              <!-- KPI: Risco operacional -->
+              <section class="dashboard-module" id="module_cpu_%_por_hora">
+                <h4>Risco operacional:</h4>
+                <div class="mini-kpis">
+                  <div class="mini-kpi">
+                    <div class="mini-label">Quantidade de dispositivos que tem alertas não resolvidos:</div>
+                    <div class="mini-value" id="qtd_unsolved">XX</div>
+                    <div class="level-indicator-bar">
+                      <div class="colored-level" id="level_qtd_overwhelmed_squads"></div>
+                    </div>
+                  </div>
+                  <div class="mini-kpi">
+                    <div class="mini-label">Quantidade de equipes sobrecarregadas (>30 alertas não resolvidos)</div>
+                    <div class="mini-value" id="qtd_overwhelmed_squads">XX</div>
+                    <div class="level-indicator-bar">
+                      <div class="colored-level" id="level_qtd_overwhelmed_squads"></div>
+                    </div>
+                  </div>
+                  <div class="mini-kpi">
+                    <div class="mini-label">Tempo médio de resolução dos alertas (em dias):</div>
+                    <div class="mini-value" id="mean_time_resolution">XX</div>
+                    <span style="font-weight: 700; color: #412051;">dias</span>
+                  </div>
+                </div>
+              </section>
+
+
+            </div>
+          </div>
+
+          <hr>
+
+          <!-- SEGMENTO 2: riscos e desempenho detalhado das equipes -->
+          <h2>Detalhes das equipes:</h2>
+          <div id="segment-2">
+            <div class="segment-row">
+
+              <!-- Gráfico Linha: Acompanhamento de tarefas da equipe -->
+              <section class="dashboard-module" id="module_ram_gb_por_hora">
+                <h4>Acompanhamento de tarefas da equipe:</h4>
+                <div class="module-content">
+                  <canvas id="graficoRamGbPorHora"></canvas>
+                  aqui vai ter um gráfico de barras empilhadas. exemplo:
+                  <br>
+                  ⁃ Equipe Alpha: 10 resolvidos, 3 em acompanhamento e 1 ativos <br>
+                  ⁃ Equipe Beta: 8 resolvidos, 2 em acompanhamento e 3 ativos <br>
+                  ⁃ Equipe Gamma: 7 resolvidos, 6 em acompanhamento e 2 ativos <br>
+                </div>
+              </section>
+
+            </div>
+          </div>
+
+          <hr>
+
+          <!-- SEGMENTO 3: Informações filtradas da clínica -->
+          <div id="segment-3">
+
+            <div class="filters">
+              <h2>Informações filtradas:</h2>
+              <h3>
+                <span>Filtrar por modelos:</span>
+                <!-- as options desse select vão ser buscados do banco de dados -->
+                <select name="" id="filter_by_model" onchange="atualizarKpisPorModelo(this.value)">
+                  <!-- essa função ainda não existe no arq .js -->
+                  <option value="geral" selected>Geral</option>
+                  <option value="biotronik-a-ilivia-neo7-vr-t">Biotronik A: Ilivia Neo7 VR-T</option>
+                </select>
+              </h3>
+              <h3>
+                <span>Filtrar por tempo:</span>
+                <select name="" id="filter_by_period" onchange="atualizarKpisPorPeriodo(this.value)">
+                  <!-- essa função ainda não existe no arq .js -->
+                  <option value="last_7_days">últimos 7 dias</option>
+                  <option value="last_15_days">últimos 15 dias</option>
+                  <option value="last_30_days" selected>últimos 30 dias</option>
+                  <option value="last_2_months">últimos 2 meses</option>
+                  <option value="last_6_months">últimos 6 meses</option>
+                  <option value="last_1_years">últimos 1 ano</option>
+                  <option value="since_always">Desde sempre</option>
+                </select>
+              </h3>
+            </div>
+
+            <div class="segment-row">
+              <!-- Gráfico Donut: Status dos alertas -->
+              <section class="dashboard-module" id="module_alertas_status">
+                <h4>Status dos alertas:</h4>
+                <!--  -->
+                <div class="kpis">
+                  <ul>
+                    <li>
+                      <span>Total de alertas:</span>
+                      <span class="kpi" id="kpi_alerts_total">XX</span>
+                    </li>
+                    <li>
+                      <span>Alertas resolvidos:</span>
+                      <span class="kpi" id="kpi_alerts_solved">XX</span>
+                    </li>
+                    <li>
+                      <span>Alertas em acompanhamento:</span>
+                      <span class="kpi" id="kpi_alerts_in_progress">XX</span>
+                    </li>
+                    <li>
+                      <span>Alertas ativos:</span>
+                      <span class="kpi" id="kpi_alerts_active">XX</span>
+                    </li>
+                  </ul>
+                </div>
+                <div class="module-content">
+                  <canvas id="graficoDonutStatusAlertas"></canvas>
+                  Gráfico donut
+                </div>
+              </section>
+
+              <!-- Gráfico de barras: tempo de resolução médio de cada equipe -->
+              <section class="dashboard-module" id="module_alertas_origem">
+                <h4>Tempo de resolução:</h4>
+                <!--  -->
+                <div class="module-content">
+                  <canvas id="graficoDonutOrigemAlertas"></canvas>
+                  Gráfico de barras mostrando as equipes e o tempo médio de resolução delas
+                </div>
+              </section>
+
+            </div>
+
+            <!-- Eventos recentes / Tabela -->
+            <section class="card events-card" aria-label="Eventos recentes">
+              <div class="card-header">
+                <h4>Eventos recentes</h4>
+              </div>
+                <table class="events-table" aria-describedby="eventos-desc">
+                  <caption id="eventos-desc" style="display:none">Lista de eventos recentes do dispositivo</caption>
+                  <thead>
+                    <tr>
+                      <th>Severidade</th>
+                      <th>Tempo de resolução</th>
+                      <th>Horário</th>
+                      <th>Data de resolução</th>
+                      <th>Evento</th>
+                      <th>Duração evento</th>
+                    </tr>
+                  </thead>
+                  <tbody id="eventsBody">
+                    <tr>
+                      <td>Atenção</td>
+                      <td>2 dias</td>
+                      <td>2025-10-12 03:12</td>
+                      <td>2025-10-14 15:30</td>
+                      <td>RAM &lt; 90%</td>
+                      <td>5 min</td>
+                    </tr>
+                    <tr>
+                      <td>Crítico</td>
+                      <td>13 dias</td>
+                      <td>2025-10-11 10:45</td>
+                      <td>2025-10-24 09:39</td>
+                      <td>CPU &gt; 80%</td>
+                      <td>2 min</td>
+                    </tr>
+                    <tr>
+                      <td>Crítico</td>
+                      <td>13 dias</td>
+                      <td>2025-10-11 10:45</td>
+                      <td>2025-10-24 09:39</td>
+                      <td>CPU &gt; 80%</td>
+                      <td>2 min</td>
+                    </tr>
+                    <tr>
+                      <td>Crítico</td>
+                      <td>13 dias</td>
+                      <td>2025-10-11 10:45</td>
+                      <td>2025-10-24 09:39</td>
+                      <td>CPU &gt; 80%</td>
+                      <td>2 min</td>
+                    </tr>
+                    <tr>
+                      <td>Crítico</td>
+                      <td>13 dias</td>
+                      <td>2025-10-11 10:45</td>
+                      <td>2025-10-24 09:39</td>
+                      <td>CPU &gt; 80%</td>
+                      <td>2 min</td>
+                    </tr>
+                    <tr>
+                      <td>Crítico</td>
+                      <td>13 dias</td>
+                      <td>2025-10-11 10:45</td>
+                      <td>2025-10-24 09:39</td>
+                      <td>CPU &gt; 80%</td>
+                      <td>2 min</td>
+                    </tr>
+                    <tr>
+                      <td>Crítico</td>
+                      <td>13 dias</td>
+                      <td>2025-10-11 10:45</td>
+                      <td>2025-10-24 09:39</td>
+                      <td>CPU &gt; 80%</td>
+                      <td>2 min</td>
+                    </tr>
+                    <tr>
+                      <td>Crítico</td>
+                      <td>13 dias</td>
+                      <td>2025-10-11 10:45</td>
+                      <td>2025-10-24 09:39</td>
+                      <td>CPU &gt; 80%</td>
+                      <td>2 min</td>
+                    </tr>
+                    <tr>
+                      <td>Crítico</td>
+                      <td>13 dias</td>
+                      <td>2025-10-11 10:45</td>
+                      <td>2025-10-24 09:39</td>
+                      <td>CPU &gt; 80%</td>
+                      <td>2 min</td>
+                    </tr>
+                    <tr>
+                      <td>Crítico</td>
+                      <td>13 dias</td>
+                      <td>2025-10-11 10:45</td>
+                      <td>2025-10-24 09:39</td>
+                      <td>CPU &gt; 80%</td>
+                      <td>2 min</td>
+                    </tr>
+                    <tr>
+                      <td>Crítico</td>
+                      <td>13 dias</td>
+                      <td>2025-10-11 10:45</td>
+                      <td>2025-10-24 09:39</td>
+                      <td>CPU &gt; 80%</td>
+                      <td>2 min</td>
+                    </tr>
+                    <tr>
+                      <td>Crítico</td>
+                      <td>13 dias</td>
+                      <td>2025-10-11 10:45</td>
+                      <td>2025-10-24 09:39</td>
+                      <td>CPU &gt; 80%</td>
+                      <td>2 min</td>
+                    </tr>
+                    <tr>
+                      <td>Crítico</td>
+                      <td>13 dias</td>
+                      <td>2025-10-11 10:45</td>
+                      <td>2025-10-24 09:39</td>
+                      <td>CPU &gt; 80%</td>
+                      <td>2 min</td>
+                    </tr>
+                  </tbody>
+                </table>
+            </section>
+          </div>
+
+        </div>
+
+      </div>
+    </main>
+  </div>
+  <script src="js/dashboard_admin.js"></script>
+</body>
+
+</html>
