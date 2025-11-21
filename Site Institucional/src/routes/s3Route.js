@@ -8,8 +8,4 @@ router.get('/dados/:arquivo', (req, res) => {
   s3Controller.lerArquivo(req, res);
 });
 
-router.get('/ver/:arquivo', (req, res) => {
-  res.sendFile(path.join(__dirname, '../../public', 'index.html'));
-});
-
 module.exports = router;

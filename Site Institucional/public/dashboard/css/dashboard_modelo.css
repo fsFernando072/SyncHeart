@@ -14,7 +14,7 @@ body {
     background-color: #f4f7fa;
     color: #3b3b3b;
     height: 100vh;
-    overflow: hidden;
+    overflow-x: hidden;
 }
 
 .app-container {
@@ -92,6 +92,7 @@ body {
     display: flex;
     flex-direction: column;
     overflow-y: auto;
+    scroll-behavior: smooth;
 }
 
 .page-header {
@@ -146,6 +147,7 @@ body {
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
     border-left: 5px solid;
     transition: transform 0.2s, box-shadow 0.2s;
+    cursor: pointer;
 }
 
 .kpi-card:hover {
@@ -189,6 +191,7 @@ body {
     display: grid;
     grid-template-columns: 2fr 1fr;
     gap: 30px;
+    margin-bottom: 30px;
 }
 
 .main-column,
@@ -293,6 +296,21 @@ body {
     font-size: 12px;
     font-weight: 600;
     text-transform: uppercase;
+    cursor: pointer;
+    user-select: none;
+}
+
+#lista_alertas_container tr:not(.critico) td:nth-of-type(3){
+    color: #f1c40f;
+}
+
+#lista_dispositivos_container tr:not(.critico) td:nth-of-type(4){
+    color: #34db55;
+}
+
+#lista_parametros_container td:nth-of-type(1),
+#lista_alertas_container td:nth-of-type(2) {
+    font-weight: 600;
 }
 
 .critico {
@@ -301,4 +319,50 @@ body {
 
 .critico td {
     color: #e74c3c;
+}
+
+.btn-editar {
+    background: #D6166F;
+    color: white;
+    border: none;
+    padding: 8px 12px;
+    border-radius: 8px;
+    font-size: 14px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    text-align: center;
+    text-decoration: none;
+}
+
+.btn-editar:hover {
+    background: #b81360;
+    transform: translateY(-2px);
+}
+
+#lista_dispositivos_container, #lista_alertas_container {
+    scroll-margin-top: 150px;
+}
+
+.subir {
+    background-color: #00000066;
+    position: fixed;
+    right: 15px;
+    bottom: 125px;
+    border-top-left-radius: 5px;
+    border-bottom-left-radius: 5px;
+    padding: 8px 15px 0 15px;
+    line-height: 40px;
+    margin-right: -20%;
+    text-align: center;
+    cursor: pointer;
+    transition: all 1s ease-in-out;
+}
+
+.subir span {
+    line-height: 30px;
+    display: block;
+    font-size: 30px;
+    color: #fff;
+    font-weight: 300;
+    user-select: none;
 }
