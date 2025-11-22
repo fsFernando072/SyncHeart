@@ -1,0 +1,11 @@
+const express = require('express');
+const router = express.Router();
+const path = require('path');
+
+const s3Controller = require('../controllers/s3Controller');
+
+router.get('/dados/:arquivo', (req, res) => {
+  s3Controller.lerArquivo(req, res);
+});
+
+module.exports = router;

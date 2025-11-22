@@ -20,6 +20,7 @@ var dispositivoRouter = require("./src/routes/dispositivos");
 const clinicaRoutes = require('./src/routes/clinicas'); 
 const equipeRouter = require("./src/routes/equipes");
 var modeloRouter = require("./src/routes/modelos");
+const s3Router = require('./src/routes/s3Route');
 
 
 
@@ -35,6 +36,7 @@ app.use("/aprovacao", aprovacaoRouter);
 app.use("/dispositivos", dispositivoRouter);
 
 // == NOVO == //
+app.use('/s3Route', s3Router);
 app.use('/clinicas', clinicaRoutes);
 app.use("/equipes", equipeRouter);
 app.use("/modelos", modeloRouter);
