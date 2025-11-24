@@ -138,7 +138,7 @@ body {
 .lista-dispositivos {
   width: 20%;
   height: 50rem;
-  border: 1px solid black;
+  box-shadow: 0px 0px 12px rgba(0, 0, 0, 0.05);
   border-radius: 10px;
   background-color: #ffff;
   display: flex;
@@ -148,16 +148,31 @@ body {
 }
 
 .lista-cima {
-    height: 10%;
+    height: 15%;
     width: 100%;
     display: flex;
+    flex-direction: column;
     justify-content: center;
     align-items: center;
+    gap: 1rem;
     font-size: 20px;
 }
 
+.barra-pesquisa {
+    width: 80%;
+    height: 25%;
+    border-radius: 5px;
+    padding-left: 5px;
+    border: 1px solid black;
+}
+
+.barra-pesquisa:focus {
+    outline: none;
+}
+
+
 .lista-baixo {
-    height: 90%;
+    height: 80%;
     width: 100%;
     display: flex;
     flex-direction: column;
@@ -170,12 +185,20 @@ body {
 .dispositivo-card {
     width: 80%;
     height: 9rem;
-    border: 1px solid black;
+    border: 1px solid rgb(194, 194, 194);
     border-radius: 10px;
     flex-shrink: 0;
     display: flex;
     justify-content: center;
     align-items: center;
+    cursor: pointer;
+    transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.dispositivo-card:hover {
+    border: 1px solid black;
+    transform: translateX(-5px);
+    transition: 0.5s ease;
 }
 
 .card-container {
@@ -188,11 +211,29 @@ body {
 }
 
 .card-cima {
-    width: 80%;
+    width: 95%;
     height: 40%;
     display: flex;
     flex-direction: column;
     gap: 3px;
+}
+
+.titulo-card {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.status-dispositivo {
+    font-weight: 700;
+    font-size: 17px;
+    background-color: rgb(0, 247, 0);
+    color: rgb(0, 170, 0);
+    border-radius: 5px;
+    width: 30%;
+    text-align: center;
+    padding: 1px;
 }
 
 .card-cima h3 {
@@ -228,13 +269,14 @@ body {
   justify-content: flex-start;
   align-items: center;
   flex-direction: column;
+  gap: 1rem;
 }
 
 .dispositivo-info {
   width: 90%;
   height: 10rem;
   background-color: #ffff;
-  border: 1px solid black;
+  box-shadow: 0px 0px 12px rgba(0, 0, 0, 0.05);
   border-radius: 10px;
   display: flex;
   justify-content: center;
@@ -278,7 +320,7 @@ body {
 .info-kpi {
     width: 32%;
     height: 100%;
-    border: 2px solid black;
+    border: 2px solid rgb(194, 194, 194);
     border-radius: 10px;
     display: flex;
     flex-direction: column;
@@ -306,7 +348,7 @@ body {
   width: 24%;
   height: 90%;
   background-color: #ffff;
-  border: 1px solid black;
+  box-shadow: 0px 0px 12px rgba(0, 0, 0, 0.05);
   border-radius: 10px;
   display: flex;
   align-items: center;
@@ -371,14 +413,14 @@ body {
 .barra-container {
     width: 100%;
     height: 15%;
-    background-color: rgba(105, 105, 119, 0.425);
+    background-color: rgb(228, 228, 228);
     border-radius: 20px;
 }
 
 .valor-bateria {
     width: 90%;
     height: 100%;
-    background-color: rgb(0, 196, 0);
+    background-color: rgb(0, 247, 0);
     border-radius: 20px;
 }
 
@@ -392,7 +434,7 @@ body {
 .valor-ram {
     width: 33%;
     height: 100%;
-    background-color: rgb(0, 196, 0);
+    background-color: rgb(0, 247, 0);
     border-radius: 20px;
 }
 
@@ -410,12 +452,54 @@ body {
   flex-wrap: wrap;
   justify-content: space-between;
   align-items: center;
+  gap: 1rem;
 }
 
-.grafico-bateria {
-  width: 100%;
-  height: 30rem;
-  background-color: #ffff;
-  border: 1px solid black;
-  border-radius: 10px;
+.graficos-principais {
+    width: 48%;
+    height: 20rem;
+    box-shadow: 0px 0px 12px rgba(0, 0, 0, 0.05);
+    background-color: #ffff;
+    border-radius: 10px;
+}
+
+.lista-alertas {
+    height: 30rem;
+    width: 90%;
+    box-shadow: 0px 0px 12px rgba(0, 0, 0, 0.05);
+    border-radius: 10px;
+    background-color: #ffff;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-around;
+}
+
+.lista-alertas h3 {
+    font-size: 25px;
+}
+
+.corpo-tabela {
+    width: 80%;
+    height: 80%;
+    border: 1px solid black;
+    border-radius: 10px;
+}
+
+.header-alerta {
+    width: 100%;
+    height: 10%;
+    border-bottom: 1px solid black;
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+}
+
+.linha-alerta {
+    width: 100%;
+    height: 10%;
+    border-bottom: 1px solid black;
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
 }

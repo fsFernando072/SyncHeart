@@ -77,13 +77,16 @@
               <div class="lista-dispositivos">
                 <div class="lista-cima">
                     <h3>Dispositivos</h3>
+                    <input type="text" class="barra-pesquisa" id="barra-pesquisa" placeholder="Buscar Dispositivo">
                 </div>
 
                 <div class="lista-baixo">
                     <div class="dispositivo-card">
                         <div class="card-container">
                             <div class="card-cima">
-                                <h3>Dispositivo 1</h3>
+                                <div class="titulo-card">
+                                    <h3>Dispositivo 1</h3> <span class="status-dispositivo">Online</span>
+                                </div>
                                 <h4>123MP1287512312</h4>
                             </div>
                             <div class="card-baixo">
@@ -95,7 +98,9 @@
                     <div class="dispositivo-card">
                         <div class="card-container">
                             <div class="card-cima">
-                                <h3>Dispositivo 2</h3>
+                                <div class="titulo-card">
+                                    <h3>Dispositivo 2</h3> <span class="status-dispositivo">Online</span>
+                                </div>
                                 <h4>123MP1287512312</h4>
                             </div>
                             <div class="card-baixo">
@@ -107,7 +112,9 @@
                     <div class="dispositivo-card">
                         <div class="card-container">
                             <div class="card-cima">
-                                <h3>Dispositivo 3</h3>
+                                <div class="titulo-card">
+                                    <h3>Dispositivo 3</h3> <span class="status-dispositivo">Online</span>
+                                </div>
                                 <h4>123MP1287512312</h4>
                             </div>
                             <div class="card-baixo">
@@ -118,7 +125,9 @@
                     <div class="dispositivo-card">
                         <div class="card-container">
                             <div class="card-cima">
-                                <h3>Dispositivo 4</h3>
+                                <div class="titulo-card">
+                                    <h3>Dispositivo 4</h3> <span class="status-dispositivo">Online</span>
+                                </div>
                                 <h4>123MP1287512312</h4>
                             </div>
                             <div class="card-baixo">
@@ -147,12 +156,12 @@
                                 <span class="valor-info">4</span>
                             </div>
                             <div class="info-kpi">
-                                <h3>Taxa de resolução</h3>
-                                <span class="valor-info">96%</span>
+                                <h3>Última captura</h3>
+                                <span class="valor-info">1 hora</span>
                             </div>
                             <div class="info-kpi">
-                                <h3>Criticidade média</h3>
-                                <span class="valor-info">Crítico</span>
+                                <h3>Status</h3>
+                                <span class="valor-info">Online</span>
                             </div>
                         </div>
                     </div>
@@ -214,10 +223,40 @@
                 </div>
 
                 <div class="graficos">
-                  <section class="grafico-bateria">
+                  <section class="graficos-principais">
+
+                  </section>
+                  <section class="graficos-principais">
+
+                  </section>
+                  <section class="graficos-principais">
+                    
+                  </section>
+                  <section class="graficos-principais">
 
                   </section>
                 </div>
+
+                <section class="lista-alertas">
+                    <h3>Histórico de Alertas</h3>
+
+                    <div class="corpo-tabela">
+                        <div class="header-alerta">
+                            <span class="valor-header">ID</span>
+                            <span class="valor-header">DATA</span>
+                            <span class="valor-header">SEVERIDADE</span>
+                            <span class="valor-alerta">COMPONENTE</span>
+                        </div>
+
+
+                        <div class="linha-alerta">
+                            <span class="valor-linha">1</span>
+                            <span class="valor-linha">20/11/2025 12:00</span>
+                            <span class="valor-linha">Crítico</span>
+                            <span class="valor-linha">RAM</span>
+                        </div>
+                    </div>
+                </section>
               </div>
 
             </div>
