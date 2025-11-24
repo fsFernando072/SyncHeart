@@ -1,8 +1,6 @@
 // Arquivo: js/dashboard_modelo.js
 
 document.addEventListener('DOMContentLoaded', () => {
-    let alertaData;
-    let parametroData;
     let dispositivoData;
 
     let ordens = [
@@ -45,7 +43,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
         carregarKPIs();
         carregarGraficos();
-        configurarBotaoCadastrar();
         carregarAlertasAtivos();
         carregarParametros();
         carregarDispositivos();
@@ -262,43 +259,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
     }
 
-
-    function configurarBotaoCadastrar() {
-        const dadosUsuarioLogado = JSON.parse(sessionStorage.getItem("USUARIO_LOGADO"));
-        const cargoId = dadosUsuarioLogado.usuario.cargoId;
-
-        const botaoCadastrar = document.getElementById('nav_cadastrar');
-        const labelCadastrar = document.getElementById('nav_cadastrar_label');
-
-        // Garante que os elementos existem antes de tentar alterar
-        if (!botaoCadastrar || !labelCadastrar) {
-            return;
-        }
-
-        // Esconde o botão por padrão. Ele só será exibido se o cargo tiver uma função de cadastro.
-        botaoCadastrar.style.display = 'none';
-
-        switch (cargoId) {
-            case 2: // Admin da Clínica
-                labelCadastrar.textContent = 'Funcionários';
-                botaoCadastrar.href = 'crud_funcionario.html';
-                botaoCadastrar.title = 'Gerenciar Funcionários';
-                botaoCadastrar.style.display = 'flex'; // Torna o botão visível
-                break;
-            case 4: // Engenharia Clínica
-                labelCadastrar.textContent = 'Modelos';
-                botaoCadastrar.href = 'crud_modelo.html';
-                botaoCadastrar.title = 'Gerenciar Modelos de MP';
-                botaoCadastrar.style.display = 'flex';
-                break;
-            case 3: // Eletrofisiologista
-                labelCadastrar.textContent = 'Marcapassos';
-                botaoCadastrar.href = 'provisionar_dispositivo.html';
-                botaoCadastrar.title = 'Provisionar Marcapassos';
-                botaoCadastrar.style.display = 'flex';
-                break;
-        }
-    }
 
     function carregarAlertasAtivos(data) {
 
@@ -536,6 +496,10 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function selectionSortNumerico(data, coluna, nomeLista) {
+        if (data.length == 0) {
+            return;
+        }
+
         let ordem;
 
         if (nomeLista == "alertas") {
@@ -594,9 +558,12 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function selectionSortString(data, coluna, nomeLista) {
+        if (data.length == 0) {
+            return;
+        }
+
         let ordem;
 
-        
         if (nomeLista == "alertas") {
             ordem = (ordens[0][coluna] == "asc") ? "desc" : "asc";
             ordens[0][coluna] = ordem; 
