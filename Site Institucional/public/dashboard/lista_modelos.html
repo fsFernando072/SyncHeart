@@ -4,10 +4,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dashboard Modelo - SyncHeart</title>
+    <title>Modelos - SyncHeart</title>
 
     <link rel="shortcut icon" href="../assets/Logo_contornada.png" type="image/x-icon">
-    <link rel="stylesheet" href="./css/dashboard_modelo.css">
+    <link rel="stylesheet" href="./css/lista_modelos.css">
     <link href="https://fonts.googleapis.com/css2?family=Lexend:wght@100..900&display=swap" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
@@ -41,14 +41,14 @@
                     </div>
                     <span class="nav-label">Cadastrar</span>
                 </a>
-                <a href="lista_modelos.html" class="nav-item active" title="Modelos">
+                <a href="lista_modelos.html" class="nav-item active" title="Modelos" id="nav_cadastrar">
                     <div class="nav-icon">
                         <svg viewBox="0 0 24 24" fill="currentColor">
                             <path
                                 d="M10 10.02h5V21h-5zM17 21h3c1.1 0 2-.9 2-2v-9h-5v11zm3-18H5c-1.1 0-2 .9-2 2v3h19V5c0-1.1-.9-2-2-2zM3 19c0 1.1.9 2 2 2h3V10H3v9z" />
                         </svg>
                     </div>
-                    <span class="nav-label">Modelos</span>
+                    <span class="nav-label" id="nav_cadastrar_label">Modelos</span>
                 </a>
             </div>
             <div class="sidebar-bottom">
@@ -86,96 +86,17 @@
 
 
             <div class="dashboard-container">
-                <section class="kpi-line" id="kpi_container">
-                    <div class="kpi-card devices">
-                        <h3>Dispositivos Offline</h3>
-                        <span class="kpi-value"></span>
-                        <span class="kpi-description"><span></span> Vs. semana anterior</span>
-                    </div>
-
-                    <div class="kpi-card alert">
-                        <h3>Alertas Ativos</h3>
-                        <span class="kpi-value"></span>
-                        <span class="kpi-description"><span></span> Vs. semana anterior</span>
-                    </div>
-
-                    <div class="kpi-card battery">
-                        <h3>Alertas Críticos</h3>
-                        <span class="kpi-value"></span>
-                        <span class="kpi-description"><span></span> Vs. semana anterior</span>
-                    </div>
-                </section>
-
-                <div class="dashboard-grid">
-                    <div class="main-column">
-
-                        <section class="dashboard-module" id="module_historico_alertas">
-                            <h2>Histórico de Alertas </h2>
-                            <div class="module-content">
-                                <canvas id="graficoHistoricoAlertas"></canvas>
-                            </div>
-                        </section>
-
-                        <section class="list-module">
-                            <h2>Alertas Ativos</h2>
-                            <div id="lista_alertas_container">
-                                <table class="tabela-dados">
-                                    <thead>
-                                        <tr>
-                                            <th>UUID &#709;</th>
-                                            <th>Componente &#709;</th>
-                                            <th>Severidade &#709;</th>
-                                            <th>Ações</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-
-                                    </tbody>
-                                </table>
-                            </div>
-                        </section>
-
-                    </div>
-
-                    <div class="side-column">
-                        <section class="dashboard-module" id="module_tipos_alertas">
-                            <h2>Tipos de Alertas Ativos</h2>
-                            <div class="module-content">
-                                <canvas id="graficoTiposAlertas"></canvas>
-                            </div>
-                        </section>
-
-                        <section class="list-module">
-                            <h2>Limite Parâmetros</h2>
-                            <div id="lista_parametros_container">
-                                <table class="tabela-dados">
-                                    <thead>
-                                        <tr>
-                                            <th>Componente &#709;</th>
-                                            <th>Mínimo &#709;</th>
-                                            <th>Máximo &#709;</th>
-                                            <th>Tempo (minutos) &#709;</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-
-                                    </tbody>
-                                </table>
-                            </div>
-                        </section>
-                    </div>
-                </div>
-
                 <section class="list-module">
-                    <h2>Dispositivos</h2>
-                    <div id="lista_dispositivos_container">
+                    <h2>Modelos</h2>
+                    <div id="lista_modelos_container">
                         <table class="tabela-dados">
                             <thead>
                                 <tr>
-                                    <th>UUID &#709;</th>
+                                    <th>Fabricante &#709;</th>
+                                    <th>Nome do Modelo &#709;</th>
+                                    <th>Dispositivos Offline &#709;</th>
                                     <th>Alertas Ativos &#709;</th>
                                     <th>Alertas Críticos &#709;</th>
-                                    <th>Status &#709;</th>
                                     <th>Ações</th>
                                 </tr>
                             </thead>
@@ -194,7 +115,7 @@
             </div>
         </main>
     </div>
-    <script src="js/dashboard_modelo.js"></script>
+    <script src="js/lista_modelos.js"></script>
 </body>
 
 </html>
