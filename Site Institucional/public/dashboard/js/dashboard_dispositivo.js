@@ -79,6 +79,17 @@ function initAllCharts(sample) {
           backgroundColor: 'rgba(214,22,111,0.08)'
         }]
       },
+      annotation: {
+        annotations: [{
+          type: 'line',
+          mode: 'horizontal',
+          scaleID: 'y-axis-0',
+          value: '50',
+          fill: true,
+          borderColor: 'orange',
+          borderWidth: 2
+        }]
+      },
       options: { responsive: true, maintainAspectRatio: false, scales: { y: { beginAtZero: true, max: 100 } } }
     });
   }
