@@ -140,7 +140,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // --- FUNÇÃO PARA CARREGAR OS GRÁFICOS ---
     function carregarGraficos() {
 
-        const dadosHistoricoAlertas = { labels: ['Dom', 'Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sáb'], valoresReais: [3, 5, 2, 8, 4, 7], valoresPrevistos: [4, 8, 2, 5, 8, 2, 3] };
+        const dadosHistoricoAlertas = { labels: ['Dom', 'Seg', 'Ter', 'Qua', 'Qui', 'Sex (Hoje)', 'Sáb'], valoresReais: [3, 5, 2, 8, 4, 7], valoresPrevistos: [4, 8, 2, 5, 8, 2, 3] };
         const dadosTiposAlertas = { labels: ['CPU', 'Bateria', 'RAM', 'Disco'], valores: [4, 2, 1, 0] };
         const ctxHistorico = document.getElementById('graficoHistoricoAlertas').getContext('2d');
         new Chart(ctxHistorico,
@@ -149,7 +149,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 data: {
                     labels: dadosHistoricoAlertas.labels,
                     datasets: [{
-                        label: 'Alertas Ativos',
+                        label: 'Alertas Emitidos',
                         data: dadosHistoricoAlertas.valoresReais,
                         backgroundColor: 'rgba(190, 17, 17, 0.2)',
                         borderWidth: 2,
