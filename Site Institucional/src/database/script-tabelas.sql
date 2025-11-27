@@ -221,3 +221,19 @@ INSERT INTO Dispositivos VALUES
 CREATE USER IF NOT EXISTS 'heart'@'%' IDENTIFIED BY 'Sptech#2024';
 GRANT ALL PRIVILEGES ON syncheart.* TO 'heart'@'%';
 FLUSH PRIVILEGES;
+
+/*SELECT 
+    d.dispositivo_id,
+    d.dispositivo_uuid,
+    p.id_paciente_na_clinica,
+    m.nome_modelo,
+    e.nome_equipe
+FROM Usuarios u
+JOIN UsuarioEquipe ue ON ue.usuario_id = u.usuario_id
+JOIN EquipesCuidado e ON e.equipe_id = ue.equipe_id
+JOIN Dispositivos d ON d.equipe_id = e.equipe_id
+JOIN Pacientes p ON p.paciente_id = d.paciente_id
+JOIN Modelos m ON m.modelo_id = d.modelo_id
+WHERE u.usuario_id = 3;
+
+dispositivo específico
