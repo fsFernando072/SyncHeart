@@ -73,66 +73,6 @@
         </div>
         <div class="header-user" id="header_user_info"></div>
       </header>
-
-      <!-- LISTA DE DISPOSITIVOS -->
-
-      <!-- Botão para ocultar/mostrar lista -->
-      <button id="toggleDeviceListBtn" class="toggle-device-list-btn" title="Mostrar/ocultar lista">
-        ☰
-      </button>
-
-      <!-- Lista em si -->
-      <div class="sidebar-list-devices" aria-label="Lista de dispositivos">
-        <!-- Head da lista -->
-        <table class="device-table" aria-label="Dispositivos do modelo">
-          <thead>
-            <tr class="device-table-head">
-              <!-- Input de busca -->
-              <th  class="col-device">Lista de dispositivos:</th>
-              <th  class="col-batt">🔋</th>
-              <th  class="col-alerts">⚠️</th>
-            </tr>
-          </thead>
-
-          <!-- Corpo da lista -->
-          <tbody id="listaBody">
-            <tr role="row" class="device-row" data-device="02314" tabindex="0">
-              <td role="gridcell" class="col-device">
-                <span class="codigo-dispositivo">002314</span>
-                <span class="codigo-paciente">123MP1287512312</span>
-              </td>
-              <td role="gridcell" class="col-batt"><span class="device-batt">10%</span></td>
-              <td role="gridcell" class="col-alerts"><span class="device-alerts">5</span></td>
-            </tr>
-            <tr role="row" class="device-row selected" data-device="02315" tabindex="0" aria-selected="true">
-              <td role="gridcell" class="col-device">
-                <span class="codigo-dispositivo">002315</span>
-                <span class="codigo-paciente">123MP1287512312</span>
-              </td>
-              <td role="gridcell" class="col-batt"><span class="device-batt">10%</span></td>
-              <td role="gridcell" class="col-alerts"><span class="device-alerts">5</span></td>
-            </tr>
-            <tr role="row" class="device-row" data-device="02316" tabindex="0">
-              <td role="gridcell" class="col-device">
-                <span class="codigo-dispositivo">002316</span>
-                <span class="codigo-paciente">123MP1287512312</span>
-              </td>
-              <td role="gridcell" class="col-batt"><span class="device-batt">10%</span></td>
-              <td role="gridcell" class="col-alerts"><span class="device-alerts">5</span></td>
-            </tr>
-            <tr role="row" class="device-row" data-device="02317" tabindex="0">
-              <td role="gridcell" class="col-device">
-                <span class="codigo-dispositivo">002317</span>
-                <span class="codigo-paciente">123MP1287512312</span>
-              </td>
-              <td role="gridcell" class="col-batt"><span class="device-batt">10%</span></td>
-              <td role="gridcell" class="col-alerts"><span class="device-alerts">5</span></td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
-
-
       <div class="dashboard-container">
         <div class="dashboard-grid">
           <h2>Últimos dados:</h2>
@@ -177,7 +117,7 @@
             <section class="dashboard-module" id="module_alertas_por_dia">
               <h2>Consumo médio de bateria(por semana):</h2>
               <div class="module-content">
-                <canvas id="graficoAlertasPorDia"></canvas>
+                <canvas id="consumoBateria"></canvas>
               </div>
             </section>
           </div>
