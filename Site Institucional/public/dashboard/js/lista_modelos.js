@@ -45,7 +45,7 @@ document.addEventListener('DOMContentLoaded', () => {
             }
             let tabelaHTML = `
                 ${modelos.map(modelo => `<tr><td>${modelo.nome_fabricante}</td><td>${modelo.nome_modelo}</td><td>3</td><td>2</td><td>2</td><td class="acoes"><button class="btn-acao btn-editar" data-id="${modelo.modelo_id}">Ver Situação</button></td></tr>`).join('')}`;
-            
+
             listaModelosContainer.querySelector("tbody").innerHTML = tabelaHTML;
             adicionarOrdenacoes();
         } catch (erro) {
@@ -166,7 +166,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function adicionarOrdenacoes() {
         const thModelos = listaModelosContainer.querySelectorAll("th");
-        
+
         thModelos.forEach(th => {
             if (th.textContent.toLowerCase().includes("fabricante")) {
                 th.addEventListener("click", () => selectionSortString(modelos, "nome_fabricante"));
@@ -191,20 +191,27 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-     async function testarJira() {
+    async function testarJira() {
         const token = sessionStorage.getItem('authToken');
         const nomeClinica = JSON.parse(sessionStorage.getItem("USUARIO_LOGADO")).clinica.nome;
+        const idModelo = 2;
 
         try {
-            const resposta = await fetch(`/jira/listar/${nomeClinica}`, { headers: { 'Authorization': `Bearer ${token}` } });
+            const listaBody = { nomeClinica: nomeClinica, idModelo: idModelo};
+            const resposta = await fetch(`/jira/listar/modelo`,
+                {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
+                    body: JSON.stringify(listaBody)
+                });
             if (!resposta.ok) throw new Error('Falha ao carregar alertas.');
             alertas = await resposta.json();
             if (alertas.length === 0) {
-                console.log('<p>Nenhum alerta cadastrado ainda.</p>');
+                console.log('Nenhum alerta cadastrado ainda.');
                 return;
             }
             console.log(alertas);
-            
+
         } catch (erro) {
             console.error(erro);
         }
