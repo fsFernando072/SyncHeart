@@ -170,6 +170,12 @@ body {
     outline: none;
 }
 
+.filtro-dispositivos {
+    width: 50%;
+    height: 25%;
+    font-weight: 800;
+}
+
 
 .lista-baixo {
     height: 80%;
@@ -334,6 +340,14 @@ body {
     font-weight: 700;
 }
 
+.alertas-ativos {
+    color: red;
+}
+
+.status {
+    color: rgb(0, 247, 0);
+}
+
 
 .kpi-top {
   width: 90%;
@@ -353,6 +367,7 @@ body {
   display: flex;
   align-items: center;
   justify-content: center;
+  border-left: 5px solid rgb(0, 247, 0);
 }
 
 .dado-container {
@@ -482,24 +497,29 @@ body {
 .corpo-tabela {
     width: 80%;
     height: 80%;
-    border: 1px solid black;
     border-radius: 10px;
 }
 
 .header-alerta {
     width: 100%;
     height: 10%;
-    border-bottom: 1px solid black;
     display: flex;
     align-items: center;
     justify-content: space-around;
 }
 
+.header-alerta span {
+    opacity: 0.6;
+}
+
 .linha-alerta {
     width: 100%;
     height: 10%;
-    border-bottom: 1px solid black;
     display: flex;
     align-items: center;
     justify-content: space-around;
+}
+
+.teste {
+    padding: 20px;
 }

@@ -78,6 +78,9 @@
                 <div class="lista-cima">
                     <h3>Dispositivos</h3>
                     <input type="text" class="barra-pesquisa" id="barra-pesquisa" placeholder="Buscar Dispositivo">
+                    <select name="" id="" class="filtro-dispositivos">
+                      <option value="#">Filtrar</option>
+                    </select>
                 </div>
 
                 <div class="lista-baixo">
@@ -153,15 +156,15 @@
                         <div class="info-direita">
                             <div class="info-kpi">
                                 <h3>Alertas ativos</h3>
-                                <span class="valor-info">4</span>
+                                <span class="valor-info alertas-ativos">4</span>
                             </div>
                             <div class="info-kpi">
-                                <h3>Última captura</h3>
+                                <h3>Última atualização</h3>
                                 <span class="valor-info">1 hora</span>
                             </div>
                             <div class="info-kpi">
                                 <h3>Status</h3>
-                                <span class="valor-info">Online</span>
+                                <span class="valor-info status">Online</span>
                             </div>
                         </div>
                     </div>
@@ -224,21 +227,21 @@
 
                 <div class="graficos">
                   <section class="graficos-principais">
-
+                        <canvas id="myChart" class="teste"></canvas>
                   </section>
                   <section class="graficos-principais">
-
+                        <canvas id="myChart2" class="teste"></canvas>
                   </section>
                   <section class="graficos-principais">
-                    
+                        <canvas id="myChart3" class="teste"></canvas>
                   </section>
                   <section class="graficos-principais">
-
+                    <canvas id="myChart4" class="teste"></canvas>
                   </section>
                 </div>
 
                 <section class="lista-alertas">
-                    <h3>Histórico de Alertas</h3>
+                    <h3>Alertas recentes</h3>
 
                     <div class="corpo-tabela">
                         <div class="header-alerta">
@@ -255,6 +258,24 @@
                             <span class="valor-linha">Crítico</span>
                             <span class="valor-linha">RAM</span>
                         </div>
+                        <div class="linha-alerta">
+                            <span class="valor-linha">2</span>
+                            <span class="valor-linha">20/11/2025 12:00</span>
+                            <span class="valor-linha">Crítico</span>
+                            <span class="valor-linha">RAM</span>
+                        </div>
+                        <div class="linha-alerta">
+                            <span class="valor-linha">3</span>
+                            <span class="valor-linha">20/11/2025 12:00</span>
+                            <span class="valor-linha">Crítico</span>
+                            <span class="valor-linha">RAM</span>
+                        </div>
+                        <div class="linha-alerta">
+                            <span class="valor-linha">4</span>
+                            <span class="valor-linha">20/11/2025 12:00</span>
+                            <span class="valor-linha">Crítico</span>
+                            <span class="valor-linha">RAM</span>
+                        </div>
                     </div>
                 </section>
               </div>
@@ -265,5 +286,103 @@
 
   </div>
 </body>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<script>
+      const ctx = document.getElementById('myChart');
+      const ctx2 = document.getElementById('myChart2');
+      const ctx3 = document.getElementById('myChart3');
+      const ctx4 = document.getElementById('myChart4');
+
+  new Chart(ctx, {
+    type: 'line',
+    data: {
+      labels: ['10:00', '10:05', '10:10', '10:15', '10:20', '10:25'],
+      datasets: [{
+        label: 'Consumo de Bateria',
+        data: [10, 20, 30, 40, 60, 30],
+        borderWidth: 2
+      }]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      scales: {
+        y: {
+          beginAtZero: true
+        }
+      }
+    }
+  });
+
+  new Chart(ctx2, {
+    type: 'line',
+    data: {
+      labels: ['10:00', '10:05', '10:10', '10:15', '10:20', '10:25'],
+      datasets: [{
+        label: 'Consumo de CPU',
+        data: [60, 50, 60, 45, 40, 45],
+        borderWidth: 2
+      },
+      {
+        label: 'Consumo de RAM',
+        data: [30, 35, 40, 35, 30, 25],
+        borderWidth: 2,
+      }]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      scales: {
+        y: {
+          beginAtZero: true
+        }
+      }
+    }
+  });
+
+  new Chart(ctx3, {
+    type: 'line',
+    data: {
+      labels: ['10:00', '10:05', '10:10', '10:15', '10:20', '10:25'],
+      datasets: [{
+        label: 'Consumo de Disco',
+        data: [100, 100, 100, 99, 99, 99],
+        borderWidth: 2
+      }]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      scales: {
+        y: {
+          beginAtZero: true
+        }
+      }
+    }
+  });
+
+  new Chart(ctx4, {
+    type: 'bar',
+    data: {
+      labels: ['CPU', 'RAM', 'BATERIA', 'DISCO'],
+      datasets: [{
+        label: 'Alertas dos componentes',
+        data: [20, 12, 2, 1],
+        borderWidth: 2
+      }]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      scales: {
+        y: {
+          beginAtZero: true
+        }
+      }
+    }
+  });
+</script>
 
 </html>
