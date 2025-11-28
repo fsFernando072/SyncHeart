@@ -30,6 +30,7 @@ document.addEventListener('DOMContentLoaded', () => {
         carregarModelosExistentes();
         subirScroll();
         configurarEventListeners();
+        testarJira();
     }
 
     async function carregarModelosExistentes() {
@@ -188,6 +189,25 @@ document.addEventListener('DOMContentLoaded', () => {
                 window.location = "dashboard_modelo.html";
             }
         });
+    }
+
+     async function testarJira() {
+        const token = sessionStorage.getItem('authToken');
+        const nomeClinica = JSON.parse(sessionStorage.getItem("USUARIO_LOGADO")).clinica.nome;
+
+        try {
+            const resposta = await fetch(`/jira/listar/${nomeClinica}`, { headers: { 'Authorization': `Bearer ${token}` } });
+            if (!resposta.ok) throw new Error('Falha ao carregar alertas.');
+            alertas = await resposta.json();
+            if (alertas.length === 0) {
+                console.log('<p>Nenhum alerta cadastrado ainda.</p>');
+                return;
+            }
+            console.log(alertas);
+            
+        } catch (erro) {
+            console.error(erro);
+        }
     }
 
 
