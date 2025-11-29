@@ -43,6 +43,28 @@ function listarParametrosPorModelo(modeloId) {
     return database.executar(instrucaoSql, [modeloId]);
 }
 
+function listarParametrosDashModelo(modeloId) {
+    var instrucaoSql = `
+        SELECT 
+            metrica,
+            concat(
+				CASE 
+					WHEN condicao = 'MAIOR_QUE' THEN '> '
+					ELSE '< '
+				END, 
+                ROUND(limiar_valor),
+                '%') as limiar_valor,
+            duracao_minutos,
+            CASE 
+                WHEN criticidade = 'CRITICO' THEN 'CRÍTICO'
+                WHEN criticidade = 'ATENCAO' THEN 'ATENÇÃO'
+                ELSE UPPER(criticidade)
+            END AS criticidade
+        FROM ModelosAlertaParametros WHERE modelo_id = ?;
+    `;
+    return database.executar(instrucaoSql, [modeloId]);
+}
+
 
 
 /**
@@ -77,6 +99,7 @@ module.exports = {
     listar,
     listarFabricantes,
     listarParametrosPorModelo,
+    listarParametrosDashModelo,
     buscarPorId,
     atualizar
 };

@@ -15,6 +15,9 @@ router.get('/fabricantes', authMiddleware.verificarEngClinico, modeloController.
 // Rota para LISTAR todos os parâmetros de alerta de um modelo 
 router.get('/:modeloId/parametros', authMiddleware.verificarEngClinico, modeloController.listarParametrosPorModelo);
 
+// Rota para LISTAR todos os parâmetros de alerta de um modelo 
+router.get('/:modeloId/parametros/dashboard', authMiddleware.verificarEngClinico, modeloController.listarParametrosDashModelo);
+
 /**
  * Rota para BUSCAR os dados de um único modelo pelo ID.
  * Usada para preencher o formulário de edição.

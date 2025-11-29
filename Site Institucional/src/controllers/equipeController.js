@@ -1,6 +1,5 @@
 var equipeModel = require("../models/equipeModel");
 
-
 //Cria uma nova equipe, associando a clínica do usuário logado
 async function criar(req, res) {
     const { nome_equipe } = req.body;

@@ -34,6 +34,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     async function carregarModelosExistentes() {
         const token = sessionStorage.getItem('authToken');
+        const nomeClinica = JSON.parse(sessionStorage.getItem("USUARIO_LOGADO")).clinica.nome;
         try {
             const resposta = await fetch('/modelos/listar', { headers: { 'Authorization': `Bearer ${token}` } });
             if (!resposta.ok) throw new Error('Falha ao carregar modelos.');
@@ -42,9 +43,18 @@ document.addEventListener('DOMContentLoaded', () => {
                 listaModelosContainer.innerHTML = '<p>Nenhum modelo cadastrado ainda.</p>';
                 return;
             }
+
+            const promisesDeTickets = modelos.map(async modelo => {
+                const resultado = await buscarTicketsPorModelo(nomeClinica, modelo.modelo_id, token);
+                modelo.alertas_ativos = resultado.alertas_ativos;
+                modelo.alertas_criticos = resultado.alertas_criticos;
+            });
+
+            await Promise.all(promisesDeTickets);
+
             let tabelaHTML = `
-                ${modelos.map(modelo => `<tr><td>${modelo.nome_fabricante}</td><td>${modelo.nome_modelo}</td><td>3</td><td>2</td><td>2</td><td class="acoes"><button class="btn-acao btn-editar" data-id="${modelo.modelo_id}">Ver Situação</button></td></tr>`).join('')}`;
-            
+                ${modelos.map(modelo => `<tr><td>${modelo.nome_fabricante}</td><td>${modelo.nome_modelo}</td><td>3</td><td>${modelo.alertas_ativos}</td><td>${modelo.alertas_criticos}</td><td class="acoes"><button class="btn-acao btn-editar" data-id="${modelo.modelo_id}">Ver Situação</button></td></tr>`).join('')}`;
+
             listaModelosContainer.querySelector("tbody").innerHTML = tabelaHTML;
             adicionarOrdenacoes();
         } catch (erro) {
@@ -114,7 +124,8 @@ document.addEventListener('DOMContentLoaded', () => {
         modelos = data;
 
         let tabelaHTML = `
-                ${modelos.map(modelo => `<tr><td>${modelo.nome_fabricante}</td><td>${modelo.nome_modelo}</td><td>3</td><td>2</td><td>2</td><td class="acoes"><button class="btn-acao btn-editar" data-id="${modelo.modelo_id}">Ver Situação</button></td></tr>`).join('')}`;
+                ${modelos.map(modelo => `<tr><td>${modelo.nome_fabricante}</td><td>${modelo.nome_modelo}</td><td>3</td><td>${modelo.alertas_ativos}</td><td>${modelo.alertas_criticos}</td><td class="acoes"><button class="btn-acao btn-editar" data-id="${modelo.modelo_id}">Ver Situação</button></td></tr>`).join('')}`;
+
         listaModelosContainer.querySelector("tbody").innerHTML = tabelaHTML;
     }
 
@@ -159,13 +170,14 @@ document.addEventListener('DOMContentLoaded', () => {
         }
 
         let tabelaHTML = `
-                ${modelos.map(modelo => `<tr><td>${modelo.nome_fabricante}</td><td>${modelo.nome_modelo}</td><td>3</td><td>2</td><td>2</td><td class="acoes"><button class="btn-acao btn-editar" data-id="${modelo.modelo_id}">Ver Situação</button></td></tr>`).join('')}`;
+                ${modelos.map(modelo => `<tr><td>${modelo.nome_fabricante}</td><td>${modelo.nome_modelo}</td><td>3</td><td>${modelo.alertas_ativos}</td><td>${modelo.alertas_criticos}</td><td class="acoes"><button class="btn-acao btn-editar" data-id="${modelo.modelo_id}">Ver Situação</button></td></tr>`).join('')}`;
+
         listaModelosContainer.querySelector("tbody").innerHTML = tabelaHTML;
     }
 
     function adicionarOrdenacoes() {
         const thModelos = listaModelosContainer.querySelectorAll("th");
-        
+
         thModelos.forEach(th => {
             if (th.textContent.toLowerCase().includes("fabricante")) {
                 th.addEventListener("click", () => selectionSortString(modelos, "nome_fabricante"));
@@ -185,9 +197,41 @@ document.addEventListener('DOMContentLoaded', () => {
         listaModelosContainer.addEventListener('click', (event) => {
             if (event.target.classList.contains('btn-editar')) {
                 const idModelo = event.target.dataset.id;
+
+                sessionStorage.setItem("idModelo", idModelo);
+
                 window.location = "dashboard_modelo.html";
             }
         });
+    }
+
+    async function buscarTicketsPorModelo(nomeClinica, idModelo, token) {
+        try {
+            const listaBody = { nomeClinica: nomeClinica, idModelo: idModelo };
+            const resposta = await fetch(`/jira/listar/modelo`,
+                {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
+                    body: JSON.stringify(listaBody)
+                });
+
+            if (!resposta.ok) throw new Error('Falha ao carregar tickets.');
+
+            let alertas = await resposta.json();
+
+            let criticos = 0;
+            alertas.forEach(alerta => {
+                if (alerta.priority.name == "High") {
+                    criticos += 1;
+                }
+            });
+
+            return { alertas_ativos: alertas.length, alertas_criticos: criticos };
+        } catch (erro) {
+            console.error(erro);
+
+            return { alertas_ativos: 0, alertas_criticos: 0 };
+        }
     }
 
 
