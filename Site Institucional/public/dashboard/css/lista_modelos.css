@@ -119,11 +119,6 @@ body {
     align-items: flex-end;
 }
 
-.breadcrumb {
-    color: #888;
-    font-size: 14px;
-}
-
 .dashboard-container {
     padding: 30px;
     flex: 1;
@@ -176,6 +171,12 @@ body {
 
 .breadcrumb {
     color: #4A154B;
+    font-size: 16px;
+}
+
+.breadcrumb a {
+    color: #4A154B;
+    text-decoration: none;
     font-size: 16px;
 }
 

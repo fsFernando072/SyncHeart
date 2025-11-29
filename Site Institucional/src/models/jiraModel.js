@@ -27,6 +27,7 @@ async function modeloBuscar(jql) {
         `${JIRA_BASE_URL}/rest/api/3/search/jql`,
         body,
         {
+            timeout: 10000,
             headers: {
                 Accept: "application/json",
                 "Content-Type": "application/json",

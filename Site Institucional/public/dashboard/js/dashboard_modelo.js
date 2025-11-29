@@ -8,7 +8,7 @@ document.addEventListener('DOMContentLoaded', () => {
     let dadosTiposAlertas = { labels: ['CPU', 'Bateria', 'RAM', 'Disco'], valores: [0, 0, 0, 0] };
 
     const token = sessionStorage.getItem('authToken');
-    const modeloId = 1;
+    const idModelo = sessionStorage.getItem("idModelo");
 
     let ordens = [
         {
@@ -274,7 +274,7 @@ document.addEventListener('DOMContentLoaded', () => {
         tbodyFinal = "";
         if (data == null) {
             try {
-                const resposta = await fetch(`/alertas/listar/${modeloId}`, { headers: { 'Authorization': `Bearer ${token}` } });
+                const resposta = await fetch(`/alertas/listar/${idModelo}`, { headers: { 'Authorization': `Bearer ${token}` } });
                 if (!resposta.ok) throw new Error('Falha ao carregar alertas do modelo.');
                 alertaData = await resposta.json();
 
@@ -342,7 +342,7 @@ document.addEventListener('DOMContentLoaded', () => {
         tbodyFinal = "";
         if (data == null) {
             try {
-                const resposta = await fetch(`/modelos/${modeloId}/parametros/dashboard`, { headers: { 'Authorization': `Bearer ${token}` } });
+                const resposta = await fetch(`/modelos/${idModelo}/parametros/dashboard`, { headers: { 'Authorization': `Bearer ${token}` } });
                 if (!resposta.ok) throw new Error('Falha ao carregar alertas do modelo.');
                 parametroData = await resposta.json();
 
@@ -400,7 +400,7 @@ document.addEventListener('DOMContentLoaded', () => {
         tbodyFinal = "";
         if (data == null) {
             try {
-                const resposta = await fetch(`/alertas/listar/${modeloId}/dispositivos`, { headers: { 'Authorization': `Bearer ${token}` } });
+                const resposta = await fetch(`/alertas/listar/${idModelo}/dispositivos`, { headers: { 'Authorization': `Bearer ${token}` } });
                 if (!resposta.ok) throw new Error('Falha ao carregar alertas de cada dispositivo do modelo.');
                 dispositivoData = await resposta.json();
 
