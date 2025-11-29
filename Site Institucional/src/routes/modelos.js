@@ -29,5 +29,7 @@ router.get('/:modeloId', authMiddleware.verificarEngClinico, modeloController.bu
  */
 router.put('/:modeloId', authMiddleware.verificarEngClinico, modeloController.atualizar);
 
+// Rota para LISTAR todos os dispositivos de um modelo de uma clínica
+router.get('/listar/:modeloId/dispositivos', authMiddleware.verificarUsuarioAutenticado, modeloController.listarDispositivos);
 
 module.exports = router;

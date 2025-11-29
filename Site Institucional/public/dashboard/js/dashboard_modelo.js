@@ -9,6 +9,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const token = sessionStorage.getItem('authToken');
     const idModelo = sessionStorage.getItem("idModelo");
+    const nomeClinica = JSON.parse(sessionStorage.getItem("USUARIO_LOGADO")).clinica.nome;
 
     let ordens = [
         {
@@ -24,9 +25,9 @@ document.addEventListener('DOMContentLoaded', () => {
         },
         {
             "dispositivo_uuid": "asc",
-            "alertas_ativos": "desc",
+            "alertas_ativos": "asc",
             "alertas_criticos": "desc",
-            "status": "asc"
+            "status": "desc"
         }
     ]
     // Selecionando os novos elementos
@@ -48,11 +49,13 @@ document.addEventListener('DOMContentLoaded', () => {
         const emailUsuario = dadosUsuarioLogado.usuario.email;
         headerUserInfoEl.innerHTML = `<div class="user-info"><span class="user-name">${nomeUsuario}</span><span class="user-email">${emailUsuario}</span></div>`;
 
-        await carregarAlertasAtivos();
+        let alertas = await buscarTicketsPorModelo(nomeClinica, idModelo, token);
+        alertaData = alertas;
+        await carregarAlertasAtivos(alertas);
         await carregarParametros();
-        await carregarDispositivos();
+        await carregarDispositivos(dispositivoData, alertas);
         carregarKPIs();
-        carregarGraficos();
+        carregarGraficos(alertas);
         subirScroll();
         adicionarOrdenacoes();
     }
@@ -145,7 +148,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     // --- FUNÇÃO PARA CARREGAR OS GRÁFICOS ---
-    function carregarGraficos() {
+    function carregarGraficos(alertas) {
 
         const dadosHistoricoAlertas = { labels: ['Dom', 'Seg', 'Ter', 'Qua', 'Qui', 'Sex (Hoje)', 'Sáb'], valoresReais: [3, 5, 2, 8, 4, 7], valoresPrevistos: [4, 8, 2, 5, 8, 2, 3] };
         
@@ -215,6 +218,15 @@ document.addEventListener('DOMContentLoaded', () => {
                     }
                 }
             });
+
+        if (dadosTiposAlertas.valores[0] == 0 && 
+            dadosTiposAlertas.valores[1] == 0 &&
+            dadosTiposAlertas.valores[2] == 0 &&
+            dadosTiposAlertas.valores[3] == 0
+        ) {
+            document.getElementById('graficoTiposAlertas').parentElement.innerHTML = '<p>Nenhum alerta ativo ainda.</p>';
+            return;
+        }
         const ctxTipos = document.getElementById('graficoTiposAlertas').getContext('2d');
 
         new Chart(ctxTipos, {
@@ -272,23 +284,9 @@ document.addEventListener('DOMContentLoaded', () => {
         const tbodyTabelaAlertas = listaAlertasContainer.querySelector("tbody");
 
         tbodyFinal = "";
-        if (data == null) {
-            try {
-                const resposta = await fetch(`/alertas/listar/${idModelo}`, { headers: { 'Authorization': `Bearer ${token}` } });
-                if (!resposta.ok) throw new Error('Falha ao carregar alertas do modelo.');
-                alertaData = await resposta.json();
-
-                if (alertaData.length === 0) {
-                    tbodyTabelaAlertas.innerHTML = '<p>Nenhum alerta ativo ainda.</p>';
-                    return;
-                }
-
-                data = alertaData;
-            } catch (erro) {
-                console.error(erro);
-                tbodyTabelaAlertas.innerHTML = `<p style="color: red;">${erro.message}</p>`;
-                return;
-            }
+        if (data == null || data.length == 0) {
+            tbodyTabelaAlertas.parentElement.innerHTML = '<p>Nenhum alerta ativo ainda.</p>';
+            return;
         }
 
         for (let i = 0; i < data.length; i++) {
@@ -373,6 +371,7 @@ document.addEventListener('DOMContentLoaded', () => {
             tbodyFinal += `<td>${data[i].criticidade}</td>`;
             tbodyFinal += "</tr>";
         }
+        
 
         tbodyTabelaParametros.innerHTML = tbodyFinal;
 
@@ -394,18 +393,18 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    async function carregarDispositivos(data) {
+    async function carregarDispositivos(data, tickets) {
         const tbodyTabelaDispositivos = listaDispositivosContainer.querySelector("tbody");
 
         tbodyFinal = "";
         if (data == null) {
             try {
-                const resposta = await fetch(`/alertas/listar/${idModelo}/dispositivos`, { headers: { 'Authorization': `Bearer ${token}` } });
-                if (!resposta.ok) throw new Error('Falha ao carregar alertas de cada dispositivo do modelo.');
+                const resposta = await fetch(`/modelos/listar/${idModelo}/dispositivos`, { headers: { 'Authorization': `Bearer ${token}` } });
+                if (!resposta.ok) throw new Error('Falha ao carregar dispositivos do modelo.');
                 dispositivoData = await resposta.json();
 
                 if (dispositivoData.length === 0) {
-                    tbodyTabelaAlertas.innerHTML = '<p>Nenhum dispositivo encontrado.</p>';
+                    tbodyTabelaDispositivos.innerHTML = '<p>Nenhum dispositivo encontrado.</p>';
                     return;
                 }
 
@@ -413,12 +412,28 @@ document.addEventListener('DOMContentLoaded', () => {
                 
                 for (let i = 0; i < dispositivoData.length; i++) {
                     dispositivoData[i].status = status[i];
+                    dispositivoData[i].alertas_ativos = 0;
+                    dispositivoData[i].alertas_criticos = 0;
+
+                    for (let j = tickets.length - 1; j >= 0; j--) {
+                        let ticket = tickets[j];
+
+                        if (ticket.dispositivo_uuid == dispositivoData[i].dispositivo_uuid) {
+                            dispositivoData[i].alertas_ativos += 1;
+
+                            if (ticket.severidade == "CRÍTICO") {
+                                dispositivoData[i].alertas_criticos += 1;
+                            }
+
+                            tickets.splice(j, 1);
+                        }
+                    };
                 }
 
                 data = dispositivoData;
             } catch (erro) {
                 console.error(erro);
-                tbodyTabelaAlertas.innerHTML = `<p style="color: red;">${erro.message}</p>`;
+                tbodyTabelaDispositivos.innerHTML = `<p style="color: red;">${erro.message}</p>`;
                 return;
             }
         }
@@ -598,19 +613,21 @@ document.addEventListener('DOMContentLoaded', () => {
                 th.addEventListener("click", () => selectionSortString(alertaData, "severidade", "alertas"));
             }
         });
-
+        
         thParametros.forEach(th => {
-            if (th.textContent.toLowerCase().includes("metrica")) {
+            if (th.textContent.toLowerCase().includes("componente")) {
                 th.addEventListener("click", () => selectionSortString(parametroData, "metrica", "parametros"));
-            } else if (th.textContent.toLowerCase().includes("mínimo")) {
+            } else if (th.textContent.toLowerCase().includes("valor")) {
                 th.addEventListener("click", () => selectionSortString(parametroData, "limiar_valor", "parametros"));
-            } else if (th.textContent.toLowerCase().includes("criticidade")) {
+            } else if (th.textContent.toLowerCase().includes("severidade")) {
                 th.addEventListener("click", () => selectionSortString(parametroData, "criticidade", "parametros"));
             } else if (th.textContent.toLowerCase().includes("tempo")) {
                 th.addEventListener("click", () => selectionSortNumerico(parametroData, "duracao_minutos", "parametros"));
             }
         });
 
+        selectionSortNumerico(dispositivoData, "alertas_ativos", "dispositivos");
+        selectionSortString(dispositivoData, "status", "dispositivos");
         thDispositivos.forEach(th => {
             if (th.textContent.toLowerCase().includes("uuid")) {
                 th.addEventListener("click", () => selectionSortString(dispositivoData, "dispositivo_uuid", "dispositivos"));
@@ -622,6 +639,47 @@ document.addEventListener('DOMContentLoaded', () => {
                 th.addEventListener("click", () => selectionSortString(dispositivoData, "status", "dispositivos"));
             }
         });
+    }
+
+    async function buscarTicketsPorModelo(nomeClinica, idModelo, token) {
+        try {
+            const listaBody = { nomeClinica: nomeClinica, idModelo: idModelo };
+            const resposta = await fetch(`/jira/listar/modelo`,
+                {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
+                    body: JSON.stringify(listaBody)
+                });
+
+            if (!resposta.ok) throw new Error('Falha ao carregar tickets.');
+
+            let tickets = await resposta.json();
+
+            let alertas = [];
+
+            tickets.forEach(ticket => {
+                let description = ticket.description.content[0].content[0].text.trim().split('\n');
+                let severidade = ticket.priority.name;
+                severidade = severidade == "High" ? "CRÍTICO" : "ATENÇÃO";
+                let dispositivo_uuid = description[0].split(":")[1].trim();
+                let tipo_alerta = description[2].split(":")[1].trim();
+                dispositivo_uuid = dispositivo_uuid.substring(0, 15)
+
+                let alerta = {
+                    "dispositivo_uuid": dispositivo_uuid.substring(0, 15),
+                    "tipo_alerta": tipo_alerta,
+                    "severidade": severidade
+                }
+                
+                alertas.push(alerta);
+            });
+
+            return alertas;
+        } catch (erro) {
+            console.error(erro);
+
+            return [];
+        }
     }
 
 

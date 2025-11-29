@@ -1,7 +1,7 @@
 const axios = require("axios");
 
 // --- FUNÇÃO BASE QUE FAZ AS REQUISIÇÕES PARA O JIRA ---
-async function modeloBuscar(jql) {
+async function modeloBuscar(jql, maxTentativas = 3) {
     const JIRA_BASE_URL = process.env.JIRA_BASE_URL;
     const JIRA_EMAIL = process.env.JIRA_EMAIL;
     const JIRA_API_TOKEN = process.env.JIRA_API_TOKEN;
@@ -23,22 +23,30 @@ async function modeloBuscar(jql) {
         ],
     };
 
-    const response = await axios.post(
-        `${JIRA_BASE_URL}/rest/api/3/search/jql`,
-        body,
-        {
-            timeout: 10000,
-            headers: {
-                Accept: "application/json",
-                "Content-Type": "application/json",
-                Authorization: `Basic ${Buffer.from(
-                    `${JIRA_EMAIL}:${JIRA_API_TOKEN}`
-                ).toString("base64")}`,
-            },
-        }
-    );
+    for (let tentativa = 1; tentativa <= maxTentativas; tentativa++) {
+        try {
+            const response = await axios.post(
+                `${JIRA_BASE_URL}/rest/api/3/search/jql`,
+                body,
+                {
+                    timeout: 10000,
+                    headers: {
+                        Accept: "application/json",
+                        "Content-Type": "application/json",
+                        Authorization: `Basic ${Buffer.from(
+                            `${JIRA_EMAIL}:${JIRA_API_TOKEN}`
+                        ).toString("base64")}`,
+                    },
+                }
+            );
 
-    return response;
+            return response;
+        } catch (error) {
+            console.warn(`Tentativa ${tentativa} falhou com erro de conexão (${error.code}). Tentando novamente...`);
+        }
+    }
+
+
 }
 
 // --- FUNÇÃO QUE BUSCA SOMENTE OS TICKETS ATIVOS DA CLÍNICA ---

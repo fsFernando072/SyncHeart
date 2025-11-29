@@ -92,6 +92,17 @@ function atualizar(modeloId, nomeModelo, vidaUtil, dimensoes, frequencia, garant
     return database.executar(instrucaoSql, [nomeModelo, vidaUtil, dimensoes, frequencia, garantia, bateria, modeloId]);
 }
 
+function listarDispositivos(modeloId) {
+    var instrucaoSql = `
+        SELECT 
+            dispositivo_id,
+            SUBSTRING(dispositivo_uuid, 1, 15) as dispositivo_uuid
+        FROM Dispositivos 
+        WHERE modelo_id = ?;
+    `;
+    return database.executar(instrucaoSql, [modeloId]);
+}
+
 
 module.exports = {
     criar,
@@ -100,6 +111,7 @@ module.exports = {
     listarFabricantes,
     listarParametrosPorModelo,
     listarParametrosDashModelo,
+    listarDispositivos,
     buscarPorId,
     atualizar
 };

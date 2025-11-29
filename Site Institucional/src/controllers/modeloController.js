@@ -113,6 +113,17 @@ async function atualizar(req, res) {
     }
 }
 
+async function listarDispositivos(req, res) {
+    const modeloId = req.params.modeloId;
+    try {
+        const modelos = await modeloModel.listarDispositivos(modeloId);
+        res.status(200).json(modelos);
+    } catch (error) {
+        console.error("Erro ao listar dispositivos do modelo:", error);
+        res.status(500).json({ erro: 'Ocorreu uma falha no servidor.' });
+    }
+}
+
 
 module.exports = {
     criar,
@@ -120,6 +131,7 @@ module.exports = {
     listarFabricantes,
     listarParametrosPorModelo,
     listarParametrosDashModelo,
+    listarDispositivos,
     buscarPorId,
     atualizar
 };
