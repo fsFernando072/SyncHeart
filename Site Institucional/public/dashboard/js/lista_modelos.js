@@ -6,9 +6,9 @@ document.addEventListener('DOMContentLoaded', () => {
     let ordens = {
         "nome_fabricante": "asc",
         "nome_modelo": "asc",
-        "dispositivosOffline": "desc",
-        "alertasAtivos": "asc",
-        "alertasCriticos": "asc",
+        "dispositivos_offline": "desc",
+        "alertas_ativos": "asc",
+        "alertas_criticos": "asc",
     }
 
     // Selecionando os novos elementos
@@ -48,14 +48,53 @@ document.addEventListener('DOMContentLoaded', () => {
                 const resultado = await buscarTicketsPorModelo(nomeClinica, modelo.modelo_id, token);
                 modelo.alertas_ativos = resultado.alertas_ativos;
                 modelo.alertas_criticos = resultado.alertas_criticos;
+                modelo.dispositivos_offline = resultado.dispositivos_offline;
             });
 
             await Promise.all(promisesDeTickets);
 
-            let tabelaHTML = `
-                ${modelos.map(modelo => `<tr><td>${modelo.nome_fabricante}</td><td>${modelo.nome_modelo}</td><td>3</td><td>${modelo.alertas_ativos}</td><td>${modelo.alertas_criticos}</td><td class="acoes"><button class="btn-acao btn-editar" data-id="${modelo.modelo_id}">Ver Situação</button></td></tr>`).join('')}`;
+            tbodyFinal = "";
+            for (let i = 0; i < modelos.length; i++) {
+                let cor_offline;
+                let cor_ativos;
+                let cor_criticos;
+                if (modelos[i].dispositivos_offline >= 3) {
+                    cor_offline = "alto";
+                } else if (modelos[i].dispositivos_offline > 0) {
+                    cor_offline = "moderado";
+                } else {
+                    cor_offline = "baixo";
+                }
 
-            listaModelosContainer.querySelector("tbody").innerHTML = tabelaHTML;
+                if (modelos[i].alertas_ativos >= 3) {
+                    cor_ativos = "alto";
+                } else if (modelos[i].alertas_ativos > 0) {
+                    cor_ativos = "moderado";
+                } else {
+                    cor_ativos = "baixo";
+                }
+
+                if (modelos[i].alertas_criticos >= 3) {
+                    cor_criticos = "alto";
+                } else if (modelos[i].alertas_criticos > 0) {
+                    cor_criticos = "moderado";
+                } else {
+                    cor_criticos = "baixo";
+                }
+
+                tbodyFinal += "<tr>";
+                tbodyFinal += `<td>${modelos[i].nome_fabricante}</td>`;
+                tbodyFinal += `<td>${modelos[i].nome_modelo}</td>`;
+                tbodyFinal += `<td class="${cor_offline}">${modelos[i].dispositivos_offline}</td>`;
+                tbodyFinal += `<td class="${cor_ativos}">${modelos[i].alertas_ativos}</td>`;
+                tbodyFinal += `<td class="${cor_criticos}">${modelos[i].alertas_criticos}</td>`;
+                tbodyFinal += `<td class="acoes">
+                                    <button class="btn-acao btn-editar" data-id="${modelos[i].modelo_id}">Ver Situação</button>
+                                </td>`;
+                tbodyFinal += "</tr>";
+            }
+
+            listaModelosContainer.querySelector("tbody").innerHTML = tbodyFinal;
             adicionarOrdenacoes();
         } catch (erro) {
             console.error(erro);
@@ -123,10 +162,48 @@ document.addEventListener('DOMContentLoaded', () => {
 
         modelos = data;
 
-        let tabelaHTML = `
-                ${modelos.map(modelo => `<tr><td>${modelo.nome_fabricante}</td><td>${modelo.nome_modelo}</td><td>3</td><td>${modelo.alertas_ativos}</td><td>${modelo.alertas_criticos}</td><td class="acoes"><button class="btn-acao btn-editar" data-id="${modelo.modelo_id}">Ver Situação</button></td></tr>`).join('')}`;
+        tbodyFinal = "";
+        for (let i = 0; i < modelos.length; i++) {
+            let cor_offline;
+            let cor_ativos;
+            let cor_criticos;
+            if (modelos[i].dispositivos_offline >= 3) {
+                cor_offline = "alto";
+            } else if (modelos[i].dispositivos_offline > 0) {
+                cor_offline = "moderado";
+            } else {
+                cor_offline = "baixo";
+            }
 
-        listaModelosContainer.querySelector("tbody").innerHTML = tabelaHTML;
+            if (modelos[i].alertas_ativos >= 3) {
+                cor_ativos = "alto";
+            } else if (modelos[i].alertas_ativos > 0) {
+                cor_ativos = "moderado";
+            } else {
+                cor_ativos = "baixo";
+            }
+
+            if (modelos[i].alertas_criticos >= 3) {
+                cor_criticos = "alto";
+            } else if (modelos[i].alertas_criticos > 0) {
+                cor_criticos = "moderado";
+            } else {
+                cor_criticos = "baixo";
+            }
+
+            tbodyFinal += "<tr>";
+            tbodyFinal += `<td>${modelos[i].nome_fabricante}</td>`;
+            tbodyFinal += `<td>${modelos[i].nome_modelo}</td>`;
+            tbodyFinal += `<td class="${cor_offline}">${modelos[i].dispositivos_offline}</td>`;
+            tbodyFinal += `<td class="${cor_ativos}">${modelos[i].alertas_ativos}</td>`;
+            tbodyFinal += `<td class="${cor_criticos}">${modelos[i].alertas_criticos}</td>`;
+            tbodyFinal += `<td class="acoes">
+                                    <button class="btn-acao btn-editar" data-id="${modelos[i].modelo_id}">Ver Situação</button>
+                                </td>`;
+            tbodyFinal += "</tr>";
+        }
+
+        listaModelosContainer.querySelector("tbody").innerHTML = tbodyFinal;
     }
 
     function selectionSortString(data, coluna) {
@@ -169,10 +246,48 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         }
 
-        let tabelaHTML = `
-                ${modelos.map(modelo => `<tr><td>${modelo.nome_fabricante}</td><td>${modelo.nome_modelo}</td><td>3</td><td>${modelo.alertas_ativos}</td><td>${modelo.alertas_criticos}</td><td class="acoes"><button class="btn-acao btn-editar" data-id="${modelo.modelo_id}">Ver Situação</button></td></tr>`).join('')}`;
+        tbodyFinal = "";
+        for (let i = 0; i < modelos.length; i++) {
+            let cor_offline;
+            let cor_ativos;
+            let cor_criticos;
+            if (modelos[i].dispositivos_offline >= 3) {
+                cor_offline = "alto";
+            } else if (modelos[i].dispositivos_offline > 0) {
+                cor_offline = "moderado";
+            } else {
+                cor_offline = "baixo";
+            }
 
-        listaModelosContainer.querySelector("tbody").innerHTML = tabelaHTML;
+            if (modelos[i].alertas_ativos >= 3) {
+                cor_ativos = "alto";
+            } else if (modelos[i].alertas_ativos > 0) {
+                cor_ativos = "moderado";
+            } else {
+                cor_ativos = "baixo";
+            }
+
+            if (modelos[i].alertas_criticos >= 3) {
+                cor_criticos = "alto";
+            } else if (modelos[i].alertas_criticos > 0) {
+                cor_criticos = "moderado";
+            } else {
+                cor_criticos = "baixo";
+            }
+
+            tbodyFinal += "<tr>";
+            tbodyFinal += `<td>${modelos[i].nome_fabricante}</td>`;
+            tbodyFinal += `<td>${modelos[i].nome_modelo}</td>`;
+            tbodyFinal += `<td class="${cor_offline}">${modelos[i].dispositivos_offline}</td>`;
+            tbodyFinal += `<td class="${cor_ativos}">${modelos[i].alertas_ativos}</td>`;
+            tbodyFinal += `<td class="${cor_criticos}">${modelos[i].alertas_criticos}</td>`;
+            tbodyFinal += `<td class="acoes">
+                                    <button class="btn-acao btn-editar" data-id="${modelos[i].modelo_id}">Ver Situação</button>
+                                </td>`;
+            tbodyFinal += "</tr>";
+        }
+
+        listaModelosContainer.querySelector("tbody").innerHTML = tbodyFinal;
     }
 
     function adicionarOrdenacoes() {
@@ -220,17 +335,25 @@ document.addEventListener('DOMContentLoaded', () => {
             let alertas = await resposta.json();
 
             let criticos = 0;
+            let offline = 0;
             alertas.forEach(alerta => {
+                let description = alerta.description.content[0].content[0].text.trim().split('\n');
+                let tipo_alerta = description[2].split(":")[1].trim();
+
                 if (alerta.priority.name == "High") {
                     criticos += 1;
                 }
+
+                if (tipo_alerta == "Offline") {
+                    offline += 1;
+                }
             });
 
-            return { alertas_ativos: alertas.length, alertas_criticos: criticos };
+            return { alertas_ativos: alertas.length, alertas_criticos: criticos, dispositivos_offline: offline };
         } catch (erro) {
             console.error(erro);
 
-            return { alertas_ativos: 0, alertas_criticos: 0 };
+            return { alertas_ativos: 0, alertas_criticos: 0, dispositivos_offline: 0 };
         }
     }
 

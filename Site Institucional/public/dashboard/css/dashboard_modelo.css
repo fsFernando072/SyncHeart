@@ -376,3 +376,22 @@ body {
     font-weight: 300;
     user-select: none;
 }
+
+#lista_dispositivos_container .baixo{
+    color: #34db55;
+}
+
+#lista_dispositivos_container .moderado {
+    color: #f1c40f;
+}
+
+#lista_dispositivos_container .alto {
+    color: #e74c3c;
+}
+
+#module_historico_alertas span,
+#module_tipos_alertas span {
+    text-align: center;
+    vertical-align: center;
+    font-size: 24px;
+}
