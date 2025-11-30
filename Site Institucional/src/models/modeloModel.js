@@ -72,7 +72,12 @@ function listarParametrosDashModelo(modeloId) {
  * Essencial para preencher o formulário de edição.
  */
 function buscarPorId(modeloId) {
-    var instrucaoSql = `SELECT * FROM Modelos WHERE modelo_id = ?;`;
+    var instrucaoSql = `SELECT 
+        m.*,
+        f.nome_fabricante
+        FROM Modelos m
+        JOIN Fabricantes f ON m.fabricante_id = f.fabricante_id
+        WHERE modelo_id = ?;`;
     return database.executar(instrucaoSql, [modeloId]);
 }
 

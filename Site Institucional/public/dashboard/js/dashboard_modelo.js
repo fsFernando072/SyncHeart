@@ -5,7 +5,15 @@ document.addEventListener('DOMContentLoaded', () => {
     let alertaData;
     let parametroData;
 
-    let dadosTiposAlertas = { labels: ['CPU', 'Bateria', 'RAM', 'Disco'], valores: [0, 0, 0, 0] };
+    const alertaKpi = {
+        alertas_ativos: 0,
+        alertas_criticos: 0,
+        dispositivos_offline: 0
+    };
+
+    const dadosHistoricoAlertas = { labels: [], alertas_ativos: [], alertas_previstos: [] };
+
+    const dadosTiposAlertas = { labels: ['CPU', 'Bateria', 'RAM', 'Disco'], valores: [0, 0, 0, 0] };
 
     const token = sessionStorage.getItem('authToken');
     const idModelo = sessionStorage.getItem("idModelo");
@@ -49,22 +57,56 @@ document.addEventListener('DOMContentLoaded', () => {
         const emailUsuario = dadosUsuarioLogado.usuario.email;
         headerUserInfoEl.innerHTML = `<div class="user-info"><span class="user-name">${nomeUsuario}</span><span class="user-email">${emailUsuario}</span></div>`;
 
+        await carregarModelo();
         let alertas = await buscarTicketsPorModelo(nomeClinica, idModelo, token);
+        let alertasUltSemana = await buscarTicketsPorModeloUltimaSemana(nomeClinica, idModelo, token);
         alertaData = alertas;
         await carregarAlertasAtivos(alertas);
         await carregarParametros();
         await carregarDispositivos(dispositivoData, alertas);
-        carregarKPIs();
-        carregarGraficos(alertas);
+        carregarKPIs(alertasUltSemana);
+        await carregarAlertasPorDia();
+        carregarGraficos();
         subirScroll();
         adicionarOrdenacoes();
     }
 
     // --- FUNÇÃO PARA CARREGAR OS KPIS ---
-    function carregarKPIs() {
+    function carregarKPIs(alertasUltSemana) {
 
-        const kpiData = { alertas_ativos: 7, dispositivosOffline: 3, alertas_criticos: 3 };
-        const kpiPercent = { alertas_ativos: 15, dispositivosOffline: 10, alertas_criticos: -5 };
+        const kpiData = {
+            alertas_ativos: alertaKpi.alertas_ativos,
+            dispositivos_offline: alertaKpi.dispositivos_offline,
+            alertas_criticos: alertaKpi.alertas_criticos
+        };
+
+        let ativosPercent = 0;
+        let offlinePercent = 0;
+        let criticoPercent = 0;
+
+        if (alertasUltSemana.alertas_ativos == 0) {
+            ativosPercent = alertaKpi.alertas_ativos * 100;
+        } else {
+            ativosPercent = (1 - alertaKpi.alertas_ativos / alertasUltSemana.alertas_ativos) * 100;
+        }
+
+        if (alertasUltSemana.dispositivos_offline == 0) {
+            offlinePercent = alertaKpi.dispositivos_offline * 100;
+        } else {
+            offlinePercent = (1 - alertaKpi.dispositivos_offline / alertasUltSemana.dispositivos_offline) * 100;
+        }
+
+        if (alertasUltSemana.alertas_criticos == 0) {
+            criticoPercent = alertaKpi.alertas_criticos * 100;
+        } else {
+            criticoPercent = (1 - alertaKpi.alertas_criticos / alertasUltSemana.alertas_criticos) * 100;
+        }
+
+        const kpiPercent = {
+            alertas_ativos: ativosPercent,
+            dispositivos_offline: offlinePercent,
+            alertas_criticos: criticoPercent
+        };
 
         const kpiCards = kpiContainer.querySelectorAll(".kpi-card");
 
@@ -80,17 +122,17 @@ document.addEventListener('DOMContentLoaded', () => {
         const kpiValue = kpiContainer.getElementsByClassName("kpi-value");
         const kpiDescription = kpiContainer.querySelectorAll(".kpi-description span");
 
-        kpiValue[0].innerText = kpiData.dispositivosOffline;
+        kpiValue[0].innerText = kpiData.dispositivos_offline;
         kpiValue[1].innerText = kpiData.alertas_ativos;
         kpiValue[2].innerText = kpiData.alertas_criticos;
 
-        kpiDescription[0].innerText = (kpiPercent.dispositivosOffline > 0 ? "+" : "") + kpiPercent.dispositivosOffline + "%";
+        kpiDescription[0].innerText = (kpiPercent.dispositivos_offline > 0 ? "+" : "") + kpiPercent.dispositivos_offline + "%";
         kpiDescription[1].innerText = (kpiPercent.alertas_ativos > 0 ? "+" : "") + kpiPercent.alertas_ativos + "%";
         kpiDescription[2].innerText = (kpiPercent.alertas_criticos > 0 ? "+" : "") + kpiPercent.alertas_criticos + "%";
 
-        if (kpiPercent.dispositivosOffline > 0) {
+        if (kpiPercent.dispositivos_offline > 0) {
             kpiDescription[0].style.color = "#e74c3c";
-        } else if (kpiPercent.dispositivosOffline == 0) {
+        } else if (kpiPercent.dispositivos_offline == 0) {
             kpiDescription[0].style.color = "#f1c40f";
         } else {
             kpiDescription[0].style.color = "#10982bff";
@@ -113,10 +155,10 @@ document.addEventListener('DOMContentLoaded', () => {
         }
 
 
-        if (kpiData.dispositivosOffline >= 3) {
+        if (kpiData.dispositivos_offline >= 3) {
             kpiCard[0].style.borderLeftColor = "#e74c3c";
             kpiValue[0].style.color = "#e74c3c";
-        } else if (kpiData.dispositivosOffline > 0) {
+        } else if (kpiData.dispositivos_offline > 0) {
             kpiCard[0].style.borderLeftColor = "#f1c40f";
             kpiValue[0].style.color = "#f1c40f";
         } else {
@@ -148,9 +190,10 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     // --- FUNÇÃO PARA CARREGAR OS GRÁFICOS ---
-    function carregarGraficos(alertas) {
+    function carregarGraficos() {
 
-        const dadosHistoricoAlertas = { labels: ['Dom', 'Seg', 'Ter', 'Qua', 'Qui', 'Sex (Hoje)', 'Sáb'], valoresReais: [3, 5, 2, 8, 4, 7], valoresPrevistos: [4, 8, 2, 5, 8, 2, 3] };
+        document.querySelector("#module_historico_alertas span").style.display = "none";
+        document.querySelector("#module_tipos_alertas span").style.display = "none";
         
         const ctxHistorico = document.getElementById('graficoHistoricoAlertas').getContext('2d');
         new Chart(ctxHistorico,
@@ -159,8 +202,8 @@ document.addEventListener('DOMContentLoaded', () => {
                 data: {
                     labels: dadosHistoricoAlertas.labels,
                     datasets: [{
-                        label: 'Alertas Emitidos',
-                        data: dadosHistoricoAlertas.valoresReais,
+                        label: 'Alertas Ativos',
+                        data: dadosHistoricoAlertas.alertas_ativos,
                         backgroundColor: 'rgba(190, 17, 17, 0.2)',
                         borderWidth: 2,
                         tension: 0.4,
@@ -170,7 +213,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     },
                     {
                         label: 'Alertas Previstos',
-                        data: dadosHistoricoAlertas.valoresPrevistos,
+                        data: dadosHistoricoAlertas.alertas_previstos,
                         borderColor: 'rgba(9, 105, 168, 1)',
                         borderWidth: 2,
                         tension: 0.4,
@@ -219,7 +262,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 }
             });
 
-        if (dadosTiposAlertas.valores[0] == 0 && 
+        if (dadosTiposAlertas.valores[0] == 0 &&
             dadosTiposAlertas.valores[1] == 0 &&
             dadosTiposAlertas.valores[2] == 0 &&
             dadosTiposAlertas.valores[3] == 0
@@ -278,6 +321,16 @@ document.addEventListener('DOMContentLoaded', () => {
 
     }
 
+    async function carregarModelo() {
+        const resposta = await fetch(`/modelos/${idModelo}`, { headers: { 'Authorization': `Bearer ${token}` } });
+        if (!resposta.ok) throw new Error('Falha ao carregar modelo.');
+        let infoModelo = await resposta.json();
+
+        document.querySelector("#header_title").innerHTML += `${infoModelo.nome_fabricante} ${infoModelo.nome_modelo}`;
+        let caminho = document.querySelector("#breadcrumb_path").querySelectorAll("a")[1];
+        caminho.innerHTML += `${infoModelo.nome_fabricante} ${infoModelo.nome_modelo}`;
+    }
+
 
     async function carregarAlertasAtivos(data) {
 
@@ -297,13 +350,13 @@ document.addEventListener('DOMContentLoaded', () => {
             }
 
             if (data[i].tipo_alerta == "CPU") {
-                dadosTiposAlertas.valores[0] += 1; 
+                dadosTiposAlertas.valores[0] += 1;
             } else if (data[i].tipo_alerta == "BATERIA") {
-                dadosTiposAlertas.valores[1] += 1; 
+                dadosTiposAlertas.valores[1] += 1;
             } else if (data[i].tipo_alerta == "RAM") {
-                dadosTiposAlertas.valores[2] += 1; 
+                dadosTiposAlertas.valores[2] += 1;
             } else {
-                dadosTiposAlertas.valores[3] += 1; 
+                dadosTiposAlertas.valores[3] += 1;
             }
 
             tbodyFinal += `<td>${data[i].dispositivo_uuid}</td>`;
@@ -371,7 +424,7 @@ document.addEventListener('DOMContentLoaded', () => {
             tbodyFinal += `<td>${data[i].criticidade}</td>`;
             tbodyFinal += "</tr>";
         }
-        
+
 
         tbodyTabelaParametros.innerHTML = tbodyFinal;
 
@@ -408,10 +461,8 @@ document.addEventListener('DOMContentLoaded', () => {
                     return;
                 }
 
-                let status = ["Offline", "Offline", "Online", "Online", "Online", "Online"];
-                
                 for (let i = 0; i < dispositivoData.length; i++) {
-                    dispositivoData[i].status = status[i];
+                    dispositivoData[i].status = "Online";
                     dispositivoData[i].alertas_ativos = 0;
                     dispositivoData[i].alertas_criticos = 0;
 
@@ -420,9 +471,16 @@ document.addEventListener('DOMContentLoaded', () => {
 
                         if (ticket.dispositivo_uuid == dispositivoData[i].dispositivo_uuid) {
                             dispositivoData[i].alertas_ativos += 1;
+                            alertaKpi.alertas_ativos += 1;
 
                             if (ticket.severidade == "CRÍTICO") {
                                 dispositivoData[i].alertas_criticos += 1;
+                                alertaKpi.alertas_criticos += 1;
+                            }
+
+                            if (ticket.tipo_alerta == "Offline") {
+                                dispositivoData[i].status += "Offline";
+                                alertaKpi.dispositivos_offline += 1;
                             }
 
                             tickets.splice(j, 1);
@@ -445,9 +503,27 @@ document.addEventListener('DOMContentLoaded', () => {
                 tbodyFinal += "<tr>";
             }
 
+            let cor_ativos;
+            let cor_criticos;
+            if (data[i].alertas_ativos >= 3) {
+                cor_ativos = "alto";
+            } else if (data[i].alertas_ativos > 0) {
+                cor_ativos = "moderado";
+            } else {
+                cor_ativos = "baixo";
+            }
+
+            if (data[i].alertas_criticos >= 3) {
+                cor_criticos = "alto";
+            } else if (data[i].alertas_criticos > 0) {
+                cor_criticos = "moderado";
+            } else {
+                cor_criticos = "baixo";
+            }
+
             tbodyFinal += `<td>${data[i].dispositivo_uuid}</td>`;
-            tbodyFinal += `<td>${data[i].alertas_ativos}</td>`;
-            tbodyFinal += `<td>${data[i].alertas_criticos}</td>`;
+            tbodyFinal += `<td class="${cor_ativos}">${data[i].alertas_ativos}</td>`;
+            tbodyFinal += `<td class="${cor_criticos}">${data[i].alertas_criticos}</td>`;
             tbodyFinal += `<td>${data[i].status}</td>`;
             tbodyFinal += `<td class="acoes"><button class="btn-acao btn-editar">Ver Situação</button></td>`;
             tbodyFinal += "</tr>";
@@ -613,7 +689,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 th.addEventListener("click", () => selectionSortString(alertaData, "severidade", "alertas"));
             }
         });
-        
+
         thParametros.forEach(th => {
             if (th.textContent.toLowerCase().includes("componente")) {
                 th.addEventListener("click", () => selectionSortString(parametroData, "metrica", "parametros"));
@@ -639,6 +715,45 @@ document.addEventListener('DOMContentLoaded', () => {
                 th.addEventListener("click", () => selectionSortString(dispositivoData, "status", "dispositivos"));
             }
         });
+    }
+
+    async function carregarAlertasPorDia() {
+        const diasDaSemana = ['Dom', 'Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sáb'];
+        const dataAtual = new Date();
+
+        const promessas = [];
+        const labels = [];
+
+        for (let i = 6; i >= 0; i--) {
+            let dataInicio = new Date(dataAtual);
+            dataInicio.setDate(dataAtual.getDate() - i);
+
+            const ano = dataInicio.getFullYear();
+            const mes = (dataInicio.getMonth() + 1).toString().padStart(2, '0');
+            const dia = dataInicio.getDate().toString().padStart(2, '0');
+
+            const dataFormatada = `${ano}-${mes}-${dia}`;
+
+            promessas.push(
+                buscarTicketsPorModeloPorDia(nomeClinica, idModelo, token, dataFormatada)
+            );
+
+            labels.push(diasDaSemana[dataInicio.getDay()]);
+        }
+
+        labels[6] = `${labels[6]} (Hoje)`;
+        labels[7] = labels[0];
+
+        const totais = await Promise.all(promessas);
+        const alertas_previstos = await preverAlertas(totais, 0.3);
+
+        labels.splice(0, 1);
+        totais.splice(0, 1);
+        alertas_previstos.splice(0, 1);
+
+        dadosHistoricoAlertas.labels = labels;
+        dadosHistoricoAlertas.alertas_ativos = totais;
+        dadosHistoricoAlertas.alertas_previstos = alertas_previstos;
     }
 
     async function buscarTicketsPorModelo(nomeClinica, idModelo, token) {
@@ -670,7 +785,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     "tipo_alerta": tipo_alerta,
                     "severidade": severidade
                 }
-                
+
                 alertas.push(alerta);
             });
 
@@ -680,6 +795,78 @@ document.addEventListener('DOMContentLoaded', () => {
 
             return [];
         }
+    }
+
+    async function buscarTicketsPorModeloUltimaSemana(nomeClinica, idModelo, token) {
+        try {
+            const listaBody = { nomeClinica: nomeClinica, idModelo: idModelo };
+            const resposta = await fetch(`/jira/listar/modelo/ultsemana`,
+                {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
+                    body: JSON.stringify(listaBody)
+                });
+
+            if (!resposta.ok) throw new Error('Falha ao carregar tickets.');
+
+            let alertas = await resposta.json();
+
+            let criticos = 0;
+            let offline = 0;
+            alertas.forEach(alerta => {
+                let description = alerta.description.content[0].content[0].text.trim().split('\n');
+                let tipo_alerta = description[2].split(":")[1].trim();
+
+                if (alerta.priority.name == "High") {
+                    criticos += 1;
+                }
+
+                if (tipo_alerta == "Offline") {
+                    offline += 1;
+                }
+            });
+
+            return { alertas_ativos: alertas.length, alertas_criticos: criticos, dispositivos_offline: offline };
+        } catch (erro) {
+            console.error(erro);
+
+            return [];
+        }
+    }
+
+    async function buscarTicketsPorModeloPorDia(nomeClinica, idModelo, token, dataDoDia) {
+        try {
+            const listaBody = { nomeClinica: nomeClinica, idModelo: idModelo, dataDoDia: dataDoDia };
+            const resposta = await fetch(`/jira/listar/modelo/dia`,
+                {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
+                    body: JSON.stringify(listaBody)
+                });
+
+            if (!resposta.ok) throw new Error('Falha ao carregar tickets.');
+
+            let alertas = await resposta.json();
+
+            return alertas.length;
+        } catch (erro) {
+            console.error(erro);
+
+            return 0;
+        }
+    }
+
+    async function preverAlertas(alertas, alpha) {
+        let alertas_previstos = [];
+        alertas_previstos[0] = alertas[0];
+
+        for (i = 1; i < alertas.length; i++) {
+            alertas_previstos[i] = alpha * alertas[i] + (1 - alpha) * alertas_previstos[i - 1];
+            alertas_previstos[i] = Math.round(alertas_previstos[i]);
+        }
+        alertas_previstos[7] = alpha * alertas_previstos[6] + (1 - alpha) * alertas_previstos[6];
+
+        return alertas_previstos;
     }
 
 
