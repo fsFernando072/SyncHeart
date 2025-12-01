@@ -119,11 +119,6 @@ body {
     align-items: flex-end;
 }
 
-.breadcrumb {
-    color: #888;
-    font-size: 14px;
-}
-
 .dashboard-container {
     padding: 30px;
     flex: 1;
@@ -270,6 +265,13 @@ body {
     font-size: 16px;
 }
 
+.breadcrumb a {
+    color: #4A154B;
+    text-decoration: none;
+    font-size: 16px;
+}
+
+
 /* Lista de Dispositivos */
 .list-module {
     background: white;
@@ -306,6 +308,14 @@ body {
 
 #lista_dispositivos_container tr:not(.critico) td:nth-of-type(4){
     color: #34db55;
+}
+
+#lista_parametros_container tr.critico_texto td:nth-of-type(4) {
+    color: #e74c3c;
+}
+
+#lista_parametros_container tr:not(.critico_texto) td:nth-of-type(4) {
+    color: #f1c40f;
 }
 
 #lista_parametros_container td:nth-of-type(1),
@@ -365,4 +375,23 @@ body {
     color: #fff;
     font-weight: 300;
     user-select: none;
+}
+
+#lista_dispositivos_container .baixo{
+    color: #34db55;
+}
+
+#lista_dispositivos_container .moderado {
+    color: #f1c40f;
+}
+
+#lista_dispositivos_container .alto {
+    color: #e74c3c;
+}
+
+#module_historico_alertas span,
+#module_tipos_alertas span {
+    text-align: center;
+    vertical-align: center;
+    font-size: 24px;
 }

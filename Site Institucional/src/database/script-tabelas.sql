@@ -140,7 +140,7 @@ CREATE TABLE Alertas (
     alerta_id INT AUTO_INCREMENT PRIMARY KEY,
     dispositivo_id INT NOT NULL,
     tipo_alerta VARCHAR(100) NOT NULL,
-    severidade ENUM('baixa','media','alta','critica') DEFAULT 'media',
+    severidade ENUM('CRITICO', 'ATENCAO') NOT NULL DEFAULT 'ATENCAO',
     mensagem TEXT NOT NULL,
     detectado_em DATETIME NOT NULL,
     status_alerta ENUM('Novo', 'Em Analise', 'Resolvido', 'Ignorado') NOT NULL DEFAULT 'Novo',
