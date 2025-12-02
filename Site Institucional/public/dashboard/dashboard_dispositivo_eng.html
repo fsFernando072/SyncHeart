@@ -7,7 +7,7 @@
   <title>Dashboard - SyncHeart</title>
 
   <link rel="shortcut icon" href="../assets/Logo_contornada.png" type="image/x-icon">
-  <link rel="stylesheet" href="./css/dashboard_dispositivo copy.css">
+  <link rel="stylesheet" href="./css/dashboard_dispositivo_eng.css">
   <link href="https://fonts.googleapis.com/css2?family=Lexend:wght@100..900&display=swap" rel="stylesheet">
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
@@ -66,8 +66,9 @@
         <main class="main-content">
           <header class="page-header">
                 <div class="header-info">
-                    <h1 id="header_title">Modelo x &gt; Dispositivos</h1>
-                      <div class="breadcrumb" id="breadcrumb_path"></div>
+                    <h1 id="header_title">Dispositivo </h1>
+                    <div class="breadcrumb" id="breadcrumb_path"> <a href="dashboard_modelo.html">Modelo </a> &gt; <a href="dashboard_dispositivo_eng.html">Dispositivo </a></div>
+
                 </div>
                 <div class="header-user" id="header_user_info"></div>
             </header>
@@ -84,18 +85,18 @@
                     </select>
                 </div>
 
-                <div class="lista-baixo">
-                    <div class="dispositivo-card">
-                        <div class="card-container">
+                <div class="lista-baixo" id="lista_dispositivos">
+                    <!-- <div class="dispositivo-card">
+                        <div class="card-container" id="card_container">
                             <div class="card-cima">
                                 <div class="titulo-card">
-                                    <h3>Dispositivo 1</h3> <span class="status-dispositivo">Online</span>
+                                    <h3 id="dispositivo_card_id">Dispositivo </h3> <span class="status-dispositivo" id="dispositivo_card_status"></span>
                                 </div>
-                                <h4>123MP1287512312</h4>
+                                <h4 id="dispositivo_card_uuid"></h4>
                             </div>
                             <div class="card-baixo">
-                                <h4>Alertas recentes: <span>3</span></h4>
-                                <h5>1 hora atrás</h5>
+                                <h4>Alertas recentes: <span id="dispositivo_card_alertas_ativos"></span></h4>
+                                <h5 id="dispositivo_card_ultima_att">1 hora atrás</h5>
                             </div>
                         </div>
                     </div>
@@ -139,7 +140,7 @@
                                 <h5>2 minutos atrás</h5>
                             </div>
                         </div>
-                    </div>
+                    </div> -->
                     
                 </div>
                         
@@ -150,8 +151,8 @@
                 <div class="dispositivo-info">
                     <div class="card-info">
                         <div class="info-esquerda">
-                            <h3>Dispositivo x</h3>
-                            <h4>UUID: 1234567</h4>
+                            <h3 id="id_dispositivo">Dispositivo </h3>
+                            <h4 id="uuid_dispositivo">UUID: </h4>
                             <h4>Paciente: 123MP1287512312</h4>
                         </div>
                         <div class="info-direita">
@@ -286,104 +287,7 @@
 
 
   </div>
+  <script src="js/dashboard_dispositivos_eng.js"></script>
 </body>
-
-<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-
-<script>
-      const ctx = document.getElementById('myChart');
-      const ctx2 = document.getElementById('myChart2');
-      const ctx3 = document.getElementById('myChart3');
-      const ctx4 = document.getElementById('myChart4');
-
-  new Chart(ctx, {
-    type: 'line',
-    data: {
-      labels: ['10:00', '10:05', '10:10', '10:15', '10:20', '10:25'],
-      datasets: [{
-        label: 'Consumo de Bateria',
-        data: [10, 20, 30, 40, 60, 30],
-        borderWidth: 2
-      }]
-    },
-    options: {
-      responsive: true,
-      maintainAspectRatio: false,
-      scales: {
-        y: {
-          beginAtZero: true
-        }
-      }
-    }
-  });
-
-  new Chart(ctx2, {
-    type: 'line',
-    data: {
-      labels: ['10:00', '10:05', '10:10', '10:15', '10:20', '10:25'],
-      datasets: [{
-        label: 'Consumo de CPU',
-        data: [60, 50, 60, 45, 40, 45],
-        borderWidth: 2
-      },
-      {
-        label: 'Consumo de RAM',
-        data: [30, 35, 40, 35, 30, 25],
-        borderWidth: 2,
-      }]
-    },
-    options: {
-      responsive: true,
-      maintainAspectRatio: false,
-      scales: {
-        y: {
-          beginAtZero: true
-        }
-      }
-    }
-  });
-
-  new Chart(ctx3, {
-    type: 'line',
-    data: {
-      labels: ['10:00', '10:05', '10:10', '10:15', '10:20', '10:25'],
-      datasets: [{
-        label: 'Consumo de Disco',
-        data: [100, 100, 100, 99, 99, 99],
-        borderWidth: 2
-      }]
-    },
-    options: {
-      responsive: true,
-      maintainAspectRatio: false,
-      scales: {
-        y: {
-          beginAtZero: true
-        }
-      }
-    }
-  });
-
-  new Chart(ctx4, {
-    type: 'bar',
-    data: {
-      labels: ['CPU', 'RAM', 'BATERIA', 'DISCO'],
-      datasets: [{
-        label: 'Alertas dos componentes',
-        data: [20, 12, 2, 1],
-        borderWidth: 2
-      }]
-    },
-    options: {
-      responsive: true,
-      maintainAspectRatio: false,
-      scales: {
-        y: {
-          beginAtZero: true
-        }
-      }
-    }
-  });
-</script>
 
 </html>

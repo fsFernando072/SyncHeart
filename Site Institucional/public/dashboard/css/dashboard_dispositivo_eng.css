@@ -115,8 +115,14 @@ body {
 }
 
 .breadcrumb {
-    color: #888;
-    font-size: 14px;
+    color: #4A154B;
+    font-size: 16px;
+}
+
+.breadcrumb a {
+    color: #4A154B;
+    text-decoration: none;
+    font-size: 16px;
 }
 
 .dashboard-container {

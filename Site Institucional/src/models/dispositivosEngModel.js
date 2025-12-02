@@ -8,12 +8,13 @@ function listar(modeloId) {
     return database.executar(instrucaoSql, [modeloId]);
 }
 
-function listarAtual(dispositivoId) {
+function listarAtual(dispositivoUuid) {
     var instrucaoSql = `
         SELECT dispositivo_id id, dispositivo_uuid uuid, id_paciente_na_clinica idp FROM Dispositivos d
         JOIN Pacientes p ON d.paciente_id = p.paciente_id
+        WHERE d.uuid = ?
     `;
-    return database.executar(instrucaoSql, [dispositivoId]);
+    return database.executar(instrucaoSql, [dispositivoUuid]);
 }
 
 module.exports = {

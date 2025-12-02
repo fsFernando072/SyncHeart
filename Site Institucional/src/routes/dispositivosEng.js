@@ -1,10 +1,10 @@
 var express = require('express');
 var router = express.Router();
-var DispositivosEngController = require('../controllers/dispositivosEngController');
+var dispositivosEngController = require('../controllers/dispositivosEngController');
 const authMiddleware = require('../middleware/authMiddleware');
 
-router.get('/:modeloId/:dispositivoId', authMiddleware.verificarEngClinico, DispositivosEngController.listar);
+router.get('/:modeloId/dispositivos', authMiddleware.verificarEngClinico, dispositivosEngController.listar);
 
-router.get('/:modeloId/:dispositivoId', authMiddleware.verificarEngClinico, DispositivosEngController.listarAtual);
+router.get('/:dispositivoUuid', authMiddleware.verificarEngClinico, dispositivosEngController.listarAtual);
 
 module.exports = router;

@@ -23,7 +23,7 @@ var modeloRouter = require("./src/routes/modelos");
 const s3Router = require('./src/routes/s3Route');
 const alertaRouter = require('./src/routes/alertas');
 const jiraRouter = require('./src/routes/jira');
-var dispositivoEngRouter = require("./src/routes/dispositivosEng");
+var dispositivosEngRouter = require("./src/routes/dispositivosEng");
 
 
 
@@ -46,7 +46,7 @@ app.use("/equipes", equipeRouter);
 app.use("/modelos", modeloRouter);
 app.use("/alertas", alertaRouter);
 app.use("/jira", jiraRouter);
-app.use("/dipositivosEng", dispositivoEngRouter);
+app.use("/dispositivosEng", dispositivosEngRouter);
 
 app.listen(PORTA_APP, function () {
     console.log(`

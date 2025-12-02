@@ -69,6 +69,7 @@ document.addEventListener('DOMContentLoaded', () => {
         carregarGraficos();
         subirScroll();
         adicionarOrdenacoes();
+        configurarEventListeners();
     }
 
     // --- FUNÇÃO PARA CARREGAR OS KPIS ---
@@ -530,6 +531,19 @@ document.addEventListener('DOMContentLoaded', () => {
         }
 
         tbodyTabelaDispositivos.innerHTML = tbodyFinal;
+    }
+
+    function configurarEventListeners() {
+        listaDispositivosContainer.addEventListener('click', (event) => {
+            if (event.target.classList.contains('btn-editar')) {
+                const idDispositivo = event.target.dataset.id;
+
+                sessionStorage.setItem("idDispositivo", idDispositivo);
+                sessionStorage.setItem("idModelo", idModelo);
+
+                window.location = "dashboard_dispositivo_eng.html";
+            }
+        });
     }
 
     function subirScroll() {

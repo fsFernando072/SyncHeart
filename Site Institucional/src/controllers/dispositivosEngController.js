@@ -1,7 +1,7 @@
 var dispositivoEngModel = require('../models/dispositivosEngModel');
 
 async function listar(req, res) {
-    const modeloId = req.body;
+    const modeloId = req.params.modeloId;
     try {
         const dispositivos = await dispositivoEngModel.listar(modeloId);
         res.status(200).json(dispositivos);
@@ -13,9 +13,9 @@ async function listar(req, res) {
 }
 
 async function listarAtual(req, res) {
-    const dispositivoId = req.body;
+    const dispositivoUuid = req.params.dispositivoUuid;
     try {
-        const dispositivo = await dispositivoEngModel.listarAtual(dispositivoId);
+        const dispositivo = await dispositivoEngModel.listarAtual(dispositivoUuid);
         res.status(200).json(dispositivo);
     }
     catch (error) {
