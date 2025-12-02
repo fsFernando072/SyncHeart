@@ -13,7 +13,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const dadosHistoricoAlertas = { labels: [], alertas_ativos: [], alertas_previstos: [] };
 
-    const dadosTiposAlertas = { labels: ['CPU', 'Bateria', 'RAM', 'Disco'], valores: [0, 0, 0, 0] };
+    const dadosTiposAlertas = { labels: ['CPU', 'Bateria', 'RAM', 'Disco', 'Offline'], valores: [0, 0, 0, 0, 0] };
 
     const token = sessionStorage.getItem('authToken');
     const idModelo = sessionStorage.getItem("idModelo");
@@ -195,7 +195,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         document.querySelector("#module_historico_alertas span").style.display = "none";
         document.querySelector("#module_tipos_alertas span").style.display = "none";
-        
+
         const ctxHistorico = document.getElementById('graficoHistoricoAlertas').getContext('2d');
         new Chart(ctxHistorico,
             {
@@ -266,7 +266,8 @@ document.addEventListener('DOMContentLoaded', () => {
         if (dadosTiposAlertas.valores[0] == 0 &&
             dadosTiposAlertas.valores[1] == 0 &&
             dadosTiposAlertas.valores[2] == 0 &&
-            dadosTiposAlertas.valores[3] == 0
+            dadosTiposAlertas.valores[3] == 0 &&
+            dadosTiposAlertas.valores[4] == 0
         ) {
             document.getElementById('graficoTiposAlertas').parentElement.innerHTML = '<p>Nenhum alerta ativo ainda.</p>';
             return;
@@ -280,7 +281,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 datasets: [{
                     label: 'Tipos de Alertas',
                     data: dadosTiposAlertas.valores,
-                    backgroundColor: ['#0a63d1ff', '#9a5018ff', '#93058fff', '#118b62ff'],
+                    backgroundColor: ['#0a63d1ff', '#9a5018ff', '#93058fff', '#118b62ff', '#c91693ff'],
                     hoverOffset: 4
                 }]
             },
@@ -327,11 +328,9 @@ document.addEventListener('DOMContentLoaded', () => {
         if (!resposta.ok) throw new Error('Falha ao carregar modelo.');
         let infoModelo = await resposta.json();
 
-        document.querySelector("#header_title").innerHTML += `${infoModelo.nome_fabricante} ${infoModelo.nome_modelo}`;
         let caminho = document.querySelector("#breadcrumb_path").querySelectorAll("a")[1];
         caminho.innerHTML += `${infoModelo.nome_fabricante} ${infoModelo.nome_modelo}`;
     }
-
 
     async function carregarAlertasAtivos(data) {
 
@@ -356,8 +355,10 @@ document.addEventListener('DOMContentLoaded', () => {
                 dadosTiposAlertas.valores[1] += 1;
             } else if (data[i].tipo_alerta == "RAM") {
                 dadosTiposAlertas.valores[2] += 1;
-            } else {
+            } else if (data[i].tipo_alerta == "DISCO") {
                 dadosTiposAlertas.valores[3] += 1;
+            } else {
+                dadosTiposAlertas.valores[4] += 1;
             }
 
             tbodyFinal += `<td>${data[i].dispositivo_uuid}</td>`;
@@ -759,11 +760,10 @@ document.addEventListener('DOMContentLoaded', () => {
         labels[7] = labels[0];
 
         const totais = await Promise.all(promessas);
-        const alertas_previstos = await preverAlertas(totais, 0.3);
+        const alertas_previstos = await preverAlertasHolt(totais);
 
         labels.splice(0, 1);
         totais.splice(0, 1);
-        alertas_previstos.splice(0, 1);
 
         dadosHistoricoAlertas.labels = labels;
         dadosHistoricoAlertas.alertas_ativos = totais;
@@ -870,17 +870,25 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
-    async function preverAlertas(alertas, alpha) {
-        let alertas_previstos = [];
-        alertas_previstos[0] = alertas[0];
+    async function preverAlertasHolt(alertas, alpha = 0.5, beta = 0.3) {
+        let nivel = alertas[0];
+        let tendencia = alertas[1] - alertas[0];
+        let previsoes = [];
 
-        for (i = 1; i < alertas.length; i++) {
-            alertas_previstos[i] = alpha * alertas[i] + (1 - alpha) * alertas_previstos[i - 1];
-            alertas_previstos[i] = Math.round(alertas_previstos[i]);
+        for (let t = 1; t < alertas.length; t++) {
+            let valor = alertas[t];
+
+            let previsao = nivel + tendencia;
+            let nivelAnterior = nivel;
+            nivel = alpha * valor + (1 - alpha) * previsao;
+            tendencia = beta * (nivel - nivelAnterior) + (1 - beta) * tendencia;
+
+            previsoes.push(Math.round(previsao));
         }
-        alertas_previstos[7] = alpha * alertas_previstos[6] + (1 - alpha) * alertas_previstos[6];
 
-        return alertas_previstos;
+        previsoes.push(Math.round(nivel + 1 * tendencia));
+
+        return previsoes;
     }
 
 
