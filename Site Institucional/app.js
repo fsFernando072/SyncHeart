@@ -20,6 +20,7 @@ var dispositivoRouter = require("./src/routes/dispositivos");
 const clinicaRoutes = require('./src/routes/clinicas'); 
 const equipeRouter = require("./src/routes/equipes");
 var modeloRouter = require("./src/routes/modelos");
+var dispositivoEngRouter = require("./src/routes/dispositivosEng");
 
 
 
@@ -38,6 +39,7 @@ app.use("/dispositivos", dispositivoRouter);
 app.use('/clinicas', clinicaRoutes);
 app.use("/equipes", equipeRouter);
 app.use("/modelos", modeloRouter);
+app.use("/dipositivosEng", dispositivoEngRouter);
 
 app.listen(PORTA_APP, function () {
     console.log(`
