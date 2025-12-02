@@ -3,6 +3,7 @@
 const token = sessionStorage.getItem('authToken');
 const usuarioLogado = JSON.parse(sessionStorage.getItem('USUARIO_LOGADO'));
 const nomeClinica = usuarioLogado?.clinica?.nome;
+const usuarioId = usuarioLogado?.usuario?.id;
 
 let chartBateriaHora = null;
 let chartConsumoSemanal = null;
@@ -35,37 +36,49 @@ document.addEventListener('DOMContentLoaded', async () => {
   await carregarListaDispositivos();
 });
 
-// Carrega lista de dispositivos (você já tem um endpoint pra isso, ex: /dispositivos)
+// Carrega lista de dispositivos 
 async function carregarListaDispositivos() {
   try {
-    const res = await fetch(`/dashboard-dispositivos/${usuarioLogado.usuario.usuario_id}`, {
+    const res = await fetch(`/dashboard-dispositivos/${usuarioId}`, {
       headers: { 'Authorization': `Bearer ${token}` }
     });
+
+    if (!res.ok) {
+      const erro = await res.json().catch(() => ({}));
+      throw new Error(erro.mensagem || erro.erro || `Erro ${res.status}`);
+    }
+
     const dispositivos = await res.json();
 
     listaBody.innerHTML = '';
+
+    if (dispositivos.length === 0) {
+      listaBody.innerHTML = '<tr><td colspan="3">Nenhum dispositivo vinculado a este usuário.</td></tr>';
+      return;
+    }
+
     dispositivos.forEach(dev => {
       const tr = document.createElement('tr');
       tr.className = 'device-row';
       tr.dataset.device = dev.dispositivo_uuid;
       tr.innerHTML = `
-                <td class="col-device">
-                    <span class="codigo-dispositivo">${dev.dispositivo_uuid}</span>
-                    <span class="codigo-paciente">${dev.paciente_codigo || '—'}</span>
-                </td>
-                <td class="col-batt"><span class="device-batt">—%</span></td>
-                <td class="col-alerts"><span class="device-alerts">0</span></td>
-            `;
+        <td class="col-device">
+            <span class="codigo-dispositivo">${dev.dispositivo_uuid}</span>
+            <span class="codigo-paciente">${dev.paciente_codigo || '—'}</span>
+        </td>
+        <td class="col-batt"><span class="device-batt">—%</span></td>
+        <td class="col-alerts"><span class="device-alerts">0</span></td>
+      `;
       tr.addEventListener('click', () => selecionarDispositivo(dev.dispositivo_uuid, tr));
       listaBody.appendChild(tr);
     });
 
-    // Seleciona o primeiro automaticamente
-    if (dispositivos.length > 0) {
-      listaBody.querySelector('.device-row').click();
-    }
+    // Seleciona automaticamente o primeiro
+    listaBody.querySelector('.device-row')?.click();
+
   } catch (err) {
-    console.error('Erro ao carregar dispositivos', err);
+    console.error('Erro ao carregar dispositivos:', err);
+    listaBody.innerHTML = `<tr><td colspan="3">Erro: ${err.message}</td></tr>`;
   }
 }
 
