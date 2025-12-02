@@ -13,9 +13,9 @@ async function listar(req, res) {
 }
 
 async function listarAtual(req, res) {
-    const dispositivoUuid = req.params.dispositivoUuid;
+    const dispositivoid = req.params.dispositivoid;
     try {
-        const dispositivo = await dispositivoEngModel.listarAtual(dispositivoUuid);
+        const dispositivo = await dispositivoEngModel.listarAtual(dispositivoid);
         res.status(200).json(dispositivo);
     }
     catch (error) {

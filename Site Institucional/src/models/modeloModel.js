@@ -101,7 +101,8 @@ function listarDispositivos(modeloId) {
     var instrucaoSql = `
         SELECT 
             dispositivo_id,
-            SUBSTRING(dispositivo_uuid, 1, 15) as dispositivo_uuid
+            SUBSTRING(dispositivo_uuid, 1, 15) as dispositivo_uuid,
+            ultima_atualizacao
         FROM Dispositivos 
         WHERE modelo_id = ?;
     `;

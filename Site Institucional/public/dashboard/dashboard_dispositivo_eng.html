@@ -99,8 +99,9 @@
                                 <h5 id="dispositivo_card_ultima_att">1 hora atrás</h5>
                             </div>
                         </div>
-                    </div>
-                    <div class="dispositivo-card">
+                    </div> -->
+
+                    <!-- <div class="dispositivo-card">
                         <div class="card-container">
                             <div class="card-cima">
                                 <div class="titulo-card">
@@ -153,7 +154,7 @@
                         <div class="info-esquerda">
                             <h3 id="id_dispositivo">Dispositivo </h3>
                             <h4 id="uuid_dispositivo">UUID: </h4>
-                            <h4>Paciente: 123MP1287512312</h4>
+                            <h4 id="id_paciente">Paciente: </h4>
                         </div>
                         <div class="info-direita">
                             <div class="info-kpi">
@@ -242,43 +243,23 @@
                   </section>
                 </div>
 
-                <section class="lista-alertas">
-                    <h3>Alertas recentes</h3>
+                <section class="list-module">
+                            <h2>Alertas Ativos</h2>
+                            <div id="lista_alertas_container">
+                                <table class="tabela-dados">
+                                    <thead>
+                                        <tr>
+                                            <th>UUID &#709;</th>
+                                            <th>Componente &#709;</th>
+                                            <th>Severidade &#709;</th>
+                                            <th>Ações</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
 
-                    <div class="corpo-tabela">
-                        <div class="header-alerta">
-                            <span class="valor-header">ID</span>
-                            <span class="valor-header">DATA</span>
-                            <span class="valor-header">SEVERIDADE</span>
-                            <span class="valor-alerta">COMPONENTE</span>
-                        </div>
-
-
-                        <div class="linha-alerta">
-                            <span class="valor-linha">1</span>
-                            <span class="valor-linha">20/11/2025 12:00</span>
-                            <span class="valor-linha">Crítico</span>
-                            <span class="valor-linha">RAM</span>
-                        </div>
-                        <div class="linha-alerta">
-                            <span class="valor-linha">2</span>
-                            <span class="valor-linha">20/11/2025 12:00</span>
-                            <span class="valor-linha">Crítico</span>
-                            <span class="valor-linha">RAM</span>
-                        </div>
-                        <div class="linha-alerta">
-                            <span class="valor-linha">3</span>
-                            <span class="valor-linha">20/11/2025 12:00</span>
-                            <span class="valor-linha">Crítico</span>
-                            <span class="valor-linha">RAM</span>
-                        </div>
-                        <div class="linha-alerta">
-                            <span class="valor-linha">4</span>
-                            <span class="valor-linha">20/11/2025 12:00</span>
-                            <span class="valor-linha">Crítico</span>
-                            <span class="valor-linha">RAM</span>
-                        </div>
-                    </div>
+                                    </tbody>
+                                </table>
+                            </div>
                 </section>
               </div>
 
