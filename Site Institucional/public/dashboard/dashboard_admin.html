@@ -67,7 +67,7 @@
       <header class="page-header">
         <div class="header-info">
           <h1 id="header_title">Painel do Administrador da Clínica</h1>
-          <div class="breadcrumb" id="breadcrumb_path">Clínica A</div>
+          <div class="breadcrumb" id="breadcrumb_path" href="dashboard.html">Clínica A</div>
           <!-- provavelmente esse breadcrumb vai ser dinâmico e não mockado -->
         </div>
         <div class="header-user" id="header_user_info"></div>
@@ -83,46 +83,46 @@
             <div class="segment-row">
 
               <!-- KPI: Métricas de dimensão da clínica -->
-              <section class="dashboard-module" id="module_cpu_%_por_hora">
+              <section class="dashboard-module" id="module_metricas_dimensao">
                 <h4>Métricas de dimensão da clínica:</h4>
                 <div class="mini-kpis">
                   <!-- KPI: Quantidade de dispositivos acompanhados na clínica -->
                   <div class="mini-kpi">
-                    <div class="mini-label">Quantidade de dispositivos acompanhados na clínica:</div>
+                    <div class="mini-label">Quantidade de dispositivos:</div>
                     <div class="mini-value" id="kpi_qtd_devices">XX</div>
                   </div>
                   <!-- KPI: Quantidade de modelos de marca-passo na clínica -->
                   <div class="mini-kpi">
-                    <div class="mini-label">Quantidade de modelos de marca-passo na clínica:</div>
+                    <div class="mini-label">Quantidade de modelos de marca-passoa:</div>
                     <div class="mini-value" id="kpi_qtd_models">XX</div>
                   </div>
                   <!-- KPI: Quantidade de equipes na clínica -->
                   <div class="mini-kpi">
-                    <div class="mini-label">Quantidade de equipes de cuidado na clínica:</div>
+                    <div class="mini-label">Quantidade de equipes de cuidado:</div>
                     <div class="mini-value" id="kpi_qtd_squads">XX</div>
                   </div>
                 </div>
               </section>
-              
+
               <!-- KPI: Risco operacional -->
               <section class="dashboard-module" id="module_risco_operacional">
                 <h4>Risco operacional:</h4>
                 <div class="mini-kpis">
-                  <div class="mini-kpi">
-                    <div class="mini-label">Quantidade de dispositivos que tem alertas não resolvidos:</div>
+                  <div class="mini-kpi colored-module-border">
+                    <div class="mini-label">Quantidade de dispositivos com alertas não resolvidos:</div>
                     <div class="mini-value" id="qtd_unsolved">XX</div>
                     <div class="level-indicator-bar">
                       <div class="colored-level" id="level_qtd_devices_with_not_solved_alerts"></div>
                     </div>
                   </div>
-                  <div class="mini-kpi">
+                  <div class="mini-kpi colored-module-border">
                     <div class="mini-label">Quantidade de equipes sobrecarregadas (>30 alertas não resolvidos)</div>
                     <div class="mini-value" id="qtd_overwhelmed_squads">XX</div>
                     <div class="level-indicator-bar">
                       <div class="colored-level" id="level_qtd_overwhelmed_squads"></div>
                     </div>
                   </div>
-                  <div class="mini-kpi">
+                  <div class="mini-kpi colored-module-border">
                     <div class="mini-label">Tempo médio de resolução dos alertas (em dias):</div>
                     <div class="mini-value" id="mean_time_resolution">XX</div>
                     <span style="font-weight: 700; color: #412051;">dias</span>
@@ -143,14 +143,14 @@
 
               <!-- Gráfico Linha: Acompanhamento de tarefas da equipe -->
               <section class="dashboard-module" id="module_squad_tasks_follow_up">
-                <h4>Acompanhamento de tarefas da equipe:</h4>
+                <h4>Acompanhamento de tarefas das equipes:</h4>
                 <div class="module-content">
                   <canvas id="graficoBarrasEmpilhadasAcompanhamentoTarefasEquipes"></canvas>
-                  aqui vai ter um gráfico de barras empilhadas. exemplo:
+                  <!-- aqui vai ter um gráfico de barras empilhadas. exemplo:
                   <br>
                   ⁃ Equipe Alpha: 10 resolvidos, 3 em acompanhamento e 1 ativos <br>
                   ⁃ Equipe Beta: 8 resolvidos, 2 em acompanhamento e 3 ativos <br>
-                  ⁃ Equipe Gamma: 7 resolvidos, 6 em acompanhamento e 2 ativos <br>
+                  ⁃ Equipe Gamma: 7 resolvidos, 6 em acompanhamento e 2 ativos <br> -->
                 </div>
               </section>
 
@@ -165,7 +165,76 @@
             <div class="filters">
               <h2>Informações filtradas:</h2>
               <h3>
-                <span>Filtrar por modelos:</span>
+
+<!-- TESTES PARA CRIAR INPUT  -->
+<!-- 
+<label for="fruta">Escolha ou digite uma fruta:</label>
+<input list="frutas" id="fruta" name="fruta" placeholder="Digite ou selecione">
+
+<datalist id="frutas">
+  <option value="Maçã1">
+  <option value="Maçã2">
+  <option value="Maçã3">
+  <option value="Maçã4">
+  <option value="Maçã5">
+  <option value="Banana1">
+  <option value="Banana2">
+  <option value="Banana3">
+  <option value="Banana4">
+  <option value="Banana5">
+  <option value="Laranja1">
+  <option value="Laranja2">
+  <option value="Laranja3">
+  <option value="Laranja4">
+  <option value="Laranja5">
+  <option value="Uva1">
+  <option value="Uva2">
+  <option value="Uva3">
+  <option value="Uva4">
+  <option value="Uva5">
+  <option value="Manga1">
+  <option value="Manga2">
+  <option value="Manga3">
+  <option value="Manga4">
+  <option value="Manga5">
+</datalist>
+<br><br>
+              
+                
+<label for="ipt_model">Filtrar por modelo:</label>
+<input list="models" id="ipt_model" placeholder="Digite ou selecione" value="Geral">
+
+<datalist id="models">
+  <option value="Geral">
+  <option value="Maçã2">
+  <option value="Maçã3">
+  <option value="Maçã4">
+  <option value="Maçã5">
+  <option value="Banana1">
+  <option value="Banana2">
+  <option value="Banana3">
+  <option value="Banana4">
+  <option value="Banana5">
+  <option value="Laranja1">
+  <option value="Laranja2">
+  <option value="Laranja3">
+  <option value="Laranja4">
+  <option value="Laranja5">
+  <option value="Uva1">
+  <option value="Uva2">
+  <option value="Uva3">
+  <option value="Uva4">
+  <option value="Uva5">
+  <option value="Manga1">
+  <option value="Manga2">
+  <option value="Manga3">
+  <option value="Manga4">
+  <option value="Manga5">
+</datalist>
+<br><br>
+
+ -->
+                <label>Filtrar por modelos:</label>
                 <!-- as options desse select vão ser buscados do banco de dados -->
                 <select name="" id="filter_by_model" onchange="atualizarKpisPorModelo(this.value)">
                   <!-- essa função ainda não existe no arq .js -->
@@ -174,7 +243,7 @@
                 </select>
               </h3>
               <h3>
-                <span>Filtrar por tempo:</span>
+                <label>Filtrar por tempo:</label>
                 <select name="" id="filter_by_period" onchange="atualizarKpisPorPeriodo(this.value)">
                   <!-- essa função ainda não existe no arq .js -->
                   <option value="last_7_days">últimos 7 dias</option>
@@ -182,15 +251,15 @@
                   <option value="last_30_days" selected>últimos 30 dias</option>
                   <option value="last_2_months">últimos 2 meses</option>
                   <option value="last_6_months">últimos 6 meses</option>
-                  <option value="last_1_years">últimos 1 ano</option>
+                  <option value="last_1_year">último 1 ano</option>
                   <option value="since_always">Desde sempre</option>
                 </select>
               </h3>
             </div>
 
-            <div class="segment-row">
+            <div class="segment-row segment-row-3">
               <!-- Gráfico Donut: Status dos alertas -->
-              <section class="dashboard-module" id="module_alertas_status">
+              <section class="dashboard-module dashboard-module-segment-3" id="module_alertas_status">
                 <h4>Status dos alertas:</h4>
                 <!--  -->
                 <div class="kpis">
@@ -215,17 +284,17 @@
                 </div>
                 <div class="module-content">
                   <canvas id="graficoDonutStatusAlertas"></canvas>
-                  Gráfico donut
+                  <!-- Gráfico donut -->
                 </div>
               </section>
 
               <!-- Gráfico de barras: tempo de resolução médio de cada equipe -->
-              <section class="dashboard-module" id="module_mean_resolution_time_each_squad">
+              <section class="dashboard-module dashboard-module-segment-3" id="module_mean_resolution_time_each_squad">
                 <h4>Tempo de resolução:</h4>
                 <!--  -->
                 <div class="module-content">
                   <canvas id="graficoBarrasTempoMedioResolucaoCadaEquipe"></canvas>
-                  Gráfico de barras mostrando as equipes e o tempo médio de resolução delas
+                  <!-- Gráfico de barras mostrando as equipes e o tempo médio de resolução delas -->
                 </div>
               </section>
 
@@ -235,9 +304,14 @@
             <section class="card events-card" aria-label="Eventos recentes">
               <div class="card-header">
                 <h4>Eventos recentes</h4>
+                <br>
               </div>
+
+              <div class="events-table-container">
                 <table class="events-table" aria-describedby="eventos-desc">
-                  <caption id="eventos-desc" style="display:none">Lista de eventos recentes do dispositivo</caption>
+                  <caption id="eventos-desc" style="display:none">
+                    Lista de eventos recentes do dispositivo
+                  </caption>
                   <thead>
                     <tr>
                       <th>Severidade</th>
@@ -265,96 +339,10 @@
                       <td>CPU &gt; 80%</td>
                       <td>2 min</td>
                     </tr>
-                    <tr>
-                      <td>Crítico</td>
-                      <td>13 dias</td>
-                      <td>2025-10-11 10:45</td>
-                      <td>2025-10-24 09:39</td>
-                      <td>CPU &gt; 80%</td>
-                      <td>2 min</td>
-                    </tr>
-                    <tr>
-                      <td>Crítico</td>
-                      <td>13 dias</td>
-                      <td>2025-10-11 10:45</td>
-                      <td>2025-10-24 09:39</td>
-                      <td>CPU &gt; 80%</td>
-                      <td>2 min</td>
-                    </tr>
-                    <tr>
-                      <td>Crítico</td>
-                      <td>13 dias</td>
-                      <td>2025-10-11 10:45</td>
-                      <td>2025-10-24 09:39</td>
-                      <td>CPU &gt; 80%</td>
-                      <td>2 min</td>
-                    </tr>
-                    <tr>
-                      <td>Crítico</td>
-                      <td>13 dias</td>
-                      <td>2025-10-11 10:45</td>
-                      <td>2025-10-24 09:39</td>
-                      <td>CPU &gt; 80%</td>
-                      <td>2 min</td>
-                    </tr>
-                    <tr>
-                      <td>Crítico</td>
-                      <td>13 dias</td>
-                      <td>2025-10-11 10:45</td>
-                      <td>2025-10-24 09:39</td>
-                      <td>CPU &gt; 80%</td>
-                      <td>2 min</td>
-                    </tr>
-                    <tr>
-                      <td>Crítico</td>
-                      <td>13 dias</td>
-                      <td>2025-10-11 10:45</td>
-                      <td>2025-10-24 09:39</td>
-                      <td>CPU &gt; 80%</td>
-                      <td>2 min</td>
-                    </tr>
-                    <tr>
-                      <td>Crítico</td>
-                      <td>13 dias</td>
-                      <td>2025-10-11 10:45</td>
-                      <td>2025-10-24 09:39</td>
-                      <td>CPU &gt; 80%</td>
-                      <td>2 min</td>
-                    </tr>
-                    <tr>
-                      <td>Crítico</td>
-                      <td>13 dias</td>
-                      <td>2025-10-11 10:45</td>
-                      <td>2025-10-24 09:39</td>
-                      <td>CPU &gt; 80%</td>
-                      <td>2 min</td>
-                    </tr>
-                    <tr>
-                      <td>Crítico</td>
-                      <td>13 dias</td>
-                      <td>2025-10-11 10:45</td>
-                      <td>2025-10-24 09:39</td>
-                      <td>CPU &gt; 80%</td>
-                      <td>2 min</td>
-                    </tr>
-                    <tr>
-                      <td>Crítico</td>
-                      <td>13 dias</td>
-                      <td>2025-10-11 10:45</td>
-                      <td>2025-10-24 09:39</td>
-                      <td>CPU &gt; 80%</td>
-                      <td>2 min</td>
-                    </tr>
-                    <tr>
-                      <td>Crítico</td>
-                      <td>13 dias</td>
-                      <td>2025-10-11 10:45</td>
-                      <td>2025-10-24 09:39</td>
-                      <td>CPU &gt; 80%</td>
-                      <td>2 min</td>
-                    </tr>
+                    <!-- outras linhas -->
                   </tbody>
                 </table>
+              </div>
             </section>
           </div>
 

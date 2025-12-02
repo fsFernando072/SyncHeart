@@ -130,7 +130,7 @@ CREATE TABLE ModelosAlertaParametros (
     condicao ENUM('MAIOR_QUE', 'MENOR_QUE') NOT NULL,
     limiar_valor DECIMAL(5, 2) NOT NULL,
     duracao_minutos INT DEFAULT 0,
-    criticidade ENUM('Atencao', 'Critico') NOT NULL DEFAULT 'Atencao',
+    criticidade ENUM('CRITICO', 'ATENCAO') NOT NULL DEFAULT 'ATENCAO',
     criado_em DATETIME DEFAULT CURRENT_TIMESTAMP,
     atualizado_em DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     FOREIGN KEY (modelo_id) REFERENCES Modelos(modelo_id) ON DELETE CASCADE

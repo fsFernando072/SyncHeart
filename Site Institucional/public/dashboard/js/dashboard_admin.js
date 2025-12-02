@@ -1,1 +1,3 @@
-// js/dashboard_admin.js
+/* dashboard_admin.js
+   Dashboard Admin - SyncHeart
+*/
