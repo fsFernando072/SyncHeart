@@ -275,10 +275,23 @@ document.addEventListener('DOMContentLoaded', () => {
                 botaoCadastrar.style.display = 'flex'; // Torna o botão visível
                 break;
             case 4: // Engenharia Clínica
-                labelCadastrar.textContent = 'Modelos';
                 botaoCadastrar.href = 'crud_modelo.html';
                 botaoCadastrar.title = 'Gerenciar Modelos de MP';
                 botaoCadastrar.style.display = 'flex';
+
+                const slideBarTop = document.querySelector(".sidebar-top");
+                slideBarTop.removeChild(slideBarTop.querySelector("#nav_dash_dispositivo"));
+                const modelos = `<a href="lista_modelos.html" class="nav-item" title="Modelos">
+                    <div class="nav-icon">
+                        <svg viewBox="0 0 24 24" fill="currentColor">
+                            <path
+                                d="M10 10.02h5V21h-5zM17 21h3c1.1 0 2-.9 2-2v-9h-5v11zm3-18H5c-1.1 0-2 .9-2 2v3h19V5c0-1.1-.9-2-2-2zM3 19c0 1.1.9 2 2 2h3V10H3v9z" />
+                        </svg>
+                    </div>
+                    <span class="nav-label">Modelos</span>
+                </a>`;
+                slideBarTop.innerHTML += modelos;
+                
                 break;
             case 3: // Eletrofisiologista
                 labelCadastrar.textContent = 'Marcapassos';

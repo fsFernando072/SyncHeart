@@ -1,5 +1,4 @@
 var modeloModel = require("../models/modeloModel");
-var database = require("../database/config");
 
 // --- FUNÇÃO DE CRIAÇÃO DE MODELO ---
 async function criar(req, res) {
@@ -65,6 +64,18 @@ async function listarParametrosPorModelo(req, res) {
     }
 }
 
+// --- FUNÇÃO PARA LISTAR OS PARAMETROS DE UM MODELO PARA A DASHBOARD DE MODELOS ---
+async function listarParametrosDashModelo(req, res) {
+    const { modeloId } = req.params;
+    try {
+        const parametros = await modeloModel.listarParametrosDashModelo(modeloId);
+        res.status(200).json(parametros);
+    } catch (error) {
+        console.error("Erro ao listar parâmetros de alerta:", error);
+        res.status(500).json({ erro: 'Ocorreu uma falha no servidor.' });
+    }
+}
+
 
 //Busca os dados de um único modelo pelo seu ID.
 async function buscarPorId(req, res) {
@@ -102,12 +113,25 @@ async function atualizar(req, res) {
     }
 }
 
+async function listarDispositivos(req, res) {
+    const modeloId = req.params.modeloId;
+    try {
+        const modelos = await modeloModel.listarDispositivos(modeloId);
+        res.status(200).json(modelos);
+    } catch (error) {
+        console.error("Erro ao listar dispositivos do modelo:", error);
+        res.status(500).json({ erro: 'Ocorreu uma falha no servidor.' });
+    }
+}
+
 
 module.exports = {
     criar,
     listar,
     listarFabricantes,
     listarParametrosPorModelo,
+    listarParametrosDashModelo,
+    listarDispositivos,
     buscarPorId,
     atualizar
 };

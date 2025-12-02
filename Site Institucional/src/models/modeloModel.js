@@ -43,6 +43,28 @@ function listarParametrosPorModelo(modeloId) {
     return database.executar(instrucaoSql, [modeloId]);
 }
 
+function listarParametrosDashModelo(modeloId) {
+    var instrucaoSql = `
+        SELECT 
+            metrica,
+            concat(
+				CASE 
+					WHEN condicao = 'MAIOR_QUE' THEN '> '
+					ELSE '< '
+				END, 
+                ROUND(limiar_valor),
+                '%') as limiar_valor,
+            duracao_minutos,
+            CASE 
+                WHEN criticidade = 'CRITICO' THEN 'CRÍTICO'
+                WHEN criticidade = 'ATENCAO' THEN 'ATENÇÃO'
+                ELSE UPPER(criticidade)
+            END AS criticidade
+        FROM ModelosAlertaParametros WHERE modelo_id = ?;
+    `;
+    return database.executar(instrucaoSql, [modeloId]);
+}
+
 
 
 /**
@@ -50,7 +72,12 @@ function listarParametrosPorModelo(modeloId) {
  * Essencial para preencher o formulário de edição.
  */
 function buscarPorId(modeloId) {
-    var instrucaoSql = `SELECT * FROM Modelos WHERE modelo_id = ?;`;
+    var instrucaoSql = `SELECT 
+        m.*,
+        f.nome_fabricante
+        FROM Modelos m
+        JOIN Fabricantes f ON m.fabricante_id = f.fabricante_id
+        WHERE modelo_id = ?;`;
     return database.executar(instrucaoSql, [modeloId]);
 }
 
@@ -70,6 +97,17 @@ function atualizar(modeloId, nomeModelo, vidaUtil, dimensoes, frequencia, garant
     return database.executar(instrucaoSql, [nomeModelo, vidaUtil, dimensoes, frequencia, garantia, bateria, modeloId]);
 }
 
+function listarDispositivos(modeloId) {
+    var instrucaoSql = `
+        SELECT 
+            dispositivo_id,
+            SUBSTRING(dispositivo_uuid, 1, 15) as dispositivo_uuid
+        FROM Dispositivos 
+        WHERE modelo_id = ?;
+    `;
+    return database.executar(instrucaoSql, [modeloId]);
+}
+
 
 module.exports = {
     criar,
@@ -77,6 +115,8 @@ module.exports = {
     listar,
     listarFabricantes,
     listarParametrosPorModelo,
+    listarParametrosDashModelo,
+    listarDispositivos,
     buscarPorId,
     atualizar
 };

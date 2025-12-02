@@ -14,7 +14,7 @@ body {
     background-color: #f4f7fa;
     color: #3b3b3b;
     height: 100vh;
-    overflow: hidden;
+    overflow-x: hidden;
 }
 
 .app-container {
@@ -92,6 +92,7 @@ body {
     display: flex;
     flex-direction: column;
     overflow-y: auto;
+    scroll-behavior: smooth;
 }
 
 .page-header {
@@ -118,11 +119,6 @@ body {
     align-items: flex-end;
 }
 
-.breadcrumb {
-    color: #888;
-    font-size: 14px;
-}
-
 .dashboard-container {
     padding: 30px;
     flex: 1;
@@ -141,11 +137,12 @@ body {
 
 .kpi-card {
     background: white;
-    padding: 20px;
+    padding: 12px 20px;
     border-radius: 12px;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
     border-left: 5px solid;
     transition: transform 0.2s, box-shadow 0.2s;
+    cursor: pointer;
 }
 
 .kpi-card:hover {
@@ -177,7 +174,7 @@ body {
 }
 
 .kpi-card.devices {
-    border-left-color: #3498db;
+    border-left-color: #34db55;
 }
 
 .kpi-card.battery {
@@ -189,6 +186,7 @@ body {
     display: grid;
     grid-template-columns: 2fr 1fr;
     gap: 30px;
+    margin-bottom: 30px;
 }
 
 .main-column,
@@ -212,7 +210,7 @@ body {
 }
 
 .module-content {
-    min-height: 150px;
+    min-height: 250px;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -262,124 +260,138 @@ body {
     border-radius: 5px;
 }
 
-
-/* --- 5. WIDGET DE AÇÕES RÁPIDAS (CELULAR) --- */
-.mobile-section {
-    position: fixed;
-    /* Posição fixa na tela */
-    right: 30px;
-    bottom: 20px;
-    transition: transform 0.5s ease-in-out;
-    z-index: 100;
-}
-
-/* Animação de esconder/mostrar */
-.mobile-section.hidden {
-    transform: translateY(calc(100% - 30px));
-}
-
-.phone-mockup {
-    width: 280px;
-    height: 500px;
-    background: #333;
-    border-radius: 25px;
-    padding: 10px;
-    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
-}
-
-.phone-screen {
-    width: 100%;
-    height: 100%;
-    background: white;
-    border-radius: 15px;
-    overflow: hidden;
-    display: flex;
-    flex-direction: column;
-}
-
-.phone-header {
-    height: 30px;
-    background: #333;
-    position: relative;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-
-.phone-toggle-icon {
-    color: white;
-    font-size: 16px;
-    transition: transform 0.3s;
-}
-
-.mobile-section.hidden .phone-toggle-icon {
-    transform: rotate(180deg);
-}
-
-.phone-content {
-    flex: 1;
-    padding: 20px;
-    display: flex;
-    flex-direction: column;
-}
-
-.phone-content h3 {
+.breadcrumb {
     color: #4A154B;
-    font-size: 18px;
-    margin-bottom: 20px;
-    text-align: center;
+    font-size: 16px;
+}
+
+.breadcrumb a {
+    color: #4A154B;
+    text-decoration: none;
+    font-size: 16px;
+}
+
+
+/* Lista de Dispositivos */
+.list-module {
+    background: white;
+    padding: 25px;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+}
+
+.tabela-dados {
+    width: 100%;
+    border-collapse:
+        collapse;
+}
+
+.tabela-dados th,
+.tabela-dados td {
+    text-align: left;
+    padding: 12px 15px;
+    border-bottom: 1px solid #f0f0f0;
+}
+
+.tabela-dados th {
+    color: #888;
+    font-size: 12px;
+    font-weight: 600;
+    text-transform: uppercase;
+    cursor: pointer;
+    user-select: none;
+}
+
+#lista_alertas_container tr:not(.critico) td:nth-of-type(3){
+    color: #f1c40f;
+}
+
+#lista_dispositivos_container tr:not(.critico) td:nth-of-type(4){
+    color: #34db55;
+}
+
+#lista_parametros_container tr.critico_texto td:nth-of-type(4) {
+    color: #e74c3c;
+}
+
+#lista_parametros_container tr:not(.critico_texto) td:nth-of-type(4) {
+    color: #f1c40f;
+}
+
+#lista_parametros_container td:nth-of-type(1),
+#lista_alertas_container td:nth-of-type(2) {
     font-weight: 600;
 }
 
-.action-buttons {
-    display: flex;
-    flex-direction: column;
-    gap: 15px;
+.critico {
+    background-color: #c34d4030;
 }
 
-.action-btn {
+.critico td {
+    color: #e74c3c;
+}
+
+.btn-editar {
     background: #D6166F;
     color: white;
     border: none;
-    padding: 15px 20px;
+    padding: 8px 12px;
     border-radius: 8px;
     font-size: 14px;
-    line-height: 1.4;
     cursor: pointer;
     transition: all 0.3s ease;
     text-align: center;
     text-decoration: none;
-    display: block;
 }
 
-.action-btn:hover {
+.btn-editar:hover {
     background: #b81360;
     transform: translateY(-2px);
 }
 
-.no-actions {
-    color: #999;
-    font-size: 14px;
+#lista_dispositivos_container, #lista_alertas_container {
+    scroll-margin-top: 150px;
+}
+
+.subir {
+    background-color: #00000066;
+    position: fixed;
+    right: 15px;
+    bottom: 125px;
+    border-top-left-radius: 5px;
+    border-bottom-left-radius: 5px;
+    padding: 8px 15px 0 15px;
+    line-height: 40px;
+    margin-right: -20%;
     text-align: center;
-    margin-top: 20px;
+    cursor: pointer;
+    transition: all 1s ease-in-out;
 }
 
-
-#atividade_recente_container {
-    padding-left: 10px;
+.subir span {
+    line-height: 30px;
+    display: block;
+    font-size: 30px;
+    color: #fff;
+    font-weight: 300;
+    user-select: none;
 }
 
-.tempo-atividade {
-    margin-bottom: 20px;
-    color: #555
+#lista_dispositivos_container .baixo{
+    color: #34db55;
 }
 
-.item-atividade {
-    margin-bottom: 10px;
+#lista_dispositivos_container .moderado {
+    color: #f1c40f;
 }
 
-.breadcrumb {
-    color: #4A154B;
-    font-size: 16px;
+#lista_dispositivos_container .alto {
+    color: #e74c3c;
+}
+
+#module_historico_alertas span,
+#module_tipos_alertas span {
+    text-align: center;
+    vertical-align: center;
+    font-size: 24px;
 }
