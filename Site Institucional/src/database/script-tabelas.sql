@@ -107,23 +107,6 @@ CREATE TABLE Dispositivos (
     FOREIGN KEY (paciente_id) REFERENCES Pacientes(paciente_id)
 );
 
-/* Para caso armazenemos os dados de exibição no banco
-CREATE TABLE DadosHardware (
-    dado_id BIGINT AUTO_INCREMENT PRIMARY KEY,
-    dispositivo_id INT NOT NULL,
-    timestamp_utc DATETIME NOT NULL,
-    arritmia_detectada BOOLEAN,
-    cpu_porcentagem DECIMAL(5, 2),
-    ram_porcentagem DECIMAL(5, 2),
-    disco_uso_kb DECIMAL(10, 4),
-    bateria_porcentagem DECIMAL(7, 4),
-    total_tarefas_ativas INT,
-    lista_tarefas_ativas TEXT,
-    INDEX idx_dispositivo_timestamp (dispositivo_id, timestamp_utc),
-    FOREIGN KEY (dispositivo_id) REFERENCES Dispositivos(dispositivo_id) ON DELETE CASCADE
-);
-*/
-
 CREATE TABLE ModelosAlertaParametros (
     parametro_id INT AUTO_INCREMENT PRIMARY KEY,
     modelo_id INT NOT NULL,
