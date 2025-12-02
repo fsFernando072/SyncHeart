@@ -1,257 +1,187 @@
 // js/dashboard_dispositivo.js
 
-// Captura o elemento do cabeçalho onde aparece o nome e e-mail do usuário logado
+const token = sessionStorage.getItem('authToken');
+const usuarioLogado = JSON.parse(sessionStorage.getItem('USUARIO_LOGADO'));
+const nomeClinica = usuarioLogado?.clinica?.nome;
+
+let chartBateriaHora = null;
+let chartConsumoSemanal = null;
+
+// Elementos
 const headerUserInfoEl = document.getElementById('header_user_info');
+const headerTitleEl = document.getElementById('header_title');
+const listaBody = document.getElementById('listaBody');
+const eventsBody = document.getElementById('eventsBody');
 
-// ----------------------------------------------------------------
-// Funções Auxiliares (Helpers)
-// ----------------------------------------------------------------
+// KPIs
+const kpiBateriaAtual = document.getElementById('kpi_bateria_atual');
+const kpiMediaConsumo = document.getElementById('kpi_media_consumo');
+const kpiDeltaConsumo = document.getElementById('kpi_delta_consumo');
+const kpiProximaRecarga = document.getElementById('kpi_proxima_recarga');
 
-// Gera um número aleatório inteiro entre "min" e "max"
-const rnd = (min, max) => Math.round(min + Math.random() * (max - min));
-// Calcula a média de um array numérico e arredonda o resultado
-const avg = arr => Math.round(arr.reduce((a, b) => a + b, 0) / arr.length);
+document.addEventListener('DOMContentLoaded', async () => {
+  if (!token || !usuarioLogado) {
+    window.location.href = '../login.html';
+    return;
+  }
 
-// Cria um array de 24 posições com os horários no formato "0:00", "1:00", ..., "23:00"
-const hoursLabels = Array.from({ length: 24 }, (_, i) => `${i}:00`);
-
-// ----------------------------------------------------------------
-// Função para gerar dados sintéticos (Mock simulado)
-// ----------------------------------------------------------------
-// Essa função gera dados aleatórios apenas para demonstração dos gráficos.
-// O parâmetro `deviceSeed` muda levemente os valores conforme o dispositivo.
-function makeSynthetic(deviceSeed = 0) {
-  // Bateria vai diminuindo ao longo do tempo, simulando consumo diário
-  const batt = hoursLabels.map((_, i) =>
-    Math.max(2, Math.round(100 - i * (0.7 + (deviceSeed % 2) * 0.2) - Math.random() * 1.7))
-  );
-  // Quantidade total de alertas por tipo
-  const alerts = [
-    rnd(0, 10) + (deviceSeed % 3), // CPU
-    rnd(0, 8) + (deviceSeed % 2),  // RAM
-    rnd(0, 6)                      // Flash
-  ];
-  // Linha do tempo dos alertas (últimos 7 dias)
-  const alertsTimeline = Array.from({ length: 7 }, () => rnd(0, 6));
-
-  // Retorna todos os conjuntos de dados simulados
-  return { batt, alerts, alertsTimeline };
-}
-
-// ----------------------------------------------------------------
-// Variáveis para guardar os gráficos (Instâncias do Chart.js)
-// ----------------------------------------------------------------
-let chartTrend = null;
-let chartBatt = null;
-let chartAlerts = null;
-
-// ----------------------------------------------------------------
-// Inicialização de todos os gráficos da dashboard
-// ----------------------------------------------------------------
-function initAllCharts(sample) {
-  // Exibe informações do usuário logado no cabeçalho
-  const dadosUsuarioLogado = JSON.parse(sessionStorage.getItem("USUARIO_LOGADO"));
-  const nomeUsuario = dadosUsuarioLogado.usuario.nome;
-  const emailUsuario = dadosUsuarioLogado.usuario.email;
-
+  // Info do usuário logado
   headerUserInfoEl.innerHTML = `
-    <div class="user-info">
-      <span class="user-name">${nomeUsuario}</span>
-      <span class="user-email">${emailUsuario}</span>
-    </div>`;
+        <div class="user-info">
+            <span class="user-name">${usuarioLogado.usuario.nome}</span>
+            <span class="user-email">${usuarioLogado.usuario.email}</span>
+        </div>`;
 
+  await carregarListaDispositivos();
+});
 
-  // Gráfico de Bateria (% por dia)
-  const battEl = document.getElementById('graficoBateria%PorDia');
-  if (battEl) {
-    if (chartBatt) chartBatt.destroy();
-    const ctx = battEl.getContext('2d');
-    chartBatt = new Chart(ctx, {
-      type: 'line',
-      data: {
-        labels: hoursLabels,
-        datasets: [{
-          label: 'Bateria %',
-          data: sample.batt,
-          fill: true,
-          tension: 0.3,
-          borderColor: '#D6166F',
-          backgroundColor: 'rgba(214,22,111,0.08)'
-        }]
-      },
-      options: { responsive: true, maintainAspectRatio: false, scales: { y: { beginAtZero: true, max: 100 } } }
+// Carrega lista de dispositivos (você já tem um endpoint pra isso, ex: /dispositivos)
+async function carregarListaDispositivos() {
+  try {
+    const res = await fetch(`/dashboard-dispositivos/${usuarioLogado.usuario.usuario_id}`, {
+      headers: { 'Authorization': `Bearer ${token}` }
     });
+    const dispositivos = await res.json();
+
+    listaBody.innerHTML = '';
+    dispositivos.forEach(dev => {
+      const tr = document.createElement('tr');
+      tr.className = 'device-row';
+      tr.dataset.device = dev.dispositivo_uuid;
+      tr.innerHTML = `
+                <td class="col-device">
+                    <span class="codigo-dispositivo">${dev.dispositivo_uuid}</span>
+                    <span class="codigo-paciente">${dev.paciente_codigo || '—'}</span>
+                </td>
+                <td class="col-batt"><span class="device-batt">—%</span></td>
+                <td class="col-alerts"><span class="device-alerts">0</span></td>
+            `;
+      tr.addEventListener('click', () => selecionarDispositivo(dev.dispositivo_uuid, tr));
+      listaBody.appendChild(tr);
+    });
+
+    // Seleciona o primeiro automaticamente
+    if (dispositivos.length > 0) {
+      listaBody.querySelector('.device-row').click();
+    }
+  } catch (err) {
+    console.error('Erro ao carregar dispositivos', err);
   }
+}
 
-  // Gráfico de Alertas (últimos 7 dias)
-  const alertsEl = document.getElementById('graficoAlertasPorDia');
-  if (alertsEl) {
-    if (chartAlerts) chartAlerts.destroy();
-    const ctx = alertsEl.getContext('2d');
-    chartAlerts = new Chart(ctx, {
-      type: 'bar',
-      data: {
-        labels: ['D-6', 'D-5', 'D-4', 'D-3', 'D-2', 'D-1', 'Hoje'],
-        datasets: [{ label: 'Alertas', data: sample.alertsTimeline, backgroundColor: '#D6166F' }]
-      },
-      options: { responsive: true, maintainAspectRatio: false, scales: { y: { beginAtZero: true } } }
+// Quando clica em um dispositivo
+async function selecionarDispositivo(deviceId, elementoTR) {
+  document.querySelectorAll('.device-row').forEach(r => r.classList.remove('selected'));
+  elementoTR.classList.add('selected');
+  headerTitleEl.textContent = `Visão do paciente — ${deviceId}`;
+
+  await carregarDashboardBateria(deviceId);
+}
+
+// Busca os dados da bateria via Lambda
+async function carregarDashboardBateria(deviceId) {
+  try {
+    const res = await fetch(`/clinicas/${nomeClinica}/dispositivos/${deviceId}/dashboard-bateria`, {
+      headers: { 'Authorization': `Bearer ${token}` }
     });
+
+    if (!res.ok) throw new Error('Falha ao carregar dashboard de bateria');
+
+    const data = await res.json(); // ← Isso é o DashboardBateriaDto
+
+    atualizarKPIs(data);
+    atualizarGraficoBateriaPorHora(data.bateriaPorHora);
+    atualizarGraficoConsumoSemanal(data.consumoSemanal);
+    atualizarEventosRecentes(data.eventosRecentes);
+    atualizarListaBateria(deviceId, data.bateriaAtual);
+
+  } catch (err) {
+    console.error(err);
+    alert('Erro ao carregar dados da bateria');
   }
-
-  // Gráficos menores individuais
 }
 
-// ----------------------------------------------------------------
-// Atualiza as mini-KPIs e percentuais de alerta
-// ----------------------------------------------------------------
-function updateMiniKPIs(sample, deviceId) {
-  // Função auxiliar para atualizar texto de um elemento pelo ID
-  const setText = (id, text) => {
-    const el = document.getElementById(id);
-    if (el) el.textContent = text;
-  };
-
-  // Atualiza valores dos mini indicadores
-  setText('mini_batt', (sample.batt.at(-1) || 0) + '%');
-
-  // Calcula a porcentagem de alertas por tipo (CPU, RAM, Flash)
-  const totalAlerts = sample.alerts.reduce((a, b) => a + b, 0) || 1;
-  // Atualiza, se existirem, os elementos específicos de alertas
+function atualizarListaBateria(deviceId, bateriaAtual) {
+  const row = document.querySelector(`.device-row[data-device="${deviceId}"]`);
+  if (row) {
+    const battSpan = row.querySelector('.device-batt');
+    battSpan.textContent = Math.round(bateriaAtual) + '%';
+    battSpan.style.color = bateriaAtual < 20 ? '#e74c3c' : bateriaAtual < 50 ? '#f1c40f' : '#27ae60';
+  }
 }
 
-// ----------------------------------------------------------------
-// Função para trocar dados quando seleciona um dispositivo
-// ----------------------------------------------------------------
-function updateForDevice(deviceId) {
-  // Gera um "seed" com base no ID do dispositivo (para manter consistência)
-  const seed = parseInt(deviceId.replace(/\D/g, '') || '0', 10) % 7;
-  const sample = makeSynthetic(seed);
+function atualizarKPIs(data) {
+  kpiBateriaAtual.textContent = Math.round(data.bateriaAtual) + '%';
+  kpiMediaConsumo.textContent = data.mediaConsumoSemanal.toFixed(1) + '%/semana';
+  kpiProximaRecarga.textContent = data.proximaRecarga || 'Indeterminado';
 
-  // Atualiza KPIs e gráficos com novos dados
-  updateMiniKPIs(sample, deviceId);
-  initAllCharts(sample);
-
-  // Atualiza o título do cabeçalho com o nome do dispositivo
-  const header = document.getElementById('header_title');
-  if (header) header.textContent = `Visão do paciente — ${deviceId}`;
+  const delta = data.deltaConsumo?.toFixed(1) || 0;
+  kpiDeltaConsumo.textContent = delta > 0 ? `+${delta}%` : `${delta}%`;
+  kpiDeltaConsumo.style.color = delta > 0 ? '#e74c3c' : '#27ae60';
 }
 
-// ----------------------------------------------------------------
-// Confiuração de seleção de dispositivos na lista lateral
-// ----------------------------------------------------------------
-function setupDeviceSelection() {
-  const items = document.querySelectorAll('.device-row');
-  if (!items.length) return;
+function atualizarGraficoBateriaPorHora(historico) {
+  const ctx = document.getElementById('graficoBateriaPorHora').getContext('2d');
+  if (chartBateriaHora) chartBateriaHora.destroy();
 
-  items.forEach(item => {
-    // Clique: define o item como "selecionado"
-    item.addEventListener('click', () => {
-      items.forEach(i => i.classList.remove('selected'));
-      item.classList.add('selected');
-      const deviceId = item.dataset.device || item.querySelector('.device-id')?.textContent?.trim();
-      if (deviceId) updateForDevice(deviceId);
-    });
-
-    // Teclado (Enter ou Espaço)
-    item.addEventListener('keydown', (ev) => {
-      if (['Enter', ' '].includes(ev.key)) {
-        ev.preventDefault();
-        item.click();
-      }
-    });
+  chartBateriaHora = new Chart(ctx, {
+    type: 'line',
+    data: {
+      labels: historico.labels,
+      datasets: [{
+        label: 'Bateria (%)',
+        data: historico.valores,
+        fill: true,
+        borderColor: '#D6166F',
+        backgroundColor: 'rgba(214, 22, 111, 0.1)',
+        tension: 0.3,
+        pointRadius: 3
+      }]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      scales: { y: { min: 0, max: 100 } }
+    }
   });
-
-  // Inicializa automaticamente com o primeiro dispositivo selecionado
-  const initial = document.querySelector('.device-row.selected') || items[0];
-  if (initial) {
-    const deviceId = initial.dataset.device || initial.querySelector('.device-id')?.textContent?.trim();
-    if (deviceId) updateForDevice(deviceId);
-  }
 }
 
-// ----------------------------------------------------------------
-// Evento principal — Dom pronto
-// ----------------------------------------------------------------
-document.addEventListener('DOMContentLoaded', () => {
-  // Inicializa seleção dos dispositivos
-  setupDeviceSelection();
+function atualizarGraficoConsumoSemanal(historico) {
+  const ctx = document.getElementById('graficoConsumoSemanal').getContext('2d');
+  if (chartConsumoSemanal) chartConsumoSemanal.destroy();
 
-  // Listener para troca de período (caso o HTML tenha esse select futuramente)
-  const sel = document.getElementById('periodSelect');
-  if (sel) {
-    sel.addEventListener('change', () => {
-      const current = document.querySelector('.device-row.selected');
-      const deviceId = current?.dataset?.device || current?.querySelector('.device-id')?.textContent?.trim();
-      if (deviceId) updateForDevice(deviceId);
-    });
-  }
-});
-
-// ----------------------------------------------------------------
-// Botão de mostrar/ocultar lista e dispositivos
-// ----------------------------------------------------------------
-document.addEventListener("DOMContentLoaded", () => {
-  const btn = document.getElementById("toggleDeviceListBtn");
-  const list = document.querySelector(".sidebar-list-devices");
-  const main = document.querySelector(".main-content");
-
-  // Clique no botão: alterna visibilidade da lista
-  if (btn && list && main) {
-    btn.addEventListener("click", () => {
-      list.classList.toggle("hidden");
-      main.classList.toggle("expanded");
-    });
-  }
-
-  // Corrige comportamento quando redimensiona a janela (<=1000px)
-  function handleResize() {
-    if (window.innerWidth <= 1000) {
-      list.classList.remove("hidden");
-      main.classList.remove("expanded");
+  chartConsumoSemanal = new Chart(ctx, {
+    type: 'bar',
+    data: {
+      labels: historico.labels,
+      datasets: [{
+        label: 'Consumo semanal (%)',
+        data: historico.valores,
+        backgroundColor: '#D6166F'
+      }]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      scales: { y: { beginAtZero: true } }
     }
+  });
+}
+
+function atualizarEventosRecentes(eventos) {
+  eventsBody.innerHTML = '';
+  if (!eventos || eventos.length === 0) {
+    eventsBody.innerHTML = '<tr><td colspan="3">Nenhum evento recente</td></tr>';
+    return;
   }
 
-  handleResize(); // executa uma vez no carregamento
-  window.addEventListener("resize", handleResize); // executa sempre que redimensiona
-
-  // ----------------------------------------------------------------
-  // Configura botão "cadastrar" no sidebar conforme cargo
-  // ----------------------------------------------------------------
-  function configurarBotaoCadastrar() {
-    const dadosUsuarioLogado = JSON.parse(sessionStorage.getItem("USUARIO_LOGADO"));
-    const cargoId = dadosUsuarioLogado.usuario.cargoId;
-
-    const botaoCadastrar = document.getElementById('nav_cadastrar');
-    const labelCadastrar = document.getElementById('nav_cadastrar_label');
-
-    if (!botaoCadastrar || !labelCadastrar) return;
-
-    // Esconde por padrão, depois exibe conforme cargo
-    botaoCadastrar.style.display = 'none';
-
-    switch (cargoId) {
-      case 2: // Admin da Clínica
-        labelCadastrar.textContent = 'Funcionários';
-        botaoCadastrar.href = 'crud_funcionario.html';
-        botaoCadastrar.title = 'Gerenciar Funcionários';
-        botaoCadastrar.style.display = 'flex';
-        break;
-
-      case 4: // Engenharia Clínica
-        labelCadastrar.textContent = 'Modelos';
-        botaoCadastrar.href = 'crud_modelo.html';
-        botaoCadastrar.title = 'Gerenciar Modelos de MP';
-        botaoCadastrar.style.display = 'flex';
-        break;
-
-      case 3: // Eletrofisiologista
-        labelCadastrar.textContent = 'Marcapassos';
-        botaoCadastrar.href = 'provisionar_dispositivo.html';
-        botaoCadastrar.title = 'Provisionar Marcapassos';
-        botaoCadastrar.style.display = 'flex';
-        break;
-    }
-  }
-
-  configurarBotaoCadastrar(); // executa ao carregar
-});
+  eventos.slice(0, 10).forEach(e => {
+    const tr = document.createElement('tr');
+    tr.innerHTML = `
+            <td>${e.horario}</td>
+            <td><span style="color: ${e.severidade.includes('Crítico') ? '#e74c3c' : '#f1c40f'}">${e.mensagem}</span></td>
+            <td>${e.duracao}</td>
+        `;
+    eventsBody.appendChild(tr);
+  });
+}

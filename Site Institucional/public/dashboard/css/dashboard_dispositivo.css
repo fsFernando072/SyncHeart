@@ -4,9 +4,9 @@
 
 /* --- 0. VARIÁVEIS GLOBAIS DE LARGURA --- */
 :root {
-  --sidebar-width: 90px;
+  --sidebar-width: 80px;
   /* largura da barra de ícones (fixa) */
-  --device-list-width: 340px;
+  --device-list-width: 80px;
   /* espaço entre device-list e dashboard */
   --app-padding-top: 12px;
   /* distância do topo (para posicionamento na viewport) */
@@ -136,7 +136,7 @@ input {
 /* wrapper fixo ao lado da sidebar */
 .sidebar-list-devices {
   position: fixed;
-  left: calc(var(--sidebar-width) + 12px);
+  left: calc(var(--sidebar-width) + 5px);
   top: calc(var(--header-height) + 60px);
   width: var(--device-list-width);
   height: calc(100vh - (var(--header-height) + 66px));
@@ -345,40 +345,6 @@ input {
   transform: scale(1.06);
 }
 
-/* === EFEITOS DE OCULTAR LISTA === */
-
-/* animação de recolher */
-.sidebar-list-devices.hidden {
-  transform: translateX(-110%);
-  opacity: 0;
-  pointer-events: none;
-}
-
-/* expande o dashboard quando a lista some */
-.main-content.expanded {
-  margin-left: calc(var(--sidebar-width) + 50px);
-  transition: margin-left 0.35s ease;
-}
-
-@media (max-width: 1000px) {
-
-  .sidebar-list-devices.hidden {
-    transform: translateY(-110%);
-    opacity: 0;
-    pointer-events: none;
-  }
-
-  .toggle-device-list-btn {
-    display: none;
-  }
-
-  .device-table th.col-batt,
-  .device-table td.col-batt,
-  .device-table th.col-alerts,
-  .device-table td.col-alerts {
-    text-align: left;
-  }
-}
 
 
 /* --- 5. ÁREA PRINCIPAL (dashboard-container) --- */
@@ -449,7 +415,6 @@ input {
     gap: 40px;
     margin-bottom: 20px;
     margin-top: 20px;
-    padding-left: 20px;
 }
 
 .kpi-card {
