@@ -101,6 +101,7 @@ CREATE TABLE Dispositivos (
     equipe_id INT NOT NULL,
     paciente_id INT,
     data_provisionamento DATETIME DEFAULT CURRENT_TIMESTAMP,
+    ultima_atualizacao DATETIME DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (modelo_id) REFERENCES Modelos(modelo_id),
     FOREIGN KEY (equipe_id) REFERENCES EquipesCuidado(equipe_id),
     FOREIGN KEY (paciente_id) REFERENCES Pacientes(paciente_id)
@@ -130,7 +131,7 @@ CREATE TABLE ModelosAlertaParametros (
     condicao ENUM('MAIOR_QUE', 'MENOR_QUE') NOT NULL,
     limiar_valor DECIMAL(5, 2) NOT NULL,
     duracao_minutos INT DEFAULT 0,
-    criticidade ENUM('Atencao', 'Critico') NOT NULL DEFAULT 'Atencao',
+    criticidade ENUM('CRITICO', 'ATENCAO') NOT NULL DEFAULT 'ATENCAO',
     criado_em DATETIME DEFAULT CURRENT_TIMESTAMP,
     atualizado_em DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     FOREIGN KEY (modelo_id) REFERENCES Modelos(modelo_id) ON DELETE CASCADE
@@ -162,17 +163,58 @@ INSERT INTO Cargos (cargo_id, nome_cargo, descricao) VALUES
 (3, 'Eletrofisiologista', 'Médico responsável pela análise clínica e acompanhamento de dispositivos.'),
 (4, 'Engenharia Clínica', 'Responsável pela gestão técnica e operacional dos equipamentos médicos.');
 
-
-
 -- Inserindo o usuario administrador principal do sistema
 INSERT INTO Usuarios (nome_completo, email, senha_hash, cargo_id, clinica_id, ativo) VALUES
 ('Administrador SyncHeart', 'admin@syncheart.com', 'admin123', 1, NULL, 1);
 
-SELECT * FROM cargos;
-SELECT * FROM usuarios;
-SELECT * FROM usuarioEquipe;
-SELECT * FROM EquipesCuidado;
+INSERT INTO Clinicas VALUES 
+(1, 'Saúde Plena', '11.111.111/1111-11', 'thiago@gmail.com', '123456', 'Ativo', '2025-11-18 17:01:47');
 
+INSERT INTO Usuarios VALUES 
+(2, 1, 'thiago@gmail.com', '123456', 'Thiago', 2, 1,NULL, '2025-11-18 17:01:47'),
+(3, 1, 'beatriz@gmail.com', '123456', 'Beatriz', 4, 1,NULL, '2025-11-18 17:04:02'),
+(4, 1, 'andre@gmail.com', '123456', 'André', 3, 1,NULL, '2025-11-18 17:04:23');
+
+INSERT INTO EquipesCuidado VALUES (1, 'Ômega', 1);
+
+INSERT INTO UsuarioEquipe VALUES (3, 1), (4, 1);
+
+INSERT INTO Modelos VALUES 
+(1, 4, 'Amvia', 10, '50', '60', '4', 'Litio', 1),
+(2, 5, 'Sentiva', 9, '45', '65', '3', 'Iodo', 1);
+
+INSERT INTO ModelosAlertaParametros VALUES 
+(1, 1, 'CPU', 'MAIOR_QUE', 15.00, 5, 'Atencao', '2025-11-18 17:10:44', '2025-11-18 17:10:44'),
+(2, 2, 'CPU','MAIOR_QUE', 18.00, 3, 'Atencao', '2025-11-18 17:13:02', '2025-11-18 17:13:02'),
+(3, 2, 'RAM','MAIOR_QUE', 75.00, 3, 'Atencao', '2025-11-18 17:13:02', '2025-11-18 17:13:02');
+
+INSERT INTO Pacientes VALUES 
+(1, '1091', 1, '2025-11-18 17:15:30'),
+(2, '7701', 1, '2025-11-18 17:16:12'),
+(3, '4002', 1, '2025-11-18 17:16:12'),
+(4, '7702', 1, '2025-11-18 17:16:39'),
+(5, '8922', 1, '2025-11-18 17:16:43'),
+(6, '987654', 1, '2025-11-18 17:17:15'),
+(7, '9147935', 1, '2025-11-18 17:18:26'),
+(8, '7659015', 1, '2025-11-18 17:18:43'),
+(9, '7401376', 1, '2025-11-18 17:18:58'),
+(10, '1092', 1, '2025-11-18 17:19:10'),
+(11, '656789', 1, '2025-11-18 17:22:25'),
+(12, '234935', 1, '2025-11-18 17:23:22');
+
+INSERT INTO Dispositivos VALUES 
+(1, '680fab1b-5333-4caa-970b-091a484dcf7d', 1, '7663f50869b6d93f48490e23c984c04c5ee94e32', 'Pendente', 1, 1, '2025-11-18 17:15:30', '2025-11-18 17:15:30'),
+(2, '5017d328-3322-496b-b6f3-a5ddb1a8492c', 1, '4f2f206510d35fac23770f3bc6789b4cdaf5098e', 'Pendente', 1, 2, '2025-11-18 17:16:12', '2025-11-18 17:16:12'),
+(3, '3c7675fd-eaab-46e3-902b-352d41c115f1', 2, 'c4c0962ce523dd2ea160c9d50abb5a2acb676465', 'Pendente', 1, 3, '2025-11-18 17:16:12', '2025-11-18 17:16:12'),
+(4, 'e0dd679e-03cf-43ee-b8c9-e54851310e3d', 2, '93dae89c51f24c941f7470fe899470a5c291eb03', 'Pendente', 1, 4, '2025-11-18 17:16:39', '2025-11-18 17:16:39'),
+(5, '26b76fd9-beaa-4428-a328-461eed1f2013', 1, '81fc967c1a218e4706595df0805bc8ba69ab7cec', 'Pendente', 1, 5, '2025-11-18 17:16:43', '2025-11-18 17:16:43'),
+(6, '6a2eee55-f6b0-4475-b0ba-4ef39211e66e', 1, '4f4aabec34294d0d8206419208139b0abc96e602', 'Pendente', 1, 6, '2025-11-18 17:17:15', '2025-11-18 17:17:15'),
+(7, '5a83fe84-3d16-44ed-9dd0-9c21b35a2271', 1, 'c5595b084587b13fddf115c3407aa95e03d4a0fc', 'Pendente', 1, 7, '2025-11-18 17:18:26', '2025-11-18 17:18:26'),
+(8, '9df4a175-49d0-4ab7-bd79-a430f39bba51', 2, '89ba689ea24944a3a16d466f0a70bea5c35c2c48', 'Pendente', 1, 8, '2025-11-18 17:18:43', '2025-11-18 17:18:43'),
+(9, 'c847582f-e9ad-4862-a406-3fff820c92a0', 2, 'e4096b9f5c105f97b7f9b863d0722e2163b8f1a4', 'Pendente', 1, 9, '2025-11-18 17:18:58', '2025-11-18 17:18:58'),
+(10, 'cda57540-260e-41f7-8a41-924263d0e476', 2, '461bfa307679c7013a0f5428c3ea34c68ae4af1e', 'Pendente', 1, 10, '2025-11-18 17:19:10', '2025-11-18 17:19:10'),
+(11, '60986df3-7371-40cb-aaa7-2d147a4590f5', 1, '750b1fb04613ea6130f693a337671877b768231b', 'Pendente', 1, 11, '2025-11-18 17:22:25', '2025-11-18 17:22:25'),
+(12, '600d9011-c393-4113-85b1-0b1531237226', 2, 'b656bb81be77326c3207b2f4ac9b9023f8094999', 'Pendente', 1, 12, '2025-11-18 17:23:22', '2025-11-18 17:23:22');
 
 -- ============================================
 -- Criação do usuário de banco
@@ -181,8 +223,6 @@ CREATE USER IF NOT EXISTS 'heart'@'%' IDENTIFIED BY 'Sptech#2024';
 GRANT ALL PRIVILEGES ON syncheart.* TO 'heart'@'%';
 FLUSH PRIVILEGES;
 
-
-select * from ModelosAlertaParametros;
+select * from Dispositivos;
+select * from Pacientes;
 select * from Modelos;
-
-select * from dispositivos;

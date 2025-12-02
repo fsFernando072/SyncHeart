@@ -1,0 +1,273 @@
+/* ======================================================= */
+/* ARQUIVO DE ESTILO FINAL PARA O DASHBOARD - SYNC-HEART   */
+/* ======================================================= */
+
+/* --- 1. RESET E GERAL --- */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Lexend', sans-serif;
+    background-color: #f4f7fa;
+    color: #3b3b3b;
+    height: 100vh;
+    overflow-x: hidden;
+}
+
+.app-container {
+    display: flex;
+    height: 100%;
+}
+
+/* --- 2. BARRA LATERAL (SIDEBAR) --- */
+.sidebar {
+    width: 90px;
+    background: linear-gradient(180deg, #412051 0%, #9b4b7e 100%);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-between;
+    padding: 20px 0;
+    transition: width 0.3s;
+}
+
+.sidebar-top,
+.sidebar-bottom {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 15px;
+}
+
+.nav-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 75px;
+    height: 65px;
+    border-radius: 12px;
+    cursor: pointer;
+    color: white;
+    text-decoration: none;
+    transition: background-color 0.2s;
+}
+
+.nav-item:hover {
+    background-color: rgba(255, 255, 255, 0.1);
+}
+
+.nav-item.active {
+    background-color: #D6166F;
+}
+
+.logo-item {
+    margin-bottom: 10px;
+}
+
+.nav-icon {
+    width: 30px;
+    height: 30px;
+    margin-bottom: 5px;
+}
+
+.nav-icon svg {
+    width: 100%;
+    height: 100%;
+}
+
+.nav-label {
+    font-size: 11px;
+    font-weight: 500;
+    line-height: 1.2;
+    text-align: center;
+}
+
+/* --- 3. CONTEÚDO PRINCIPAL --- */
+.main-content {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    overflow-y: auto;
+    scroll-behavior: smooth;
+}
+
+.page-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    position: sticky;
+    top: 0;
+    z-index: 2;
+    padding: 20px 30px;
+    background: white;
+    border-bottom: 1px solid #e9ecef;
+}
+
+.page-header h1 {
+    margin: 0;
+    font-size: 26px;
+    color: #4A154B;
+}
+
+.user-info {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+}
+
+.dashboard-container {
+    padding: 30px;
+    flex: 1;
+    position: relative;
+}
+
+/* Tabela de Modelos em Destaque */
+.destaque-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 25px;
+    width: 100%;
+}
+
+.destaque-coluna h4 {
+    font-size: 14px;
+    color: #888;
+    margin-bottom: 15px;
+    border-bottom: 1px solid #eee;
+    padding-bottom: 10px;
+}
+
+.destaque-lista {
+    list-style: none;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.destaque-lista li {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 14px;
+}
+
+.modelo-nome {
+    font-weight: 500;
+    color: #333;
+}
+
+.modelo-valor {
+    font-size: 13px;
+    color: #999;
+    background-color: #f5f5f5;
+    padding: 3px 8px;
+    border-radius: 5px;
+}
+
+.breadcrumb {
+    color: #4A154B;
+    font-size: 16px;
+}
+
+.breadcrumb a {
+    color: #4A154B;
+    text-decoration: none;
+    font-size: 16px;
+}
+
+/* Lista de Dispositivos */
+.list-module {
+    background: white;
+    padding: 25px;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+}
+
+.tabela-dados {
+    width: 100%;
+    border-collapse:
+        collapse;
+}
+
+.tabela-dados th,
+.tabela-dados td {
+    text-align: left;
+    padding: 12px 15px;
+    border-bottom: 1px solid #f0f0f0;
+}
+
+.tabela-dados th {
+    color: #888;
+    font-size: 12px;
+    font-weight: 600;
+    text-transform: uppercase;
+    cursor: pointer;
+    user-select: none;
+}
+
+.critico {
+    background-color: #c34d4030;
+}
+
+.critico td {
+    color: #e74c3c;
+}
+
+.btn-editar {
+    background: #D6166F;
+    color: white;
+    border: none;
+    padding: 8px 12px;
+    border-radius: 8px;
+    font-size: 14px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    text-align: center;
+    text-decoration: none;
+}
+
+.btn-editar:hover {
+    background: #b81360;
+    transform: translateY(-2px);
+}
+
+.subir {
+    background-color: #00000066;
+    position: fixed;
+    right: 15px;
+    bottom: 125px;
+    border-top-left-radius: 5px;
+    border-bottom-left-radius: 5px;
+    padding: 8px 15px 0 15px;
+    line-height: 40px;
+    margin-right: -20%;
+    text-align: center;
+    cursor: pointer;
+    transition: all 1s ease-in-out;
+}
+
+.subir span {
+    line-height: 30px;
+    display: block;
+    font-size: 30px;
+    color: #fff;
+    font-weight: 300;
+    user-select: none;
+}
+
+#lista_modelos_container .baixo{
+    color: #34db55;
+}
+
+#lista_modelos_container .moderado {
+    color: #f1c40f;
+}
+
+#lista_modelos_container .alto {
+    color: #e74c3c;
+}
