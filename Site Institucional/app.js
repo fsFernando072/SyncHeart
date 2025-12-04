@@ -23,7 +23,7 @@ var modeloRouter = require("./src/routes/modelos");
 const s3Router = require('./src/routes/s3Route');
 const alertaRouter = require('./src/routes/alertas');
 const jiraRouter = require('./src/routes/jira');
-// const dashboardAdminRoute = require('./src/routes/dashboard_admin_Route');
+const dashboardAdminRoute = require('./src/routes/dashboard_admin_Route');
 
 
 
@@ -46,7 +46,7 @@ app.use("/equipes", equipeRouter);
 app.use("/modelos", modeloRouter);
 app.use("/alertas", alertaRouter);
 app.use("/jira", jiraRouter);
-// app.use('/dashboard_admin', dashboardAdminRoute);
+app.use('/api/dashboard-admin', dashboardAdminRoute);
 
 app.listen(PORTA_APP, function () {
     console.log(`

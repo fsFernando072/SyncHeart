@@ -1,0 +1,506 @@
+
+/* ===========================
+   HELPERS GERAIS
+   =========================== */
+
+// cor dinâmica baseada em threshold simples
+function corPorNivel(valor, limiteMedio, limiteAlto) {
+  if (valor >= limiteAlto) return '#d9534f'; // vermelho
+  if (valor >= limiteMedio) return '#f0ad4e'; // amarelo
+  return '#5cb85c'; // verde
+}
+
+function formatarNumero(n) {
+  if (n === null || n === undefined) return '-';
+  if (typeof n !== 'number') return n;
+  return n.toLocaleString('pt-BR');
+}
+
+function agoraFormatado() {
+  const d = new Date();
+  return d.toLocaleString('pt-BR');
+}
+
+/* ===========================
+   MOCK DE DADOS INICIAL
+   Substituir por fetch() para as rotas do backend quando prontas.
+   Estrutura esperada em DADOS_GLOBAIS:
+   {
+     clinicaId,
+     modelos: [{id,label}, ...],
+     squads: [{id,nome,resolvidos,acompanhamento,ativos,tempoMedioResolucao}, ...],
+     dimensoes: {qtdDevices,qtdModels,qtdSquads},
+     riscoOperacional: {qtdUnresolvedDevices,qtdOverwhelmedSquads,meanTimeResolution},
+     alertas: {total,resolvidos,emAcompanhamento,ativos},
+     eventos: [{severidade,tempoResolucaoDias,horario,dataResolucao,evento,duracao}, ...]
+   }
+*/
+function gerarDadosMockados(clinicaId = 1) {
+  const modelos = [
+    { id: 'geral', label: 'Geral' },
+    { id: 'biotronik-a-ilivia-neo7-vr-t', label: 'Biotronik A: Ilivia Neo7 VR-T' }
+  ];
+
+  const squadsBase = [
+    { id: 'alpha', nome: 'Equipe Alpha' },
+    { id: 'beta', nome: 'Equipe Beta' },
+    { id: 'gamma', nome: 'Equipe Gamma' }
+  ];
+
+  const squads = [];
+  for (let i = 0; i < squadsBase.length; i++) {
+    const base = squadsBase[i];
+    const resolvidos = Math.floor(Math.random() * 40);
+    const acompanhamento = Math.floor(Math.random() * 15);
+    const ativos = Math.floor(Math.random() * 10);
+    const tempoMedioResolucao = Number((Math.random() * 5 + 0.5).toFixed(1));
+
+    squads.push({
+      id: base.id,
+      nome: base.nome,
+      resolvidos,
+      acompanhamento,
+      ativos,
+      tempoMedioResolucao
+    });
+  }
+
+  let totalAlertas = 0, resolvidos = 0, emAcompanhamento = 0, ativos = 0;
+  for (let i = 0; i < squads.length; i++) {
+    totalAlertas += squads[i].resolvidos + squads[i].acompanhamento + squads[i].ativos;
+    resolvidos += squads[i].resolvidos;
+    emAcompanhamento += squads[i].acompanhamento;
+    ativos += squads[i].ativos;
+  }
+
+  const qtdDevices = Math.floor(200 + Math.random() * 120);
+  const qtdModels = modelos.length;
+  const qtdSquads = squads.length;
+
+  const qtdUnresolvedDevices = Math.floor(qtdDevices * (0.02 + Math.random() * 0.08)); // 2-10%
+  const qtdOverwhelmedSquads = Math.floor(Math.random() * qtdSquads);
+  const meanTimeResolution = Number((Math.random() * 6 + 0.5).toFixed(1));
+
+  // eventos (tabela)
+  const eventos = [];
+  for (let i = 0; i < 50; i++) {
+    const severidade = Math.random() > 0.7 ? 'Crítico' : (Math.random() > 0.5 ? 'Atenção' : 'Aviso');
+    const duracaoMin = Math.floor(Math.random() * 30) + 1;
+    const created = new Date(Date.now() - Math.floor(Math.random() * 1000 * 60 * 60 * 24 * 30));
+    const resolved = new Date(created.getTime() + Math.floor(Math.random() * 1000 * 60 * 60 * 24 * 10));
+    const tempoResolucaoDias = Math.max(0, Math.floor((resolved - created) / (1000 * 60 * 60 * 24)));
+
+    eventos.push({
+      severidade,
+      tempoResolucaoDias,
+      horario: created.toISOString().slice(0, 16).replace('T', ' '),
+      dataResolucao: resolved.toISOString().slice(0, 16).replace('T', ' '),
+      evento: Math.random() > 0.5 ? 'CPU > 80%' : 'RAM < 90%',
+      duracao: `${duracaoMin} min`
+    });
+  }
+
+  return {
+    clinicaId,
+    modelos,
+    squads,
+    dimensoes: { qtdDevices, qtdModels, qtdSquads },
+    riscoOperacional: { qtdUnresolvedDevices, qtdOverwhelmedSquads, meanTimeResolution },
+    alertas: { total: totalAlertas, resolvidos, emAcompanhamento, ativos },
+    eventos
+  };
+}
+
+/* ===========================
+   VARIÁVEIS GLOBAIS (charts)
+   =========================== */
+let DADOS_GLOBAIS = gerarDadosMockados(1);
+
+let chartEmpilhado = null;
+let chartDonut = null;
+let chartTempoResolucao = null;
+
+/* ===========================
+   FUNÇÕES DE ATUALIZAÇÃO DE KPIs (Segmento 1)
+   =========================== */
+
+function atualizarKpisDimensao() {
+  const dims = DADOS_GLOBAIS.dimensoes;
+  const elQtdDevices = document.getElementById('kpi_qtd_devices');
+  const elQtdModels = document.getElementById('kpi_qtd_models');
+  const elQtdSquads = document.getElementById('kpi_qtd_squads');
+
+  if (elQtdDevices) elQtdDevices.textContent = formatarNumero(dims.qtdDevices);
+  if (elQtdModels) elQtdModels.textContent = formatarNumero(dims.qtdModels);
+  if (elQtdSquads) elQtdSquads.textContent = formatarNumero(dims.qtdSquads);
+}
+
+function atualizarKpisRisco() {
+  const risco = DADOS_GLOBAIS.riscoOperacional;
+  const dims = DADOS_GLOBAIS.dimensoes;
+
+  const elQtdUnsolved = document.getElementById('qtd_unsolved');
+  const elQtdOver = document.getElementById('qtd_overwhelmed_squads');
+  const elMean = document.getElementById('mean_time_resolution');
+
+  if (elQtdUnsolved) {
+    elQtdUnsolved.textContent = formatarNumero(risco.qtdUnresolvedDevices);
+    const barra = document.getElementById('level_qtd_devices_with_not_solved_alerts');
+    if (barra) {
+      const pct = Math.min(100, Math.round((risco.qtdUnresolvedDevices / Math.max(1, dims.qtdDevices)) * 100));
+      barra.style.width = `${pct}%`;
+      barra.style.background = corPorNivel(pct, 5, 15);
+    }
+  }
+
+  if (elQtdOver) {
+    elQtdOver.textContent = formatarNumero(risco.qtdOverwhelmedSquads);
+    const barra2 = document.getElementById('level_qtd_overwhelmed_squads');
+    if (barra2) {
+      const pct = Math.min(100, Math.round((risco.qtdOverwhelmedSquads / Math.max(1, dims.qtdSquads)) * 100));
+      barra2.style.width = `${pct}%`;
+      barra2.style.background = corPorNivel(pct, 30, 60);
+    }
+  }
+
+  if (elMean) {
+    elMean.textContent = risco.meanTimeResolution;
+    elMean.style.color = corPorNivel(risco.meanTimeResolution, 3, 7);
+  }
+}
+
+/* ===========================
+   FUNÇÕES SEGMENTO 3 (KPIs filtrados por modelo + período)
+   - Recalculados por atualizarGraficosPorFiltro(modelo, periodo)
+   - As funções abaixo atualizam apenas as tags do DOM
+   =========================== */
+
+function atualizarKpisStatusAlertas() {
+  const a = DADOS_GLOBAIS.alertas;
+  const elTotal = document.getElementById('kpi_alerts_total');
+  const elSolved = document.getElementById('kpi_alerts_solved');
+  const elInProg = document.getElementById('kpi_alerts_in_progress');
+  const elActive = document.getElementById('kpi_alerts_active');
+
+  if (elTotal) elTotal.textContent = formatarNumero(a.total);
+  if (elSolved) elSolved.textContent = formatarNumero(a.resolvidos);
+  if (elInProg) elInProg.textContent = formatarNumero(a.emAcompanhamento);
+  if (elActive) {
+    elActive.textContent = formatarNumero(a.ativos);
+    elActive.style.color = corPorNivel(a.ativos, Math.max(1, Math.round(a.total * 0.05)), Math.max(1, Math.round(a.total * 0.15)));
+  }
+}
+
+/* ===========================
+   POPULAR TABELA DE EVENTOS
+   =========================== */
+
+function popularTabelaEventos() {
+  const tbody = document.getElementById('eventsBody');
+  if (!tbody) return;
+  tbody.innerHTML = '';
+  const evs = DADOS_GLOBAIS.eventos;
+  for (let i = 0; i < evs.length; i++) {
+    const e = evs[i];
+    const tr = document.createElement('tr');
+
+    const tdSev = document.createElement('td'); tdSev.textContent = e.severidade; tr.appendChild(tdSev);
+    const tdTempo = document.createElement('td'); tdTempo.textContent = `${e.tempoResolucaoDias} dias`; tr.appendChild(tdTempo);
+    const tdHorario = document.createElement('td'); tdHorario.textContent = e.horario; tr.appendChild(tdHorario);
+    const tdDataRes = document.createElement('td'); tdDataRes.textContent = e.dataResolucao; tr.appendChild(tdDataRes);
+    const tdEvento = document.createElement('td'); tdEvento.textContent = e.evento; tr.appendChild(tdEvento);
+    const tdDur = document.createElement('td'); tdDur.textContent = e.duracao; tr.appendChild(tdDur);
+
+    tbody.appendChild(tr);
+  }
+}
+
+/* ===========================
+   CRIAR GRÁFICOS (Chart.js)
+   =========================== */
+
+function criarGraficos() {
+  // Empilhado - acompanhamento por equipe
+  const ctxStack = document.getElementById('graficoBarrasEmpilhadasAcompanhamentoTarefasEquipes');
+  if (ctxStack) {
+    const labels = [];
+    const resolvidos = [];
+    const acompanhamento = [];
+    const ativos = [];
+
+    for (let i = 0; i < DADOS_GLOBAIS.squads.length; i++) {
+      const s = DADOS_GLOBAIS.squads[i];
+      labels.push(s.nome);
+      resolvidos.push(s.resolvidos);
+      acompanhamento.push(s.acompanhamento);
+      ativos.push(s.ativos);
+    }
+
+    const config = {
+      type: 'bar',
+      data: {
+        labels,
+        datasets: [
+          { label: 'Resolvidos', data: resolvidos, stack: 'Stack 0', backgroundColor: '#5cb85c' },
+          { label: 'Em Acompanhamento', data: acompanhamento, stack: 'Stack 0', backgroundColor: '#f0ad4e' },
+          { label: 'Ativos', data: ativos, stack: 'Stack 0', backgroundColor: '#d9534f' }
+        ]
+      },
+      options: {
+        responsive: true,
+        plugins: { legend: { position: 'top' } },
+        scales: { x: { stacked: true }, y: { stacked: true, beginAtZero: true } }
+      }
+    };
+
+    if (chartEmpilhado) chartEmpilhado.destroy();
+    chartEmpilhado = new Chart(ctxStack, config);
+  }
+
+  // Donut - status dos alertas
+  const ctxDonut = document.getElementById('graficoDonutStatusAlertas');
+  if (ctxDonut) {
+    const a = DADOS_GLOBAIS.alertas;
+    const data = [a.resolvidos, a.emAcompanhamento, a.ativos];
+    const labels = ['Resolvidos', 'Em Acompanhamento', 'Ativos'];
+
+    const configDonut = {
+      type: 'doughnut',
+      data: {
+        labels,
+        datasets: [{ data, backgroundColor: ['#5cb85c', '#f0ad4e', '#d9534f'] }]
+      },
+      options: {
+        responsive: true,
+        plugins: { legend: { position: 'right' } }
+      }
+    };
+
+    if (chartDonut) chartDonut.destroy();
+    chartDonut = new Chart(ctxDonut, configDonut);
+  }
+
+  // Barras - tempo médio de resolução por equipe
+  const ctxMean = document.getElementById('graficoBarrasTempoMedioResolucaoCadaEquipe');
+  if (ctxMean) {
+    const labels = [];
+    const tempos = [];
+    for (let i = 0; i < DADOS_GLOBAIS.squads.length; i++) {
+      const s = DADOS_GLOBAIS.squads[i];
+      labels.push(s.nome);
+      tempos.push(s.tempoMedioResolucao);
+    }
+
+    const configMean = {
+      type: 'bar',
+      data: { labels, datasets: [{ label: 'Tempo médio (dias)', data: tempos }] },
+      options: {
+        responsive: true,
+        plugins: { legend: { display: false }, tooltip: { callbacks: { label: (ctx) => `${ctx.parsed.y} dias` } } },
+        scales: { y: { beginAtZero: true } }
+      }
+    };
+
+    if (chartTempoResolucao) chartTempoResolucao.destroy();
+    chartTempoResolucao = new Chart(ctxMean, configMean);
+  }
+}
+
+/* ===========================
+   ATUALIZAÇÃO DOS GRÁFICOS COM NOVOS DADOS
+   =========================== */
+
+function atualizarChartsDados() {
+  if (chartEmpilhado) {
+    const labels = [];
+    const resolvidos = [];
+    const acompanhamento = [];
+    const ativos = [];
+    for (let i = 0; i < DADOS_GLOBAIS.squads.length; i++) {
+      const s = DADOS_GLOBAIS.squads[i];
+      labels.push(s.nome);
+      resolvidos.push(s.resolvidos);
+      acompanhamento.push(s.acompanhamento);
+      ativos.push(s.ativos);
+    }
+    chartEmpilhado.data.labels = labels;
+    chartEmpilhado.data.datasets[0].data = resolvidos;
+    chartEmpilhado.data.datasets[1].data = acompanhamento;
+    chartEmpilhado.data.datasets[2].data = ativos;
+    chartEmpilhado.update();
+  }
+
+  if (chartDonut) {
+    const a = DADOS_GLOBAIS.alertas;
+    chartDonut.data.datasets[0].data = [a.resolvidos, a.emAcompanhamento, a.ativos];
+    chartDonut.update();
+  }
+
+  if (chartTempoResolucao) {
+    const labels = [];
+    const tempos = [];
+    for (let i = 0; i < DADOS_GLOBAIS.squads.length; i++) {
+      const s = DADOS_GLOBAIS.squads[i];
+      labels.push(s.nome);
+      tempos.push(s.tempoMedioResolucao);
+    }
+    chartTempoResolucao.data.labels = labels;
+    chartTempoResolucao.data.datasets[0].data = tempos;
+    chartTempoResolucao.update();
+  }
+}
+
+/* ===========================
+   FUNÇÃO PRINCIPAL: Atualiza dados mockados com base nos filtros
+   modelo: string ('geral' ou id do modelo)
+   periodo: string (last_7_days, last_15_days, last_30_days, last_2_months, last_6_months, last_1_years, since_always)
+   =========================== */
+
+function atualizarGraficosPorFiltro(modelo, periodo) {
+  // PONTO DE INTEGRAÇÃO FUTURO:
+  // Aqui você substituirá por uma chamada real ao backend:
+  // fetch(`/api/admin/${clinicaId}/alertas/status?modelo=${modelo}&periodo=${periodo}`)
+  //   .then(res => res.json()).then(dados => { DADOS_GLOBAIS = dados; ... atualizar...(); });
+
+  // Enquanto backend não estiver pronto, geramos dados mockados e ajustamos conforme filtros:
+  const novo = gerarDadosMockados(DADOS_GLOBAIS.clinicaId);
+
+  // se for um modelo específico, reduzimos números (simulação)
+  if (modelo && modelo !== 'geral') {
+    novo.dimensoes.qtdDevices = Math.max(1, Math.floor(novo.dimensoes.qtdDevices * 0.6));
+    novo.alertas.total = Math.max(1, Math.floor(novo.alertas.total * 0.6));
+    novo.alertas.ativos = Math.max(0, Math.floor(novo.alertas.ativos * 0.6));
+    for (let i = 0; i < novo.squads.length; i++) {
+      novo.squads[i].resolvidos = Math.floor(novo.squads[i].resolvidos * 0.6);
+      novo.squads[i].acompanhamento = Math.floor(novo.squads[i].acompanhamento * 0.6);
+      novo.squads[i].ativos = Math.floor(novo.squads[i].ativos * 0.6);
+      novo.squads[i].tempoMedioResolucao = Number((novo.squads[i].tempoMedioResolucao * 1.05).toFixed(1));
+    }
+  }
+
+  const multiplicadorPeriodo = {
+    last_7_days: 0.15,
+    last_15_days: 0.35,
+    last_30_days: 0.6,
+    last_2_months: 0.85,
+    last_6_months: 1.1,
+    last_1_years: 1.4,
+    since_always: 1.6
+  }[periodo] || 1;
+
+  novo.alertas.total = Math.max(1, Math.floor(novo.alertas.total * multiplicadorPeriodo));
+  novo.alertas.resolvidos = Math.floor(novo.alertas.resolvidos * multiplicadorPeriodo);
+  novo.alertas.emAcompanhamento = Math.floor(novo.alertas.emAcompanhamento * multiplicadorPeriodo);
+  novo.alertas.ativos = Math.floor(novo.alertas.ativos * multiplicadorPeriodo);
+
+  for (let i = 0; i < novo.squads.length; i++) {
+    novo.squads[i].resolvidos = Math.floor(novo.squads[i].resolvidos * multiplicadorPeriodo);
+    novo.squads[i].acompanhamento = Math.floor(novo.squads[i].acompanhamento * multiplicadorPeriodo);
+    novo.squads[i].ativos = Math.floor(novo.squads[i].ativos * multiplicadorPeriodo);
+    novo.squads[i].tempoMedioResolucao = Number((novo.squads[i].tempoMedioResolucao * (1 + (multiplicadorPeriodo - 0.6) * 0.25)).toFixed(1));
+  }
+
+  novo.riscoOperacional.qtdUnresolvedDevices = Math.min(novo.dimensoes.qtdDevices, Math.floor(novo.dimensoes.qtdDevices * ((novo.alertas.ativos / Math.max(1, novo.dimensoes.qtdDevices)) + 0.02)));
+  novo.riscoOperacional.meanTimeResolution = Number((Math.max(0.5, novo.riscoOperacional.meanTimeResolution * (1 + (multiplicadorPeriodo - 0.6) * 0.15))).toFixed(1));
+
+  DADOS_GLOBAIS = novo;
+
+  // atualizar DOM e charts
+  atualizarKpisDimensao();
+  atualizarKpisRisco();
+  atualizarKpisStatusAlertas();
+  popularTabelaEventos();
+  atualizarChartsDados();
+}
+
+/* ===========================
+   FUNÇÕES LIGADAS AOS SELECTS (onchange inline no HTML)
+   =========================== */
+
+function atualizarKpisPorModelo(modeloId) {
+  const selPeriodo = document.getElementById('filter_by_period');
+  const periodo = selPeriodo ? selPeriodo.value : 'last_30_days';
+  atualizarGraficosPorFiltro(modeloId, periodo);
+}
+
+function atualizarKpisPorPeriodo(periodoId) {
+  const selModelo = document.getElementById('filter_by_model');
+  const modelo = selModelo ? selModelo.value : 'geral';
+  atualizarGraficosPorFiltro(modelo, periodoId);
+}
+
+/* ===========================
+   INICIALIZAÇÃO: checar DOM e criar gráficos
+   =========================== */
+
+function inicializarDashboardAdmin() {
+  // Verificar se elementos essenciais existem
+  const required = [
+    'kpi_qtd_devices','kpi_qtd_models','kpi_qtd_squads',
+    'qtd_unsolved','qtd_overwhelmed_squads','mean_time_resolution',
+    'graficoBarrasEmpilhadasAcompanhamentoTarefasEquipes','graficoDonutStatusAlertas',
+    'graficoBarrasTempoMedioResolucaoCadaEquipe','eventsBody',
+    'filter_by_model','filter_by_period','header_user_info'
+  ];
+  const faltando = [];
+  for (let i = 0; i < required.length; i++) {
+    if (!document.getElementById(required[i])) faltando.push(required[i]);
+  }
+  if (faltando.length) {
+    console.warn('dashboard_admin.js: elementos faltando no HTML =>', faltando);
+    const header = document.getElementById('header_user_info');
+    if (header) header.innerHTML = '<small style="color:#c0392b">Alguns elementos do dashboard estão ausentes (veja console).</small>';
+  }
+
+  // preencher header (usuário mockado)
+  const headerUser = document.getElementById('header_user_info');
+  if (headerUser) headerUser.textContent = `Thiago Souza • ${agoraFormatado()}`;
+
+  // popular selects de modelo (mock)
+  const selModel = document.getElementById('filter_by_model');
+  if (selModel) {
+    // esvazia e popula
+    selModel.innerHTML = '';
+    for (let i = 0; i < DADOS_GLOBAIS.modelos.length; i++) {
+      const m = DADOS_GLOBAIS.modelos[i];
+      const opt = document.createElement('option');
+      opt.value = m.id;
+      opt.textContent = m.label;
+      selModel.appendChild(opt);
+    }
+    // manter onchange inline se houver
+  }
+
+  // executar primeiras atualizações
+  atualizarKpisDimensao();
+  atualizarKpisRisco();
+  atualizarKpisStatusAlertas();
+  popularTabelaEventos();
+  criarGraficos();
+
+  // conectar listeners (caso os selects não usem inline onchange)
+  const selPeriodo = document.getElementById('filter_by_period');
+  if (selModel) selModel.addEventListener('change', function(e) { atualizarKpisPorModelo(e.target.value); });
+  if (selPeriodo) selPeriodo.addEventListener('change', function(e) { atualizarKpisPorPeriodo(e.target.value); });
+}
+
+// iniciar quando DOM pronto
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', inicializarDashboardAdmin);
+} else {
+  inicializarDashboardAdmin();
+}
+
+/* ===========================
+   NOTAS FINAIS / INTEGRAÇÃO FUTURA
+   - Substituir gerarDadosMockados e atualizarGraficosPorFiltro por fetch() para:
+       GET /api/admin/:clinicaId/kpis/dimensao
+       GET /api/admin/:clinicaId/kpis/risco
+       GET /api/admin/:clinicaId/equipes/alertas-por-status
+       GET /api/admin/:clinicaId/alertas/status?modelo=...&periodo=...
+       GET /api/admin/:clinicaId/equipes/tempo-resolucao?modelo=...&periodo=...
+       GET /api/admin/:clinicaId/eventos?modelo=...&periodo=...&limit=20
+   - src/routes/dashboard_admin_Route.js
+   - src/controllers/dashboard_admin_Controller.js
+   - src/models/dashboard_admin_Model.js
+*/
