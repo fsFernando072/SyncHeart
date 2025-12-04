@@ -15,7 +15,7 @@ async function autenticar(req, res) {
         if (resultadoUsuario.length == 0) {
             return res.status(401).json({ erro: "Credenciais inválidas." });
         }
-        
+
         const usuario = resultadoUsuario[0];
 
         if (senha !== usuario.senha_hash) { // #BE-SENHA
@@ -25,44 +25,71 @@ async function autenticar(req, res) {
         if (usuario.ativo === 0) {
             return res.status(403).json({ erro: "Acesso negado. Esta conta de usuário está desativada." });
         }
-        
+
         const payload = {
             usuarioId: usuario.usuario_id,
             cargoId: usuario.cargo_id,
             clinicaId: usuario.clinica_id
         };
         const token = jwt.sign(payload, 'sua_chave_secreta_super_segura', { expiresIn: '8h' });
-        
+
         const CARGO_ADMIN_ID = 1; // ID do 'Admin SyncHeart'
+        // --- Admin SyncHeart ---
         if (usuario.cargo_id === CARGO_ADMIN_ID) {
             const dadosSessaoAdmin = {
-                usuario: { id: usuario.usuario_id, nome: usuario.nome_completo, email: usuario.email, cargoId: usuario.cargo_id },
+                usuario: {
+                    id: usuario.usuario_id,
+                    nome: usuario.nome_completo,
+                    email: usuario.email,
+                    cargoId: usuario.cargo_id,
+                    clinicaId: usuario.clinica_id
+                },
                 clinica: null
             };
-            return res.status(200).json({ status: "sucesso_admin", token: token, dados: dadosSessaoAdmin });
+
+            return res.status(200).json({
+                status: "sucesso_admin",
+                token,
+                dados: dadosSessaoAdmin
+            });
         }
 
+        // --- Usuário comum (clínica) ---
         const resultadoClinica = await clinicaModel.buscarPorId(usuario.clinica_id);
         if (resultadoClinica.length == 0) {
             return res.status(404).json({ erro: "Clínica associada a este usuário não foi encontrada." });
         }
 
         const clinica = resultadoClinica[0];
-        
+
         if (clinica.status === 'Pendente') {
             return res.status(403).json({ status: "aprovacao_pendente", mensagem: "Cadastro da clínica aguarda aprovação." });
         }
-        
+
         if (clinica.status === 'Inativo') {
             return res.status(403).json({ erro: "Acesso negado. A conta desta clínica está inativa ou foi recusada." });
         }
-        
+
         const dadosSessao = {
-            usuario: { id: usuario.usuario_id, nome: usuario.nome_completo, email: usuario.email, cargoId: usuario.cargo_id },
-            clinica: { id: clinica.clinica_id, nome: clinica.nome_fantasia, status: clinica.status }
+            usuario: {
+                id: usuario.usuario_id,
+                nome: usuario.nome_completo,
+                email: usuario.email,
+                cargoId: usuario.cargo_id,
+                clinicaId: usuario.clinica_id
+            },
+            clinica: {
+                id: clinica.clinica_id,
+                nome: clinica.nome_fantasia,
+                status: clinica.status
+            }
         };
-        
-        res.status(200).json({ status: "sucesso", token: token, dados: dadosSessao });
+
+        res.status(200).json({
+            status: "sucesso",
+            token,
+            dados: dadosSessao
+        });
 
     } catch (error) {
         console.error("Erro na autenticação:", error);
@@ -71,6 +98,7 @@ async function autenticar(req, res) {
 }
 
 
+// --- CADASTRAR CLÍNICA ---
 async function cadastrar(req, res) {
     const { nomeFantasia, cnpj, nome_representante, email, senha } = req.body;
     if (!nomeFantasia || !cnpj || !nome_representante || !email || !senha) {
@@ -81,7 +109,7 @@ async function cadastrar(req, res) {
         const resultadoClinica = await clinicaModel.criar(nomeFantasia, cnpj, email, senhaHash);
         const novaClinicaId = resultadoClinica.insertId;
         if (!novaClinicaId) { throw new Error("Falha ao criar a clínica."); }
-        const cargoAdminClinicaId = 2; 
+        const cargoAdminClinicaId = 2;
         const resultadoUsuario = await usuarioModel.criar(nome_representante, email, senhaHash, cargoAdminClinicaId, novaClinicaId);
         res.status(201).json({ mensagem: "Cadastro realizado com sucesso! Aguardando aprovação.", clinicaId: novaClinicaId, usuarioId: resultadoUsuario.insertId });
     } catch (error) {
@@ -98,7 +126,7 @@ async function adicionarFuncionario(req, res) {
     if (!clinicaId || !nome_completo || !email || !senha || !cargoId || !equipeId) {
         return res.status(400).json({ erro: "Todos os campos são obrigatórios." });
     }
-    const senhaHash = senha; 
+    const senhaHash = senha;
     try {
         const resultadoUsuario = await usuarioModel.criar(nome_completo, email, senhaHash, cargoId, clinicaId);
         const novoUsuarioId = resultadoUsuario.insertId;

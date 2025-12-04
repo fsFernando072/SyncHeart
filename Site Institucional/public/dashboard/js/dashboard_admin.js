@@ -64,7 +64,7 @@ async function iniciarDashboardAdmin() {
   montarKPIsSegmento1();
   montarSegmento2();
   popularSelectModelos();
-  aplicarFiltroModelo('geral'); // carrega segmento 3 com todos os tickets (últimos 90 dias suposto)
+  aplicarFiltroModelo('geral'); // carrega segmento 3 com todos os tickets (últimos 90 dias)
 }
 
 // ---------- Fetchers / backend calls ----------
@@ -114,6 +114,7 @@ async function carregarDispositivosDeModelos(token) {
   }
 }
 
+// >>>>>>>>>> TODO: CONFERIR AQUI SE FUNCIONA COM O JIRA <<<<<<<<<<<
 // tickets da clínica (rota esperada: GET /jira/listar/:nomeClinica)
 async function carregarTicketsClinica(nomeClinica, token) {
   try {
@@ -127,6 +128,7 @@ async function carregarTicketsClinica(nomeClinica, token) {
   }
 }
 
+// >>>>>>>>>> TODO: CONFERIR AQUI SE FUNCIONA COM O JIRA <<<<<<<<<<<
 // rota usada no dashboard_modelo.js para buscar por modelo
 async function buscarTicketsPorModelo(nomeClinica, idModelo, token) {
   try {
@@ -143,16 +145,24 @@ async function buscarTicketsPorModelo(nomeClinica, idModelo, token) {
   }
 }
 
-// ---------- Segmento 1: Geral da Clínica (KPIs e Risco Operacional) ----------
+// ---------- Segmento 1: Geral da Clínica (KPIs de Dimensão e Risco Operacional) ----------
 
 function montarKPIsSegmento1() {
+
+
+  // >>>>>>>>>> TODO: CONFERIR AQUI SE FUNCIONA COM O JIRA <<<<<<<<<<<
   // dispositivos com alertas não resolvidos = devices únicos extraídos dos ticketsClinica
   const uniqueDeviceUuids = new Set();
   ticketsClinica.forEach(t => {
     try {
       const description = t.description?.content?.[0]?.content?.[0]?.text || '';
+      // Confere se o ticket tem description e content, [0] pega o primeiro elemento do array content.
+      // Se tudo existir até aqui, pega a propriedade text desse objeto.
+      // Se em qualquer ponto o resultado for undefined ou null, o valor final será uma string vazia ('').
+      // Garante que o description seja sempre uma string.
       const firstLine = description.split('\n')[0] || '';
       const uuid = (firstLine.split(':')[1] || '').trim().substring(0, 36);
+      // .substring() Pega os primeiros 36 caracteres da string porque um UUID padrão tem exatamente 36 caracteres (incluindo os hífens).
       if (uuid) uniqueDeviceUuids.add(uuid);
     } catch (e) { /* ignorar */ }
   });
@@ -167,6 +177,8 @@ function montarKPIsSegmento1() {
     levelUnsolvedEl.style.background = pct > 50 ? '#e74c3c' : (pct > 0 ? '#f1c40f' : '#10982bff');
   }
 
+
+  
   // equipes sobrecarregadas (>30 não resolvidos)
   // Heurística: tenta extrair "Equipe: X" do description do ticket; se não houver, conta como 'Sem Equipe'
   const countPorEquipe = {};

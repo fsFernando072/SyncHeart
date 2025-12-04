@@ -6,7 +6,7 @@ function contarClinicas() {
 }
 
 function contarEquipes() {
-    const sql = `SELECT COUNT(*) AS total FROM Equipes;`;
+    const sql = `SELECT COUNT(*) AS total FROM EquipesCuidado;`;
     return database.executar(sql);
 }
 
