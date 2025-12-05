@@ -59,6 +59,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         await carregarModelo();
         let alertas = await buscarTicketsPorModelo(nomeClinica, idModelo, token);
+        
         let alertasUltSemana = await buscarTicketsPorModeloUltimaSemana(nomeClinica, idModelo, token);
         alertaData = alertas;
         await carregarAlertasAtivos(alertas);
@@ -103,9 +104,9 @@ document.addEventListener('DOMContentLoaded', () => {
         }
 
         const kpiPercent = {
-            alertas_ativos: ativosPercent,
-            dispositivos_offline: offlinePercent,
-            alertas_criticos: criticoPercent
+            alertas_ativos: Math.round(ativosPercent),
+            dispositivos_offline: Math.round(offlinePercent),
+            alertas_criticos: Math.round(criticoPercent)
         };
 
         const kpiCards = kpiContainer.querySelectorAll(".kpi-card");
@@ -371,7 +372,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         const tr = tbodyTabelaAlertas.querySelectorAll("tr");
 
-        let cores = ['#0a63d1ff', '#9a5018ff', '#93058fff', '#118b62ff'];
+        let cores = ['#0a63d1ff', '#9a5018ff', '#93058fff', '#118b62ff', '#c91693ff'];
 
         tr.forEach(tr => {
             let td = tr.querySelectorAll("td")[1];
@@ -384,6 +385,8 @@ document.addEventListener('DOMContentLoaded', () => {
                 td.style.color = cores[2];
             } else if (td.textContent.toLowerCase().includes("disco")) {
                 td.style.color = cores[3];
+            } else if (td.textContent.toLowerCase().includes("offline")) {
+                td.style.color = cores[4];
             }
         })
     }
@@ -480,7 +483,7 @@ document.addEventListener('DOMContentLoaded', () => {
                             }
 
                             if (ticket.tipo_alerta == "Offline") {
-                                dispositivoData[i].status += "Offline";
+                                dispositivoData[i].status = "Offline";
                                 alertaKpi.dispositivos_offline += 1;
                             }
 
@@ -768,7 +771,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
             if (!resposta.ok) throw new Error('Falha ao carregar tickets.');
 
-            let tickets = await resposta.json();
+            let tickets = await resposta.json();            
 
             let alertas = [];
 
