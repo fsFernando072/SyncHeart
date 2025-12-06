@@ -25,7 +25,7 @@ body {
 /* --- 2. BARRA LATERAL (SIDEBAR) --- */
 .sidebar {
     width: 90px;
- background: linear-gradient(180deg, #412051 0%, #9b4b7e 100%);
+    background: linear-gradient(180deg, #412051 0%, #9b4b7e 100%);
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -34,7 +34,8 @@ body {
     transition: width 0.3s;
 }
 
-.sidebar-top, .sidebar-bottom {
+.sidebar-top,
+.sidebar-bottom {
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -97,6 +98,9 @@ body {
     display: flex;
     justify-content: space-between;
     align-items: center;
+    position: sticky;
+    top: 0;
+    z-index: 2;
     padding: 20px 30px;
     background: white;
     border-bottom: 1px solid #e9ecef;
@@ -122,7 +126,7 @@ body {
 .dashboard-container {
     padding: 30px;
     flex: 1;
-    position: relative; 
+    position: relative;
 }
 
 /* --- 4. MÓDULOS DO DASHBOARD --- */
@@ -139,14 +143,14 @@ body {
     background: white;
     padding: 20px;
     border-radius: 12px;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
     border-left: 5px solid;
     transition: transform 0.2s, box-shadow 0.2s;
 }
 
 .kpi-card:hover {
     transform: translateY(-5px);
-    box-shadow: 0 8px 16px rgba(0,0,0,0.08);
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.08);
 }
 
 .kpi-card h3 {
@@ -168,9 +172,17 @@ body {
     color: #999;
 }
 
-.kpi-card.alert { border-left-color: #e74c3c; }
-.kpi-card.devices { border-left-color: #3498db; }
-.kpi-card.battery { border-left-color: #f1c40f; }
+.kpi-card.alert {
+    border-left-color: #e74c3c;
+}
+
+.kpi-card.devices {
+    border-left-color: #3498db;
+}
+
+.kpi-card.battery {
+    border-left-color: #f1c40f;
+}
 
 /* Grid Principal e Módulos */
 .dashboard-grid {
@@ -179,7 +191,8 @@ body {
     gap: 30px;
 }
 
-.main-column, .side-column {
+.main-column,
+.side-column {
     display: flex;
     flex-direction: column;
     gap: 30px;
@@ -189,7 +202,7 @@ body {
     background: white;
     padding: 25px;
     border-radius: 12px;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
 }
 
 .dashboard-module h2 {
@@ -252,7 +265,8 @@ body {
 
 /* --- 5. WIDGET DE AÇÕES RÁPIDAS (CELULAR) --- */
 .mobile-section {
-    position: fixed; /* Posição fixa na tela */
+    position: fixed;
+    /* Posição fixa na tela */
     right: 30px;
     bottom: 20px;
     transition: transform 0.5s ease-in-out;
@@ -352,18 +366,20 @@ body {
 }
 
 
-#atividade_recente_container{
+#atividade_recente_container {
     padding-left: 10px;
 }
 
-.tempo-atividade{
+.tempo-atividade {
     margin-bottom: 20px;
-    color:#555
+    color: #555
 }
-.item-atividade{
+
+.item-atividade {
     margin-bottom: 10px;
 }
+
 .breadcrumb {
-  color: #4A154B;
-  font-size: 16px;
+    color: #4A154B;
+    font-size: 16px;
 }

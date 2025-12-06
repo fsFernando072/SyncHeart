@@ -1,348 +1,295 @@
 // js/dashboard_dispositivo.js
 
-// Captura o elemento do cabeçalho onde aparece o nome e e-mail do usuário logado
+const token = sessionStorage.getItem('authToken');
+const usuarioLogado = JSON.parse(sessionStorage.getItem('USUARIO_LOGADO'));
+const nomeClinica = usuarioLogado?.clinica?.nome;
+const usuarioId = usuarioLogado?.usuario?.id;
+
+let chartBateriaHora = null;
+let chartConsumoSemanal = null;
+
+// Elementos
 const headerUserInfoEl = document.getElementById('header_user_info');
+const headerTitleEl = document.getElementById('header_title');
+const listaBody = document.getElementById('listaBody');
+const eventsBody = document.getElementById('eventsBody');
 
-// ----------------------------------------------------------------
-// Funções Auxiliares (Helpers)
-// ----------------------------------------------------------------
+// KPIs
+const kpiBateriaAtual = document.getElementById('kpi_bateria_atual');
+const kpiMediaConsumo = document.getElementById('kpi_media_consumo');
+const kpiDeltaConsumo = document.getElementById('kpi_delta_consumo');
+const kpiProximaRecarga = document.getElementById('kpi_proxima_recarga');
 
-// Gera um número aleatório inteiro entre "min" e "max"
-const rnd = (min, max) => Math.round(min + Math.random() * (max - min));
-// Calcula a média de um array numérico e arredonda o resultado
-const avg = arr => Math.round(arr.reduce((a, b) => a + b, 0) / arr.length);
+document.addEventListener('DOMContentLoaded', async () => {
+  if (!token || !usuarioLogado) {
+    window.location.href = '../login.html';
+    return;
+  }
 
-// Cria um array de 24 posições com os horários no formato "0:00", "1:00", ..., "23:00"
-const hoursLabels = Array.from({ length: 24 }, (_, i) => `${i}:00`);
-
-// ----------------------------------------------------------------
-// Função para gerar dados sintéticos (Mock simulado)
-// ----------------------------------------------------------------
-// Essa função gera dados aleatórios apenas para demonstração dos gráficos.
-// O parâmetro `deviceSeed` muda levemente os valores conforme o dispositivo.
-function makeSynthetic(deviceSeed = 0) {
-
-  // Valor base da CPU varia conforme o "seed"
-  const baseCpu = 50 + (deviceSeed * 3) % 30;
-  // Simula variação de CPU ao longo das 24h
-  const cpu = hoursLabels.map((_, i) =>
-    Math.max(5, Math.round(baseCpu + Math.sin(i / 3) * 12 + (deviceSeed * 2) % 6 - Math.random() * 6))
-  );
-  // RAM proporcional à CPU, com leve variação
-  const ram = cpu.map(v => Math.max(8, Math.round(v * (0.7 + (deviceSeed % 3) * 0.05))));
-  // Flash (disco) com valores aleatórios entre 10% e 60%
-  const disk = hoursLabels.map(() => rnd(10, 60));
-  // Bateria vai diminuindo ao longo do tempo, simulando consumo diário
-  const batt = hoursLabels.map((_, i) =>
-    Math.max(2, Math.round(100 - i * (0.7 + (deviceSeed % 2) * 0.2) - Math.random() * 1.7))
-  );
-  // Quantidade total de alertas por tipo
-  const alerts = [
-    rnd(0, 10) + (deviceSeed % 3), // CPU
-    rnd(0, 8) + (deviceSeed % 2),  // RAM
-    rnd(0, 6)                      // Flash
-  ];
-  // Linha do tempo dos alertas (últimos 7 dias)
-  const alertsTimeline = Array.from({ length: 7 }, () => rnd(0, 6));
-
-  // Retorna todos os conjuntos de dados simulados
-  return { cpu, ram, disk, batt, alerts, alertsTimeline };
-}
-
-// ----------------------------------------------------------------
-// Variáveis para guardar os gráficos (Instâncias do Chart.js)
-// ----------------------------------------------------------------
-let chartTrend = null;
-let chartDonut = null;
-let chartBatt = null;
-let chartAlerts = null;
-let chartCpuSmall = null;
-let chartRamSmall = null;
-let chartFlashSmall = null;
-
-// ----------------------------------------------------------------
-// Inicialização de todos os gráficos da dashboard
-// ----------------------------------------------------------------
-function initAllCharts(sample) {
-  // Exibe informações do usuário logado no cabeçalho
-  const dadosUsuarioLogado = JSON.parse(sessionStorage.getItem("USUARIO_LOGADO"));
-  const nomeUsuario = dadosUsuarioLogado.usuario.nome;
-  const emailUsuario = dadosUsuarioLogado.usuario.email;
-
+  // Info do usuário logado
   headerUserInfoEl.innerHTML = `
-    <div class="user-info">
-      <span class="user-name">${nomeUsuario}</span>
-      <span class="user-email">${emailUsuario}</span>
-    </div>`;
+        <div class="user-info">
+            <span class="user-name">${usuarioLogado.usuario.nome}</span>
+            <span class="user-email">${usuarioLogado.usuario.email}</span>
+        </div>`;
 
-  // Gráfico principal combinado (CPU / RAM / Flash)
-  const mainTrendCanvas = document.getElementById('graficoCpu%PorHora') || document.getElementById('graficoBateria%PorDia');
-  if (mainTrendCanvas) {
-    const ctx = mainTrendCanvas.getContext('2d');
-    if (chartTrend) chartTrend.destroy(); // remove gráfico anterior
-    chartTrend = new Chart(ctx, {
-      type: 'line',
-      data: {
-        labels: hoursLabels,
-        datasets: [
-          { label: 'CPU %', data: sample.cpu, borderWidth: 2, tension: 0.25, fill: false, borderColor: '#D6166F' },
-          { label: 'RAM %', data: sample.ram, borderWidth: 2, tension: 0.25, fill: false, borderColor: '#7B6EFB' },
-          { label: 'Flash %', data: sample.disk, borderWidth: 2, tension: 0.25, fill: false, borderColor: '#18C5D6' }
-        ]
-      },
-      options: {
-        responsive: true,
-        maintainAspectRatio: false,
-        interaction: { mode: 'index', intersect: false },
-        scales: { y: { beginAtZero: true, max: 100 } }
-      }
-    });
-  }
+  await carregarListaDispositivos();
+});
 
-  // Gráfico Donut (distribuição de alertas por tipo)
-  const donutEl = document.getElementById('graficoDonutsWhereFromAlertas');
-  if (donutEl) {
-    if (chartDonut) chartDonut.destroy();
-    const ctx = donutEl.getContext('2d');
-    chartDonut = new Chart(ctx, {
-      type: 'doughnut',
-      data: {
-        labels: ['CPU', 'RAM', 'Flash'],
-        datasets: [{ data: sample.alerts }]
-      },
-      options: {
-        responsive: true,
-        maintainAspectRatio: false,
-        plugins: { legend: { position: 'right' } }
-      }
-    });
-  }
+// Carrega lista de dispositivos 
+async function carregarListaDispositivos() {
+    try {
+        // CORREÇÃO 1: pegue o ID correto do usuário logado
+        const usuarioId = usuarioLogado?.usuario?.id;
 
-  // Gráfico de Bateria (% por dia)
-  const battEl = document.getElementById('graficoBateria%PorDia');
-  if (battEl) {
-    if (chartBatt) chartBatt.destroy();
-    const ctx = battEl.getContext('2d');
-    chartBatt = new Chart(ctx, {
-      type: 'line',
-      data: {
-        labels: hoursLabels,
-        datasets: [{
-          label: 'Bateria %',
-          data: sample.batt,
-          fill: true,
-          tension: 0.3,
-          borderColor: '#D6166F',
-          backgroundColor: 'rgba(214,22,111,0.08)'
-        }]
-      },
-      options: { responsive: true, maintainAspectRatio: false, scales: { y: { beginAtZero: true, max: 100 } } }
-    });
-  }
+        if (!usuarioId) {
+            console.error("ID do usuário não encontrado no token");
+            alert("Erro de autenticação. Faça login novamente.");
+            
+        }
 
-  // Gráfico de Alertas (últimos 7 dias)
-  const alertsEl = document.getElementById('graficoAlertasPorDia');
-  if (alertsEl) {
-    if (chartAlerts) chartAlerts.destroy();
-    const ctx = alertsEl.getContext('2d');
-    chartAlerts = new Chart(ctx, {
-      type: 'bar',
-      data: {
-        labels: ['D-6', 'D-5', 'D-4', 'D-3', 'D-2', 'D-1', 'Hoje'],
-        datasets: [{ label: 'Alertas', data: sample.alertsTimeline, backgroundColor: '#D6166F' }]
-      },
-      options: { responsive: true, maintainAspectRatio: false, scales: { y: { beginAtZero: true } } }
-    });
-  }
+        console.log("Buscando dispositivos do usuário:", usuarioId); // debug
 
-  // Gráficos menores individuais
-  const ramEl = document.getElementById('graficoRamGbPorHora');
-  if (ramEl) {
-    if (chartRamSmall) chartRamSmall.destroy();
-    const ctx = ramEl.getContext('2d');
-    chartRamSmall = new Chart(ctx, {
-      type: 'line',
-      data: { labels: hoursLabels, datasets: [{ data: sample.ram, fill: false, tension: 0.25, borderColor: '#7B6EFB' }] },
-      options: { responsive: true, maintainAspectRatio: false, scales: { y: { beginAtZero: true } } }
-    });
-  }
+        const res = await fetch(`/dashboard-dispositivos/${usuarioId}`, {
+            headers: { 
+                'Authorization': `Bearer ${token}`,
+                'Content-Type': 'application/json'
+            }
+        });
 
-  const flashEl = document.getElementById('graficoFlashGbPorHora');
-  if (flashEl) {
-    if (chartFlashSmall) chartFlashSmall.destroy();
-    const ctx = flashEl.getContext('2d');
-    chartFlashSmall = new Chart(ctx, {
-      type: 'line',
-      data: { labels: hoursLabels, datasets: [{ data: sample.disk, fill: false, tension: 0.25, borderColor: '#18C5D6' }] },
-      options: { responsive: true, maintainAspectRatio: false, scales: { y: { beginAtZero: true } } }
-    });
-  }
+        if (!res.ok) {
+            const erro = await res.text();
+            console.error("Erro na resposta:", res.status, erro);
+            throw new Error(`HTTP ${res.status}`);
+        }
+
+        const data = await res.json();
+
+        // CORREÇÃO 2: garante que é sempre um array
+        const dispositivos = Array.isArray(data) ? data : data.dispositivos || [];
+
+        if (dispositivos.length === 0) {
+            listaBody.innerHTML = '<tr><td colspan="3" style="text-align:center;color:#999">Nenhum dispositivo encontrado</td></tr>';
+            return;
+        }
+
+        listaBody.innerHTML = '';
+        dispositivos.forEach(dev => {
+            const tr = document.createElement('tr');
+            tr.className = 'device-row';
+            tr.dataset.device = dev.dispositivo_uuid;
+
+            const pacienteCodigo = dev.id_paciente_na_clinica || dev.paciente_codigo || '—';
+
+            tr.innerHTML = `
+                <td class="col-device">
+                    <span class="codigo-dispositivo">${dev.dispositivo_uuid}</span>
+                    <span class="codigo-paciente">Paciente: ${pacienteCodigo}</span>
+                </td>
+                <td class="col-batt"><span class="device-batt">—%</span></td>
+                <td class="col-alerts"><span class="device-alerts">0</span></td>
+            `;
+
+            tr.addEventListener('click', () => selecionarDispositivo(dev.dispositivo_uuid, tr));
+            listaBody.appendChild(tr);
+        });
+
+        // Seleciona o primeiro automaticamente
+        if (dispositivos.length > 0) {
+            listaBody.querySelector('.device-row').click();
+        }
+
+    } catch (err) {
+        console.error('Erro ao carregar dispositivos:', err);
+        listaBody.innerHTML = '<tr><td colspan="3" style="color:red">Erro ao carregar dispositivos</td></tr>';
+    }
 }
 
-// ----------------------------------------------------------------
-// Atualiza as mini-KPIs e percentuais de alerta
-// ----------------------------------------------------------------
-function updateMiniKPIs(sample, deviceId) {
-  // Função auxiliar para atualizar texto de um elemento pelo ID
-  const setText = (id, text) => {
-    const el = document.getElementById(id);
-    if (el) el.textContent = text;
-  };
+// Quando clica em um dispositivo
+async function selecionarDispositivo(deviceId, elementoTR) {
+  document.querySelectorAll('.device-row').forEach(r => r.classList.remove('selected'));
+  elementoTR.classList.add('selected');
+  headerTitleEl.textContent = `Visão do paciente — ${pacienteCodigo}`;
 
-  // Atualiza valores dos mini indicadores
-  setText('mini_batt', (sample.batt.at(-1) || 0) + '%');
-  setText('mini_cpu', avg(sample.cpu) + '%');
-  setText('mini_ram', avg(sample.ram) + '%');
-  setText('mini_flash', avg(sample.disk) + '%');
-
-  // Calcula a porcentagem de alertas por tipo (CPU, RAM, Flash)
-  const totalAlerts = sample.alerts.reduce((a, b) => a + b, 0) || 1;
-  const cpuPct = Math.round(sample.alerts[0] / totalAlerts * 100);
-  const ramPct = Math.round(sample.alerts[1] / totalAlerts * 100);
-  const flashPct = Math.round(sample.alerts[2] / totalAlerts * 100);
-
-  // Atualiza, se existirem, os elementos específicos de alertas
-  const elCpu = document.getElementById('alerts-cpu');
-  const elRam = document.getElementById('alerts-ram');
-  const elDisk = document.getElementById('alerts-disk');
-  if (elCpu) elCpu.textContent = cpuPct + '%';
-  if (elRam) elRam.textContent = ramPct + '%';
-  if (elDisk) elDisk.textContent = flashPct + '%';
+  await carregarDashboardBateria(deviceId);
 }
 
-// ----------------------------------------------------------------
-// Função para trocar dados quando seleciona um dispositivo
-// ----------------------------------------------------------------
-function updateForDevice(deviceId) {
-  // Gera um "seed" com base no ID do dispositivo (para manter consistência)
-  const seed = parseInt(deviceId.replace(/\D/g, '') || '0', 10) % 7;
-  const sample = makeSynthetic(seed);
+const clinicaId = usuarioLogado?.clinica?.id;
 
-  // Atualiza KPIs e gráficos com novos dados
-  updateMiniKPIs(sample, deviceId);
-  initAllCharts(sample);
+async function carregarDashboardBateria(deviceId) {
+    try {
+        const clinicaUrl = encodeURIComponent(nomeClinica);
 
-  // Atualiza o título do cabeçalho com o nome do dispositivo
-  const header = document.getElementById('header_title');
-  if (header) header.textContent = `Visão do paciente — ${deviceId}`;
+        const resposta = await fetch(`/clinicas/${clinicaUrl}/dispositivos/${deviceId}/dashboard-bateria`, {
+            method: 'GET',
+            headers: {
+                'Authorization': `Bearer ${token}`,
+                'Content-Type': 'application/json'
+            }
+        });
+
+        if (resposta.status === 404) {
+            limparDashboard();
+            alert("Este dispositivo ainda não possui dados de bateria processados.");
+            return;
+        }
+
+        if (!resposta.ok) {
+            throw new Error(`HTTP ${resposta.status}`);
+        }
+
+        const data = await resposta.json();
+
+        atualizarKPIs(data);
+        atualizarGraficoBateriaPorHora(data.bateriaPorHora);
+        atualizarGraficoConsumoSemanal(data.consumoSemanal);
+        atualizarEventosRecentes(data.eventosRecentes || []);
+        atualizarListaBateria(deviceId, data.bateriaAtual);
+
+        headerTitleEl.textContent = `Visão do paciente — ${data.uuid || deviceId}`;
+
+    } catch (err) {
+        console.error("Erro ao carregar dashboard:", err);
+        limparDashboard();
+        alert("Erro ao carregar os dados da bateria. Tente novamente.");
+    }
 }
 
-// ----------------------------------------------------------------
-// Confiuração de seleção de dispositivos na lista lateral
-// ----------------------------------------------------------------
-function setupDeviceSelection() {
-  const items = document.querySelectorAll('.device-row');
-  if (!items.length) return;
 
-  items.forEach(item => {
-    // Clique: define o item como "selecionado"
-    item.addEventListener('click', () => {
-      items.forEach(i => i.classList.remove('selected'));
-      item.classList.add('selected');
-      const deviceId = item.dataset.device || item.querySelector('.device-id')?.textContent?.trim();
-      if (deviceId) updateForDevice(deviceId);
-    });
+// <<< ADICIONE ESSA FUNÇÃO NOVA (pra limpar se não tiver dados) >>>
+function limparDashboard() {
+  kpiBateriaAtual.textContent = '--%';
+  kpiMediaConsumo.textContent = '--%/semana';
+  kpiDeltaConsumo.textContent = '--%';
+  kpiProximaRecarga.textContent = 'Indeterminado';
 
-    // Teclado (Enter ou Espaço)
-    item.addEventListener('keydown', (ev) => {
-      if (['Enter', ' '].includes(ev.key)) {
-        ev.preventDefault();
-        item.click();
-      }
-    });
+  if (chartBateriaHora) chartBateriaHora.destroy();
+  if (chartConsumoSemanal) chartConsumoSemanal.destroy();
+
+  eventsBody.innerHTML = '<tr><td colspan="3">Nenhum dado disponível</td></tr>';
+}
+
+// <<< AJUSTE TAMBÉM A atualizarEventosRecentes (pra usar o campo certo) >>>
+// No seu DTO, é .severidade, não .mensagem – ajuste se necessário
+function atualizarEventosRecentes(eventos) {
+  eventsBody.innerHTML = '';
+  if (!eventos || eventos.length === 0) {
+    eventsBody.innerHTML = '<tr><td colspan="3">Nenhum evento recente</td></tr>';
+    return;
+  }
+
+  eventos.slice(0, 10).forEach(e => {
+    const tr = document.createElement('tr');
+    tr.innerHTML = `
+      <td>${e.horario}</td>
+      <td><span style="color: ${e.severidade === 'critico' ? '#e74c3c' : e.severidade === 'atencao' ? '#f1c40f' : '#27ae60'}">${e.severidade.toUpperCase()}</span></td>
+      <td>${e.duracao}</td>
+    `;
+    eventsBody.appendChild(tr);
   });
-
-  // Inicializa automaticamente com o primeiro dispositivo selecionado
-  const initial = document.querySelector('.device-row.selected') || items[0];
-  if (initial) {
-    const deviceId = initial.dataset.device || initial.querySelector('.device-id')?.textContent?.trim();
-    if (deviceId) updateForDevice(deviceId);
-  }
 }
 
-// ----------------------------------------------------------------
-// Evento principal — Dom pronto
-// ----------------------------------------------------------------
-document.addEventListener('DOMContentLoaded', () => {
-  // Inicializa seleção dos dispositivos
-  setupDeviceSelection();
+function atualizarKPIs(data) {
+    kpiBateriaAtual.textContent = `${data.bateriaAtual?.toFixed(2) || '--'}%`;
 
-  // Listener para troca de período (caso o HTML tenha esse select futuramente)
-  const sel = document.getElementById('periodSelect');
-  if (sel) {
-    sel.addEventListener('change', () => {
-      const current = document.querySelector('.device-row.selected');
-      const deviceId = current?.dataset?.device || current?.querySelector('.device-id')?.textContent?.trim();
-      if (deviceId) updateForDevice(deviceId);
-    });
-  }
-});
+    kpiMediaConsumo.textContent =
+        `${data.mediaConsumoSemanal?.toFixed(2) || '--'}%/semana`;
 
-// ----------------------------------------------------------------
-// Botão de mostrar/ocultar lista e dispositivos
-// ----------------------------------------------------------------
-document.addEventListener("DOMContentLoaded", () => {
-  const btn = document.getElementById("toggleDeviceListBtn");
-  const list = document.querySelector(".sidebar-list-devices");
-  const main = document.querySelector(".main-content");
+    kpiDeltaConsumo.textContent =
+        `${data.deltaConsumo?.toFixed(2) || '--'}%`;
 
-  // Clique no botão: alterna visibilidade da lista
-  if (btn && list && main) {
-    btn.addEventListener("click", () => {
-      list.classList.toggle("hidden");
-      main.classList.toggle("expanded");
-    });
-  }
+    kpiProximaRecarga.textContent =
+        data.proximaRecarga || "Indeterminado";
+}
 
-  // Corrige comportamento quando redimensiona a janela (<=1000px)
-  function handleResize() {
-    if (window.innerWidth <= 1000) {
-      list.classList.remove("hidden");
-      main.classList.remove("expanded");
+
+
+function atualizarGraficoConsumoSemanal(historico) {
+  const ctx = document.getElementById('graficoConsumoSemanal').getContext('2d');
+  if (chartConsumoSemanal) chartConsumoSemanal.destroy();
+
+  chartConsumoSemanal = new Chart(ctx, {
+    type: 'bar',
+    data: {
+      labels: historico.labels || ["19/11 a 25/11" , "30/11 a 06/12"],  // ex: ["01/12 a 07/12", "08/12 a 14/12"]
+      datasets: [{
+        label: 'Consumo semanal (%)',
+        data: historico.valores || [1.2, 1.5],  // ex: [1.2, 1.5, 0.8]
+        backgroundColor: '#D6166F'
+      }]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      scales: { y: { beginAtZero: true } }
     }
-  }
+  });
+}
 
-  handleResize(); // executa uma vez no carregamento
-  window.addEventListener("resize", handleResize); // executa sempre que redimensiona
+function atualizarGraficoBateriaPorHora(bateriaPorHora) {
+    const ctx = document.getElementById('graficoBateriaHora').getContext('2d');
 
-  // ----------------------------------------------------------------
-  // Configura botão "cadastrar" no sidebar conforme cargo
-  // ----------------------------------------------------------------
-  function configurarBotaoCadastrar() {
-    const dadosUsuarioLogado = JSON.parse(sessionStorage.getItem("USUARIO_LOGADO"));
-    const cargoId = dadosUsuarioLogado.usuario.cargoId;
-
-    const botaoCadastrar = document.getElementById('nav_cadastrar');
-    const labelCadastrar = document.getElementById('nav_cadastrar_label');
-
-    if (!botaoCadastrar || !labelCadastrar) return;
-
-    // Esconde por padrão, depois exibe conforme cargo
-    botaoCadastrar.style.display = 'none';
-
-    switch (cargoId) {
-      case 2: // Admin da Clínica
-        labelCadastrar.textContent = 'Funcionários';
-        botaoCadastrar.href = 'crud_funcionario.html';
-        botaoCadastrar.title = 'Gerenciar Funcionários';
-        botaoCadastrar.style.display = 'flex';
-        break;
-
-      case 4: // Engenharia Clínica
-        labelCadastrar.textContent = 'Modelos';
-        botaoCadastrar.href = 'crud_modelo.html';
-        botaoCadastrar.title = 'Gerenciar Modelos de MP';
-        botaoCadastrar.style.display = 'flex';
-        break;
-
-      case 3: // Eletrofisiologista
-        labelCadastrar.textContent = 'Marcapassos';
-        botaoCadastrar.href = 'provisionar_dispositivo.html';
-        botaoCadastrar.title = 'Provisionar Marcapassos';
-        botaoCadastrar.style.display = 'flex';
-        break;
+    if (chartBateriaHora) {
+        chartBateriaHora.destroy();
     }
-  }
 
-  configurarBotaoCadastrar(); // executa ao carregar
-});
+    chartBateriaHora = new Chart(ctx, {
+        type: 'line',
+        data: {
+            labels: bateriaPorHora?.labels || [],
+            datasets: [
+                {
+                    label: "Bateria (%)",
+                    data: bateriaPorHora?.valores || [],
+                    borderColor: "#D6166F",
+                    borderWidth: 2,
+                    fill: false,
+                    tension: 0.2
+                }
+            ]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            scales: {
+                y: {
+                    beginAtZero: false,
+                    suggestedMin: 0,
+                    suggestedMax: 100
+                }
+            }
+        }
+    });
+}
+
+function atualizarListaBateria(deviceId, bateriaAtual) {
+    // procura a linha da tabela correspondente ao dispositivo
+    const linha = document.querySelector(`tr[data-device="${deviceId}"]`);
+
+    if (!linha) {
+        console.warn(`Linha do dispositivo ${deviceId} não encontrada para atualizar bateria.`);
+        return;
+    }
+
+    // acha o elemento que mostra a bateria (%)
+    const celulaBateria = linha.querySelector(".device-batt");
+
+    if (!celulaBateria) {
+        console.warn(`Célula de bateria não encontrada na linha do dispositivo ${deviceId}.`);
+        return;
+    }
+
+    // atualiza o texto
+    celulaBateria.textContent = `${bateriaAtual.toFixed(1)}%`;
+
+    // MUDA A COR baseado no nível
+    const valor = bateriaAtual;
+
+    if (valor >= 70) {
+        celulaBateria.style.color = "green";
+    } else if (valor >= 40) {
+        celulaBateria.style.color = "#e6a800"; // amarelo
+    } else {
+        celulaBateria.style.color = "red";
+    }
+}

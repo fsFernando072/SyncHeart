@@ -15,11 +15,15 @@ var app = express();
 var indexRouter = require("./src/routes/index");
 var usuarioRouter = require("./src/routes/usuarios");
 var aprovacaoRouter = require("./src/routes/aprovacao");
-var dispositivoRouter = require("./src/routes/dispositivos");
+var dispositivoRouter = require("./src/routes/dispositivos");          
+var dashDispositivoRouter = require("./src/routes/dashboard-dispositivo"); 
 // == NOVO == //
 const clinicaRoutes = require('./src/routes/clinicas'); 
 const equipeRouter = require("./src/routes/equipes");
 var modeloRouter = require("./src/routes/modelos");
+const s3Router = require('./src/routes/s3Route');
+const jiraRouter = require('./src/routes/jira');
+var dispositivosEngRouter = require("./src/routes/dispositivosEng");
 
 
 
@@ -32,12 +36,17 @@ app.use(cors());
 app.use("/", indexRouter);
 app.use("/usuarios", usuarioRouter);
 app.use("/aprovacao", aprovacaoRouter);
-app.use("/dispositivos", dispositivoRouter);
+app.use("/dispositivos", dispositivoRouter);              
+app.use("/dashboard-dispositivos", dashDispositivoRouter); 
+
 
 // == NOVO == //
+app.use('/s3Route', s3Router);
 app.use('/clinicas', clinicaRoutes);
 app.use("/equipes", equipeRouter);
 app.use("/modelos", modeloRouter);
+app.use("/jira", jiraRouter);
+app.use("/dispositivosEng", dispositivosEngRouter);
 
 app.listen(PORTA_APP, function () {
     console.log(`
