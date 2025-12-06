@@ -37,114 +37,171 @@ document.addEventListener('DOMContentLoaded', async () => {
 
 // Carrega lista de dispositivos (você já tem um endpoint pra isso, ex: /dispositivos)
 async function carregarListaDispositivos() {
-  try {
-    const res = await fetch(`/dashboard-dispositivos/${usuarioLogado.usuario.usuario_id}`, {
-      headers: { 'Authorization': `Bearer ${token}` }
-    });
-    const dispositivos = await res.json();
+    try {
+        // CORREÇÃO 1: pegue o ID correto do usuário logado
+        const usuarioId = usuarioLogado?.usuario?.id;
 
-    listaBody.innerHTML = '';
-    dispositivos.forEach(dev => {
-      const tr = document.createElement('tr');
-      tr.className = 'device-row';
-      tr.dataset.device = dev.dispositivo_uuid;
-      tr.innerHTML = `
+        if (!usuarioId) {
+            console.error("ID do usuário não encontrado no token");
+            alert("Erro de autenticação. Faça login novamente.");
+            
+        }
+
+        console.log("Buscando dispositivos do usuário:", usuarioId); // debug
+
+        const res = await fetch(`/dashboard-dispositivos/${usuarioId}`, {
+            headers: { 
+                'Authorization': `Bearer ${token}`,
+                'Content-Type': 'application/json'
+            }
+        });
+
+        if (!res.ok) {
+            const erro = await res.text();
+            console.error("Erro na resposta:", res.status, erro);
+            throw new Error(`HTTP ${res.status}`);
+        }
+
+        const data = await res.json();
+
+        // CORREÇÃO 2: garante que é sempre um array
+        const dispositivos = Array.isArray(data) ? data : data.dispositivos || [];
+
+        if (dispositivos.length === 0) {
+            listaBody.innerHTML = '<tr><td colspan="3" style="text-align:center;color:#999">Nenhum dispositivo encontrado</td></tr>';
+            return;
+        }
+
+        listaBody.innerHTML = '';
+        dispositivos.forEach(dev => {
+            const tr = document.createElement('tr');
+            tr.className = 'device-row';
+            tr.dataset.device = dev.dispositivo_uuid;
+
+            const pacienteCodigo = dev.id_paciente_na_clinica || dev.paciente_codigo || '—';
+
+            tr.innerHTML = `
                 <td class="col-device">
                     <span class="codigo-dispositivo">${dev.dispositivo_uuid}</span>
-                    <span class="codigo-paciente">${dev.paciente_codigo || '—'}</span>
+                    <span class="codigo-paciente">Paciente: ${pacienteCodigo}</span>
                 </td>
                 <td class="col-batt"><span class="device-batt">—%</span></td>
                 <td class="col-alerts"><span class="device-alerts">0</span></td>
             `;
-      tr.addEventListener('click', () => selecionarDispositivo(dev.dispositivo_uuid, tr));
-      listaBody.appendChild(tr);
-    });
 
-    // Seleciona o primeiro automaticamente
-    if (dispositivos.length > 0) {
-      listaBody.querySelector('.device-row').click();
+            tr.addEventListener('click', () => selecionarDispositivo(dev.dispositivo_uuid, tr));
+            listaBody.appendChild(tr);
+        });
+
+        // Seleciona o primeiro automaticamente
+        if (dispositivos.length > 0) {
+            listaBody.querySelector('.device-row').click();
+        }
+
+    } catch (err) {
+        console.error('Erro ao carregar dispositivos:', err);
+        listaBody.innerHTML = '<tr><td colspan="3" style="color:red">Erro ao carregar dispositivos</td></tr>';
     }
-  } catch (err) {
-    console.error('Erro ao carregar dispositivos', err);
-  }
 }
 
 // Quando clica em um dispositivo
 async function selecionarDispositivo(deviceId, elementoTR) {
   document.querySelectorAll('.device-row').forEach(r => r.classList.remove('selected'));
   elementoTR.classList.add('selected');
-  headerTitleEl.textContent = `Visão do paciente — ${deviceId}`;
+  headerTitleEl.textContent = `Visão do paciente — ${pacienteCodigo}`;
 
   await carregarDashboardBateria(deviceId);
 }
 
-// Busca os dados da bateria via Lambda
+const clinicaId = usuarioLogado?.clinica?.id;
+
 async function carregarDashboardBateria(deviceId) {
-  try {
-    const res = await fetch(`/clinicas/${nomeClinica}/dispositivos/${deviceId}/dashboard-bateria`, {
-      headers: { 'Authorization': `Bearer ${token}` }
-    });
+    try {
+        const clinicaUrl = encodeURIComponent(nomeClinica);
 
-    if (!res.ok) throw new Error('Falha ao carregar dashboard de bateria');
+        const resposta = await fetch(`/clinicas/${clinicaUrl}/dispositivos/${deviceId}/dashboard-bateria`, {
+            method: 'GET',
+            headers: {
+                'Authorization': `Bearer ${token}`,
+                'Content-Type': 'application/json'
+            }
+        });
 
-    const data = await res.json(); // ← Isso é o DashboardBateriaDto
+        if (resposta.status === 404) {
+            limparDashboard();
+            alert("Este dispositivo ainda não possui dados de bateria processados.");
+            return;
+        }
 
-    atualizarKPIs(data);
-    atualizarGraficoBateriaPorHora(data.bateriaPorHora);
-    atualizarGraficoConsumoSemanal(data.consumoSemanal);
-    atualizarEventosRecentes(data.eventosRecentes);
-    atualizarListaBateria(deviceId, data.bateriaAtual);
+        if (!resposta.ok) {
+            throw new Error(`HTTP ${resposta.status}`);
+        }
 
-  } catch (err) {
-    console.error(err);
-    alert('Erro ao carregar dados da bateria');
-  }
+        const data = await resposta.json();
+
+        atualizarKPIs(data);
+        atualizarGraficoBateriaPorHora(data.bateriaPorHora);
+        atualizarGraficoConsumoSemanal(data.consumoSemanal);
+        atualizarEventosRecentes(data.eventosRecentes || []);
+        atualizarListaBateria(deviceId, data.bateriaAtual);
+
+        headerTitleEl.textContent = `Visão do paciente — ${data.uuid || deviceId}`;
+
+    } catch (err) {
+        console.error("Erro ao carregar dashboard:", err);
+        limparDashboard();
+        alert("Erro ao carregar os dados da bateria. Tente novamente.");
+    }
 }
 
-function atualizarListaBateria(deviceId, bateriaAtual) {
-  const row = document.querySelector(`.device-row[data-device="${deviceId}"]`);
-  if (row) {
-    const battSpan = row.querySelector('.device-batt');
-    battSpan.textContent = Math.round(bateriaAtual) + '%';
-    battSpan.style.color = bateriaAtual < 20 ? '#e74c3c' : bateriaAtual < 50 ? '#f1c40f' : '#27ae60';
+
+// <<< ADICIONE ESSA FUNÇÃO NOVA (pra limpar se não tiver dados) >>>
+function limparDashboard() {
+  kpiBateriaAtual.textContent = '--%';
+  kpiMediaConsumo.textContent = '--%/semana';
+  kpiDeltaConsumo.textContent = '--%';
+  kpiProximaRecarga.textContent = 'Indeterminado';
+
+  if (chartBateriaHora) chartBateriaHora.destroy();
+  if (chartConsumoSemanal) chartConsumoSemanal.destroy();
+
+  eventsBody.innerHTML = '<tr><td colspan="3">Nenhum dado disponível</td></tr>';
+}
+
+// <<< AJUSTE TAMBÉM A atualizarEventosRecentes (pra usar o campo certo) >>>
+// No seu DTO, é .severidade, não .mensagem – ajuste se necessário
+function atualizarEventosRecentes(eventos) {
+  eventsBody.innerHTML = '';
+  if (!eventos || eventos.length === 0) {
+    eventsBody.innerHTML = '<tr><td colspan="3">Nenhum evento recente</td></tr>';
+    return;
   }
+
+  eventos.slice(0, 10).forEach(e => {
+    const tr = document.createElement('tr');
+    tr.innerHTML = `
+      <td>${e.horario}</td>
+      <td><span style="color: ${e.severidade === 'critico' ? '#e74c3c' : e.severidade === 'atencao' ? '#f1c40f' : '#27ae60'}">${e.severidade.toUpperCase()}</span></td>
+      <td>${e.duracao}</td>
+    `;
+    eventsBody.appendChild(tr);
+  });
 }
 
 function atualizarKPIs(data) {
-  kpiBateriaAtual.textContent = Math.round(data.bateriaAtual) + '%';
-  kpiMediaConsumo.textContent = data.mediaConsumoSemanal.toFixed(1) + '%/semana';
-  kpiProximaRecarga.textContent = data.proximaRecarga || 'Indeterminado';
+    kpiBateriaAtual.textContent = `${data.bateriaAtual?.toFixed(2) || '--'}%`;
 
-  const delta = data.deltaConsumo?.toFixed(1) || 0;
-  kpiDeltaConsumo.textContent = delta > 0 ? `+${delta}%` : `${delta}%`;
-  kpiDeltaConsumo.style.color = delta > 0 ? '#e74c3c' : '#27ae60';
+    kpiMediaConsumo.textContent =
+        `${data.mediaConsumoSemanal?.toFixed(2) || '--'}%/semana`;
+
+    kpiDeltaConsumo.textContent =
+        `${data.deltaConsumo?.toFixed(2) || '--'}%`;
+
+    kpiProximaRecarga.textContent =
+        data.proximaRecarga || "Indeterminado";
 }
 
-function atualizarGraficoBateriaPorHora(historico) {
-  const ctx = document.getElementById('graficoBateriaPorHora').getContext('2d');
-  if (chartBateriaHora) chartBateriaHora.destroy();
 
-  chartBateriaHora = new Chart(ctx, {
-    type: 'line',
-    data: {
-      labels: historico.labels,
-      datasets: [{
-        label: 'Bateria (%)',
-        data: historico.valores,
-        fill: true,
-        borderColor: '#D6166F',
-        backgroundColor: 'rgba(214, 22, 111, 0.1)',
-        tension: 0.3,
-        pointRadius: 3
-      }]
-    },
-    options: {
-      responsive: true,
-      maintainAspectRatio: false,
-      scales: { y: { min: 0, max: 100 } }
-    }
-  });
-}
 
 function atualizarGraficoConsumoSemanal(historico) {
   const ctx = document.getElementById('graficoConsumoSemanal').getContext('2d');
@@ -153,10 +210,10 @@ function atualizarGraficoConsumoSemanal(historico) {
   chartConsumoSemanal = new Chart(ctx, {
     type: 'bar',
     data: {
-      labels: historico.labels,
+      labels: historico.labels || ["19/11 a 25/11" , "30/11 a 06/12"],  // ex: ["01/12 a 07/12", "08/12 a 14/12"]
       datasets: [{
         label: 'Consumo semanal (%)',
-        data: historico.valores,
+        data: historico.valores || [1.2, 1.5],  // ex: [1.2, 1.5, 0.8]
         backgroundColor: '#D6166F'
       }]
     },
@@ -168,20 +225,70 @@ function atualizarGraficoConsumoSemanal(historico) {
   });
 }
 
-function atualizarEventosRecentes(eventos) {
-  eventsBody.innerHTML = '';
-  if (!eventos || eventos.length === 0) {
-    eventsBody.innerHTML = '<tr><td colspan="3">Nenhum evento recente</td></tr>';
-    return;
-  }
+function atualizarGraficoBateriaPorHora(bateriaPorHora) {
+    const ctx = document.getElementById('graficoBateriaHora').getContext('2d');
 
-  eventos.slice(0, 10).forEach(e => {
-    const tr = document.createElement('tr');
-    tr.innerHTML = `
-            <td>${e.horario}</td>
-            <td><span style="color: ${e.severidade.includes('Crítico') ? '#e74c3c' : '#f1c40f'}">${e.mensagem}</span></td>
-            <td>${e.duracao}</td>
-        `;
-    eventsBody.appendChild(tr);
-  });
+    if (chartBateriaHora) {
+        chartBateriaHora.destroy();
+    }
+
+    chartBateriaHora = new Chart(ctx, {
+        type: 'line',
+        data: {
+            labels: bateriaPorHora?.labels || [],
+            datasets: [
+                {
+                    label: "Bateria (%)",
+                    data: bateriaPorHora?.valores || [],
+                    borderColor: "#D6166F",
+                    borderWidth: 2,
+                    fill: false,
+                    tension: 0.2
+                }
+            ]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            scales: {
+                y: {
+                    beginAtZero: false,
+                    suggestedMin: 0,
+                    suggestedMax: 100
+                }
+            }
+        }
+    });
+}
+
+function atualizarListaBateria(deviceId, bateriaAtual) {
+    // procura a linha da tabela correspondente ao dispositivo
+    const linha = document.querySelector(`tr[data-device="${deviceId}"]`);
+
+    if (!linha) {
+        console.warn(`Linha do dispositivo ${deviceId} não encontrada para atualizar bateria.`);
+        return;
+    }
+
+    // acha o elemento que mostra a bateria (%)
+    const celulaBateria = linha.querySelector(".device-batt");
+
+    if (!celulaBateria) {
+        console.warn(`Célula de bateria não encontrada na linha do dispositivo ${deviceId}.`);
+        return;
+    }
+
+    // atualiza o texto
+    celulaBateria.textContent = `${bateriaAtual.toFixed(1)}%`;
+
+    // MUDA A COR baseado no nível
+    const valor = bateriaAtual;
+
+    if (valor >= 70) {
+        celulaBateria.style.color = "green";
+    } else if (valor >= 40) {
+        celulaBateria.style.color = "#e6a800"; // amarelo
+    } else {
+        celulaBateria.style.color = "red";
+    }
 }

@@ -112,12 +112,12 @@
           <section class="kpi-line" id="kpi_container">
             <div class="kpi-card devices">
               <h2>Bateria atual</h2>
-              <span class="kpi-value" id="kpi_bateria_atual">--%</span>
+              <span class="kpi-value" id="kpi_bateria_atual" style="color: green;">87%</span>
             </div>
 
             <div class="kpi-card alert">
               <h2>Média de consumo semanal</h2>
-              <span class="kpi-value" id="kpi_media_consumo">--%/semana</span>
+              <span class="kpi-value" id="kpi_media_consumo" style="color: green;">1.5%</span>
               <span class="kpi-description">
                 <span id="kpi_delta_consumo">0%</span> vs. semana anterior
               </span>
@@ -125,7 +125,7 @@
 
             <div class="kpi-card battery">
               <h2>Previsão de recarga</h2>
-              <span class="kpi-value" id="kpi_proxima_recarga">Calculando...</span>
+              <span class="kpi-value" id="kpi_proxima_recarga">inderteminado</span>
             </div>
           </section>
 
@@ -135,7 +135,7 @@
             <section class="dashboard-module">
               <h2>Bateria nas últimas 48 horas</h2>
               <div class="module-content">
-                <canvas id="graficoBateriaPorHora"></canvas>
+                <canvas id="graficoBateriaHora"></canvas>
               </div>
             </section>
 
