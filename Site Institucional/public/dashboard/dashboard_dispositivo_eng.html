@@ -30,19 +30,23 @@
                         </svg></div>
                     <span class="nav-label">Tela Inicial</span>
                 </a>
-                <a href="dashboard_dispositivo.html" class="nav-item active" title="Dashboard Detalhado">
-                    <div class="nav-icon"><svg viewBox="0 0 24 24" fill="currentColor">
-                            <path
-                                d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z" />
-                        </svg></div>
-                    <span class="nav-label">Dashboard</span>
-                </a>
-                <a href="#" class="nav-item" title="Cadastrar" id="nav_cadastrar">
-                    <div class="nav-icon"><svg viewBox="0 0 24 24" fill="currentColor">
+                <a href="crud_modelo.html" class="nav-item" title="Cadastrar">
+                    <div class="nav-icon">
+                        <svg viewBox="0 0 24 24" fill="currentColor">
                             <path
                                 d="M14 2H6c-1.1 0-1.99.9-1.99 2L4 20c0 1.1.89 2 2 2h8c1.1 0 2-.9 2-2V8l-6-6zm2 16H8v-2h8v2zm0-4H8v-2h8v2zm-3-5V3.5L18.5 9H13z" />
-                        </svg></div>
-                    <span class="nav-label" id="nav_cadastrar_label">Cadastrar</span>
+                        </svg>
+                    </div>
+                    <span class="nav-label">Cadastrar</span>
+                </a>
+                <a href="lista_modelos.html" class="nav-item active" title="Modelos">
+                    <div class="nav-icon">
+                        <svg viewBox="0 0 24 24" fill="currentColor">
+                            <path
+                                d="M10 10.02h5V21h-5zM17 21h3c1.1 0 2-.9 2-2v-9h-5v11zm3-18H5c-1.1 0-2 .9-2 2v3h19V5c0-1.1-.9-2-2-2zM3 19c0 1.1.9 2 2 2h3V10H3v9z" />
+                        </svg>
+                    </div>
+                    <span class="nav-label">Modelos</span>
                 </a>
             </div>
             <div class="sidebar-bottom">
@@ -66,8 +70,8 @@
         <main class="main-content">
           <header class="page-header">
                 <div class="header-info">
-                    <h1 id="header_title">Dispositivo </h1>
-                    <div class="breadcrumb" id="breadcrumb_path"> <a href="dashboard_modelo.html">Modelo </a> &gt; <a href="dashboard_dispositivo_eng.html">Dispositivo </a></div>
+                    <h1 id="header_title">Visão Geral do Dispositivo</h1>
+                    <div class="breadcrumb" id="breadcrumb_path"> <a href="lista_modelos.html">Modelos</a> &gt; <a href="dashboard_modelo.html">Modelo </a> &gt; <a href="dashboard_dispositivo_eng.html">Dispositivo </a></div>
 
                 </div>
                 <div class="header-user" id="header_user_info"></div>
@@ -157,24 +161,24 @@
                             <h4 id="id_paciente">Paciente: </h4>
                         </div>
                         <div class="info-direita">
-                            <div class="info-kpi">
+                            <div class="info-kpi" id="info_alertas_ativos">
                                 <h3>Alertas ativos</h3>
-                                <span class="valor-info alertas-ativos">4</span>
+                                <!-- <span class="valor-info alertas-ativos" id="alertas_ativos_dispositivo"></span> -->
                             </div>
-                            <div class="info-kpi">
+                            <div class="info-kpi" id="info_ultima_atualizacao">
                                 <h3>Última atualização</h3>
-                                <span class="valor-info">1 hora</span>
+                                <!-- <span class="valor-info" id="ultima_atualizacao_dispositivo">1 hora</span> -->
                             </div>
-                            <div class="info-kpi">
+                            <div class="info-kpi" id="info_status_dispositivo">
                                 <h3>Status</h3>
-                                <span class="valor-info status">Online</span>
+                                <!-- <span class="valor-info status" id="dispositivo_status"></span> -->
                             </div>
                         </div>
                     </div>
                 </div>
 
                 <div class="kpi-top">
-                  <div class="dado">
+                  <div class="dado dado-bateria">
                     <div class="dado-container">
                         <div class="dado-cima">
                             <h3>Bateria</h3>
@@ -187,7 +191,7 @@
                         </div>
                     </div>
                   </div>
-                  <div class="dado">
+                  <div class="dado dado-cpu">
                     <div class="dado-container">
                         <div class="dado-cima">
                             <h3>CPU</h3>
@@ -200,7 +204,7 @@
                         </div>
                     </div>
                   </div>
-                  <div class="dado">
+                  <div class="dado dado-ram">
                     <div class="dado-container">
                         <div class="dado-cima">
                             <h3>Memória RAM</h3>
@@ -213,7 +217,7 @@
                         </div>
                     </div>
                   </div>
-                  <div class="dado">
+                  <div class="dado dado-disco">
                     <div class="dado-container">
                         <div class="dado-cima">
                             <h3>Armazenamento</h3>
@@ -249,7 +253,6 @@
                                 <table class="tabela-dados">
                                     <thead>
                                         <tr>
-                                            <th>UUID &#709;</th>
                                             <th>Componente &#709;</th>
                                             <th>Severidade &#709;</th>
                                             <th>Ações</th>

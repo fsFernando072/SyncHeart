@@ -164,6 +164,10 @@ body {
     font-size: 20px;
 }
 
+.lista-cima h3 {
+    color: #4A154B;
+}
+
 .filtro-dispositivos {
     width: 55%;
     height: 25%;
@@ -236,7 +240,7 @@ body {
 
 .online {
     background-color: rgb(0, 247, 0);
-    color: rgb(0, 170, 0);
+    color: rgb(16, 152, 43);
 }
 
 .offline {
@@ -309,6 +313,7 @@ body {
 
 .info-esquerda h3 {
     font-size: 25px;
+    color: #4A154B;
 }
 
 .info-esquerda h4 {
@@ -323,6 +328,10 @@ body {
     display: flex;
     align-items: center;
     justify-content: space-between;
+}
+
+.info-direita h3 {
+    color: #4A154B;
 }
 
 .info-kpi {
@@ -342,14 +351,21 @@ body {
     font-weight: 700;
 }
 
+#ultima_atualizacao_dispositivo {
+    font-size: 28px;
+}
+
 .alertas-ativos {
+    color: rgb(16, 152, 43);
+}
+
+.status-on {
+    color: rgb(16, 152, 43);
+}
+
+.status-off {
     color: red;
 }
-
-.status {
-    color: rgb(0, 247, 0);
-}
-
 
 .kpi-top {
   width: 90%;
@@ -369,8 +385,11 @@ body {
   display: flex;
   align-items: center;
   justify-content: center;
-  border-left: 5px solid rgb(0, 247, 0);
 }
+
+/* .kpi-top .dado-bateria {
+      border-left: 5px solid rgb(16, 152, 43);
+} */
 
 .dado-container {
     height: 90%;
@@ -437,7 +456,7 @@ body {
 .valor-bateria {
     width: 90%;
     height: 100%;
-    background-color: rgb(0, 247, 0);
+    background-color: rgb(16, 152, 43);
     border-radius: 20px;
 }
 
@@ -602,4 +621,11 @@ body {
     text-align: center;
     vertical-align: center;
     font-size: 24px;
+}
+
+.teste {
+    padding: 10px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }

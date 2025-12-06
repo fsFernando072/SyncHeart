@@ -361,7 +361,6 @@ document.addEventListener('DOMContentLoaded', () => {
                 dadosTiposAlertas.valores[4] += 1;
             }
 
-            tbodyFinal += `<td>${data[i].dispositivo_uuid}</td>`;
             tbodyFinal += `<td>${data[i].tipo_alerta}</td>`;
             tbodyFinal += `<td>${data[i].severidade}</td>`;
             tbodyFinal += `<td class="acoes"><button class="btn-acao btn-editar">Ver Situação</button></td>`;
@@ -481,7 +480,7 @@ document.addEventListener('DOMContentLoaded', () => {
                             }
 
                             if (ticket.tipo_alerta == "Offline") {
-                                dispositivoData[i].status += "Offline";
+                                dispositivoData[i].status = "Offline";
                                 alertaKpi.dispositivos_offline += 1;
                             }
 
