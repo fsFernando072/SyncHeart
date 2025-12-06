@@ -70,6 +70,7 @@ document.addEventListener('DOMContentLoaded', () => {
         carregarGraficos();
         subirScroll();
         adicionarOrdenacoes();
+        configurarEventListeners();
     }
 
     // --- FUNÇÃO PARA CARREGAR OS KPIS ---
@@ -361,7 +362,6 @@ document.addEventListener('DOMContentLoaded', () => {
                 dadosTiposAlertas.valores[4] += 1;
             }
 
-            tbodyFinal += `<td>${data[i].dispositivo_uuid}</td>`;
             tbodyFinal += `<td>${data[i].tipo_alerta}</td>`;
             tbodyFinal += `<td>${data[i].severidade}</td>`;
             tbodyFinal += `<td class="acoes"><button class="btn-acao btn-editar">Ver Situação</button></td>`;
@@ -529,11 +529,23 @@ document.addEventListener('DOMContentLoaded', () => {
             tbodyFinal += `<td class="${cor_ativos}">${data[i].alertas_ativos}</td>`;
             tbodyFinal += `<td class="${cor_criticos}">${data[i].alertas_criticos}</td>`;
             tbodyFinal += `<td>${data[i].status}</td>`;
-            tbodyFinal += `<td class="acoes"><button class="btn-acao btn-editar">Ver Situação</button></td>`;
+            tbodyFinal += `<td class="acoes"><button class="btn-acao btn-editar" data-id="${data[i].dispositivo_id}">Ver Situação</button></td>`;
             tbodyFinal += "</tr>";
         }
 
         tbodyTabelaDispositivos.innerHTML = tbodyFinal;
+    }
+
+    function configurarEventListeners() {
+        listaDispositivosContainer.addEventListener('click', (event) => {
+            if (event.target.classList.contains('btn-editar')) {
+                const idDispositivo = event.target.dataset.id;
+
+                sessionStorage.setItem("idDispositivo", idDispositivo);
+
+                window.location = "dashboard_dispositivo_eng.html";
+            }
+        });
     }
 
     function subirScroll() {
@@ -687,7 +699,7 @@ document.addEventListener('DOMContentLoaded', () => {
         thAlertas.forEach(th => {
             if (th.textContent.toLowerCase().includes("uuid")) {
                 th.addEventListener("click", () => selectionSortString(alertaData, "dispositivo_uuid", "alertas"));
-            } else if (th.textContent.toLowerCase().includes("componente")) {
+            } else if (th.textContent.toLowerCase().includes("tipo")) {
                 th.addEventListener("click", () => selectionSortString(alertaData, "tipo_alerta", "alertas"));
             } else if (th.textContent.toLowerCase().includes("severidade")) {
                 th.addEventListener("click", () => selectionSortString(alertaData, "severidade", "alertas"));

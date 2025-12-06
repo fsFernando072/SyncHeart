@@ -22,8 +22,9 @@ const clinicaRoutes = require('./src/routes/clinicas');
 const equipeRouter = require("./src/routes/equipes");
 var modeloRouter = require("./src/routes/modelos");
 const s3Router = require('./src/routes/s3Route');
-const alertaRouter = require('./src/routes/alertas');
 const jiraRouter = require('./src/routes/jira');
+var dispositivosEngRouter = require("./src/routes/dispositivosEng");
+
 
 
 app.use(express.json());
@@ -44,8 +45,8 @@ app.use('/s3Route', s3Router);
 app.use('/clinicas', clinicaRoutes);
 app.use("/equipes", equipeRouter);
 app.use("/modelos", modeloRouter);
-app.use("/alertas", alertaRouter);
 app.use("/jira", jiraRouter);
+app.use("/dispositivosEng", dispositivosEngRouter);
 
 app.listen(PORTA_APP, function () {
     console.log(`

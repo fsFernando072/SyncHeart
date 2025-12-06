@@ -84,7 +84,7 @@ async function buscarTicketsAtivosModelo(nomeClinica, idModelo) {
             const f = issue.fields;
             tickets.push(f)
         });
-
+        
         return tickets
     } catch (error) {
         console.error(error.response?.data || error.message);
