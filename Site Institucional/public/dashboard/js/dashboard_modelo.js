@@ -416,7 +416,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
 
         for (let i = 0; i < data.length; i++) {
-            if (data[i].severidade == "CRÍTICO") {
+            if (data[i].criticidade == "CRÍTICO") {
                 tbodyFinal += '<tr class="critico_texto">';
             } else {
                 tbodyFinal += "<tr>";
