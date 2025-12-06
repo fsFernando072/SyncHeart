@@ -156,7 +156,7 @@ async function carregarDashboardBateria(deviceId) {
 }
 
 
-// <<< ADICIONE ESSA FUNÇÃO NOVA (pra limpar se não tiver dados) >>>
+
 function limparDashboard() {
   kpiBateriaAtual.textContent = '--%';
   kpiMediaConsumo.textContent = '--%/semana';
@@ -169,8 +169,7 @@ function limparDashboard() {
   eventsBody.innerHTML = '<tr><td colspan="3">Nenhum dado disponível</td></tr>';
 }
 
-// <<< AJUSTE TAMBÉM A atualizarEventosRecentes (pra usar o campo certo) >>>
-// No seu DTO, é .severidade, não .mensagem – ajuste se necessário
+
 function atualizarEventosRecentes(eventos) {
   eventsBody.innerHTML = '';
   if (!eventos || eventos.length === 0) {
@@ -287,7 +286,7 @@ function atualizarListaBateria(deviceId, bateriaAtual) {
 
     if (valor >= 70) {
         celulaBateria.style.color = "green";
-    } else if (valor >= 40) {
+    } else if (valor >= 50) {
         celulaBateria.style.color = "#e6a800"; // amarelo
     } else {
         celulaBateria.style.color = "red";
