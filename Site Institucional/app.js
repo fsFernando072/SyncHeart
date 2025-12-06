@@ -15,7 +15,8 @@ var app = express();
 var indexRouter = require("./src/routes/index");
 var usuarioRouter = require("./src/routes/usuarios");
 var aprovacaoRouter = require("./src/routes/aprovacao");
-var dispositivoRouter = require("./src/routes/dispositivos");
+var dispositivoRouter = require("./src/routes/dispositivos");          
+var dashDispositivoRouter = require("./src/routes/dashboard-dispositivo"); 
 // == NOVO == //
 const clinicaRoutes = require('./src/routes/clinicas'); 
 const equipeRouter = require("./src/routes/equipes");
@@ -34,7 +35,8 @@ app.use(cors());
 app.use("/", indexRouter);
 app.use("/usuarios", usuarioRouter);
 app.use("/aprovacao", aprovacaoRouter);
-app.use("/dispositivos", dispositivoRouter);
+app.use("/dispositivos", dispositivoRouter);              
+app.use("/dashboard-dispositivos", dashDispositivoRouter); 
 
 
 // == NOVO == //
