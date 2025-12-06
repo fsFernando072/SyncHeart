@@ -83,8 +83,7 @@
             flex: 1;
             background: linear-gradient(135deg,
                     rgba(137, 62, 134, 0.9),
-                    rgba(213, 38, 54, 0.8)),
-                url('assets/banner.jpg') center/cover no-repeat;
+                    rgba(213, 38, 54, 0.8));
             display: flex;
             flex-direction: column;
             justify-content: center;

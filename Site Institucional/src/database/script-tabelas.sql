@@ -101,27 +101,11 @@ CREATE TABLE Dispositivos (
     equipe_id INT NOT NULL,
     paciente_id INT,
     data_provisionamento DATETIME DEFAULT CURRENT_TIMESTAMP,
+    ultima_atualizacao DATETIME DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (modelo_id) REFERENCES Modelos(modelo_id),
     FOREIGN KEY (equipe_id) REFERENCES EquipesCuidado(equipe_id),
     FOREIGN KEY (paciente_id) REFERENCES Pacientes(paciente_id)
 );
-
-/* Para caso armazenemos os dados de exibição no banco
-CREATE TABLE DadosHardware (
-    dado_id BIGINT AUTO_INCREMENT PRIMARY KEY,
-    dispositivo_id INT NOT NULL,
-    timestamp_utc DATETIME NOT NULL,
-    arritmia_detectada BOOLEAN,
-    cpu_porcentagem DECIMAL(5, 2),
-    ram_porcentagem DECIMAL(5, 2),
-    disco_uso_kb DECIMAL(10, 4),
-    bateria_porcentagem DECIMAL(7, 4),
-    total_tarefas_ativas INT,
-    lista_tarefas_ativas TEXT,
-    INDEX idx_dispositivo_timestamp (dispositivo_id, timestamp_utc),
-    FOREIGN KEY (dispositivo_id) REFERENCES Dispositivos(dispositivo_id) ON DELETE CASCADE
-);
-*/
 
 CREATE TABLE ModelosAlertaParametros (
     parametro_id INT AUTO_INCREMENT PRIMARY KEY,
@@ -183,9 +167,18 @@ INSERT INTO Modelos VALUES
 (2, 5, 'Sentiva', 9, '45', '65', '3', 'Iodo', 1);
 
 INSERT INTO ModelosAlertaParametros VALUES 
-(1, 1, 'CPU', 'MAIOR_QUE', 15.00, 5, 'Atencao', '2025-11-18 17:10:44', '2025-11-18 17:10:44'),
-(2, 2, 'CPU','MAIOR_QUE', 18.00, 3, 'Atencao', '2025-11-18 17:13:02', '2025-11-18 17:13:02'),
-(3, 2, 'RAM','MAIOR_QUE', 75.00, 3, 'Atencao', '2025-11-18 17:13:02', '2025-11-18 17:13:02');
+(1, 1, 'CPU', 'MAIOR_QUE', 15.00, 2, 'ATENCAO', '2025-11-18 17:10:44', '2025-11-18 17:10:44'),
+(2, 1, 'CPU', 'MAIOR_QUE', 20.00, 2, 'CRITICO', '2025-11-18 17:10:44', '2025-11-18 17:10:44'),
+(3, 2, 'CPU','MAIOR_QUE', 18.00, 2, 'ATENCAO', '2025-11-18 17:13:02', '2025-11-18 17:13:02'),
+(4, 2, 'CPU','MAIOR_QUE', 20.00, 2, 'CRITICO', '2025-11-18 17:13:02', '2025-11-18 17:13:02'),
+(5, 1, 'RAM','MAIOR_QUE', 65.00, 2, 'ATENCAO', '2025-11-18 17:13:02', '2025-11-18 17:13:02'),
+(6, 1, 'RAM','MAIOR_QUE', 70.00, 2, 'CRITICO', '2025-11-18 17:13:02', '2025-11-18 17:13:02'),
+(7, 2, 'RAM','MAIOR_QUE', 75.00, 2, 'ATENCAO', '2025-11-18 17:13:02', '2025-11-18 17:13:02'),
+(8, 2, 'RAM','MAIOR_QUE', 80.00, 2, 'CRITICO', '2025-11-18 17:13:02', '2025-11-18 17:13:02'),
+(9, 1, 'DISCO','MAIOR_QUE', 40.00, 2, 'CRITICO', '2025-11-18 17:13:02', '2025-11-18 17:13:02'),
+(10, 2, 'DISCO','MAIOR_QUE', 40.00, 2, 'CRITICO', '2025-11-18 17:13:02', '2025-11-18 17:13:02'),
+(10, 1, 'BATERIA','MENOR_QUE', 20.00, 2, 'CRITICO', '2025-11-18 17:13:02', '2025-11-18 17:13:02'),
+(10, 2, 'BATERIA','MENOR_QUE', 20.00, 2, 'CRITICO', '2025-11-18 17:13:02', '2025-11-18 17:13:02');
 
 INSERT INTO Pacientes VALUES 
 (1, '1091', 1, '2025-11-18 17:15:30'),
@@ -269,3 +262,7 @@ INSERT INTO Dispositivos VALUES
 CREATE USER IF NOT EXISTS 'heart'@'%' IDENTIFIED BY 'Sptech#2024';
 GRANT ALL PRIVILEGES ON syncheart.* TO 'heart'@'%';
 FLUSH PRIVILEGES;
+
+select * from Dispositivos;
+select * from Pacientes;
+select * from Modelos;

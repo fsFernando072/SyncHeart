@@ -21,7 +21,9 @@ var dashDispositivoRouter = require("./src/routes/dashboard-dispositivo");
 const clinicaRoutes = require('./src/routes/clinicas'); 
 const equipeRouter = require("./src/routes/equipes");
 var modeloRouter = require("./src/routes/modelos");
-
+const s3Router = require('./src/routes/s3Route');
+const alertaRouter = require('./src/routes/alertas');
+const jiraRouter = require('./src/routes/jira');
 
 
 app.use(express.json());
@@ -36,10 +38,14 @@ app.use("/aprovacao", aprovacaoRouter);
 app.use("/dispositivos", dispositivoRouter);              
 app.use("/dashboard-dispositivos", dashDispositivoRouter); 
 
+
 // == NOVO == //
+app.use('/s3Route', s3Router);
 app.use('/clinicas', clinicaRoutes);
 app.use("/equipes", equipeRouter);
 app.use("/modelos", modeloRouter);
+app.use("/alertas", alertaRouter);
+app.use("/jira", jiraRouter);
 
 app.listen(PORTA_APP, function () {
     console.log(`
