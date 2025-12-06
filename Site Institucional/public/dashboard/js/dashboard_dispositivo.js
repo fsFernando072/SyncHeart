@@ -3,6 +3,7 @@
 const token = sessionStorage.getItem('authToken');
 const usuarioLogado = JSON.parse(sessionStorage.getItem('USUARIO_LOGADO'));
 const nomeClinica = usuarioLogado?.clinica?.nome;
+const usuarioId = usuarioLogado?.usuario?.id;
 
 let chartBateriaHora = null;
 let chartConsumoSemanal = null;
@@ -35,7 +36,7 @@ document.addEventListener('DOMContentLoaded', async () => {
   await carregarListaDispositivos();
 });
 
-// Carrega lista de dispositivos (você já tem um endpoint pra isso, ex: /dispositivos)
+// Carrega lista de dispositivos 
 async function carregarListaDispositivos() {
     try {
         // CORREÇÃO 1: pegue o ID correto do usuário logado
