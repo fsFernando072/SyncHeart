@@ -1,5 +1,6 @@
 // public/dashboard/js/dashboard_admin.js
 // Dashboard Admin - SyncHeart
+// Segue o padrão do dashboard_modelo.js (DOMContentLoaded, sessionStorage authToken, Chart.js)
 
 document.addEventListener('DOMContentLoaded', () => {
   iniciarDashboardAdmin();
@@ -9,7 +10,7 @@ document.addEventListener('DOMContentLoaded', () => {
 let modelos = [];
 let dispositivosPorModelo = {}; // { modeloId: [{ dispositivo_uuid, dispositivo_id }] }
 let equipes = []; // { equipe_id, nome_equipe }
-let ticketsClinica = []; // todos tickets vindos do Jira (clínica)
+let ticketsClinica = []; // todos tickets ativos vindos do Jira (clínica)
 let ticketsFiltrados = []; // tickets do segmento 3 (filtrados por modelo)
 
 let chartStacked = null;
@@ -17,7 +18,6 @@ let chartDonut = null;
 let chartMeanTime = null;
 
 // ---------- Elementos DOM ----------
-const breadcrumbClinicaInfoEl = document.getElementById('breadcrumb_path');
 const headerUserInfoEl = document.getElementById('header_user_info');
 
 const kpiQtdDevicesEl = document.getElementById('kpi_qtd_devices');
@@ -26,8 +26,8 @@ const kpiQtdSquadsEl = document.getElementById('kpi_qtd_squads');
 
 const qtdUnsolvedEl = document.getElementById('qtd_unsolved');
 const levelUnsolvedEl = document.getElementById('level_qtd_devices_with_not_solved_alerts');
-// const qtdOverwhelmedEl = document.getElementById('qtd_overwhelmed_squads');
-// const levelOverwhelmedEl = document.getElementById('level_qtd_overwhelmed_squads');
+const qtdOverwhelmedEl = document.getElementById('qtd_overwhelmed_squads');
+const levelOverwhelmedEl = document.getElementById('level_qtd_overwhelmed_squads');
 const meanTimeResolutionEl = document.getElementById('mean_time_resolution');
 
 const graficoTarefasEquipesEl = document.getElementById('graficoBarrasEmpilhadasAcompanhamentoTarefasEquipes');
@@ -47,59 +47,51 @@ async function iniciarDashboardAdmin() {
     return;
   }
 
-  // mostra clínica no breadcrumb do cabeçalho
-  breadcrumbClinicaInfoEl.textContent = dadosUsuarioLogado.clinica.nome;
   // mostra usuário no cabeçalho
   headerUserInfoEl.innerHTML = `<div class="user-info"><span class="user-name">${dadosUsuarioLogado.usuario.nome}</span><span class="user-email">${dadosUsuarioLogado.usuario.email}</span></div>`;
 
-  // carrega dados essenciais (mantendo as funções que você já tem e disse para não mexer)
-  const nomeClinica = JSON.parse(sessionStorage.getItem("USUARIO_LOGADO")).clinica.nome;
+  // carrega dados essenciais
   await Promise.all([
     carregarModelos(token),
     carregarEquipes(dadosUsuarioLogado.usuario.clinicaId, token),
-    carregarTicketsClinica(nomeClinica, token)
+    carregarTicketsClinica(dadosUsuarioLogado.clinica.nome, token)
   ]);
 
   await carregarDispositivosDeModelos(token);
 
-  // após carregar dados básicos, monta tudo
   montarKPIsSegmento1();
   montarSegmento2();
   popularSelectModelos();
-  aplicarFiltroModelo('geral'); // carrega segmento 3 com todos os tickets (últimos 90 dias)
+  aplicarFiltroModelo('geral'); // carrega segmento 3 com todos os tickets (últimos 90 dias suposto)
 }
 
 // ---------- Fetchers / backend calls ----------
 
-// FUNÇÃO FUNCIONANDO BEM !!! (mantida)
 async function carregarModelos(token) {
   try {
     const res = await fetch('/modelos/listar', { headers: { 'Authorization': `Bearer ${token}` } });
     if (!res.ok) throw new Error('Falha ao carregar modelos');
     modelos = await res.json();
-    if (kpiQtdModelsEl) kpiQtdModelsEl.innerText = modelos.length; // Aqui faz exibir a KPI no html.
+    if (kpiQtdModelsEl) kpiQtdModelsEl.innerText = modelos.length;
   } catch (err) {
     console.error('carregarModelos', err);
     modelos = [];
   }
 }
 
-// FUNÇÃO FUNCIONANDO BEM !!! (mantida)
 async function carregarEquipes(idClinica, token) {
   try {
     const res = await fetch(`/equipes/por-clinica/${idClinica}`, { headers: { 'Authorization': `Bearer ${token}` } });
     if (!res.ok) throw new Error('Falha ao carregar equipes');
     equipes = await res.json();
-    if (kpiQtdSquadsEl) kpiQtdSquadsEl.innerText = equipes.length; // Aqui faz exibir a KPI no html.
+    if (kpiQtdSquadsEl) kpiQtdSquadsEl.innerText = equipes.length;
   } catch (err) {
     console.error('carregarEquipes', err);
     equipes = [];
   }
 }
 
-// FUNÇÃO FUNCIONANDO BEM !!! (mantida)
 async function carregarDispositivosDeModelos(token) {
-  // criação de array com os modelos e seus dispositivos repectivos, útil para exibir total de modelos posteriormente
   dispositivosPorModelo = {};
   try {
     for (let m of modelos) {
@@ -114,136 +106,26 @@ async function carregarDispositivosDeModelos(token) {
       }
     }
     const totalDevices = Object.values(dispositivosPorModelo).reduce((acc, arr) => acc + arr.length, 0);
-    if (kpiQtdDevicesEl) kpiQtdDevicesEl.innerText = totalDevices; // exibir a KPI
+    if (kpiQtdDevicesEl) kpiQtdDevicesEl.innerText = totalDevices;
   } catch (err) {
     console.error('carregarDispositivosDeModelos', err);
   }
 }
-// ---------- PARTE 2: carregarTicketsClinica + parser leve ----------
 
-// Helper: extrai texto plano da description do Jira (rich-text) com fallback
-function extrairDescriptionTexto(descriptionField) {
-  try {
-    if (!descriptionField) return '';
-    if (typeof descriptionField === 'string') return descriptionField.trim();
-
-    const parts = [];
-    function walk(node) {
-      if (!node) return;
-      if (typeof node === 'string') {
-        parts.push(node);
-        return;
-      }
-      if (Array.isArray(node)) {
-        node.forEach(walk);
-        return;
-      }
-      if (typeof node === 'object' && node.text) {
-        parts.push(node.text);
-      }
-      for (const k of Object.keys(node)) {
-        const v = node[k];
-        if (v && (typeof v === 'object' || Array.isArray(v))) walk(v);
-      }
-    }
-    walk(descriptionField);
-    return parts.join('\n').replace(/\n{2,}/g, '\n').trim();
-  } catch (e) {
-    return '';
-  }
-}
-
-// Helper: tenta extrair uuid e tipo do texto da descrição (heurística)
-function parseDescriptionFields(descText) {
-  const lines = (descText || '').split('\n').map(l => l.trim()).filter(Boolean);
-  const result = {
-    raw: descText || '',
-    uuid: null,
-    tipo_alerta: null,
-    equipe: null,
-    resumo: null
-  };
-
-  if (lines.length === 0) return result;
-
-  // heurística para uuid (primeira linha)
-  const first = lines[0];
-  if (/uuid\s*[:\-]/i.test(first) || /device\s*[:\-]/i.test(first)) {
-    const maybe = first.split(':').slice(1).join(':').trim() || first;
-    result.uuid = maybe.substring(0, 36);
-  } else {
-    // fallback: procura algo que pareça com UUID ao longo das primeiras 3 linhas
-    for (let i = 0; i < Math.min(3, lines.length); i++) {
-      const m = lines[i].match(/[0-9a-fA-F\-]{8,}/);
-      if (m) { result.uuid = lines[i].substring(0, 36); break; }
-    }
-  }
-
-  // procura tipo e equipe
-  for (let i = 0; i < Math.min(8, lines.length); i++) {
-    const l = lines[i];
-    if (!result.tipo_alerta && /tipo\s*[:\-]/i.test(l)) result.tipo_alerta = l.split(':').slice(1).join(':').trim();
-    if (!result.tipo_alerta && /componente\s*[:\-]/i.test(l)) result.tipo_alerta = l.split(':').slice(1).join(':').trim();
-    if (!result.equipe && /equipe\s*[:\-]/i.test(l)) result.equipe = l.split(':').slice(1).join(':').trim();
-  }
-
-  // resumo: segunda linha costuma descrever (fallbacks)
-  if (lines.length >= 2) result.resumo = lines[1];
-  else result.resumo = lines[0];
-
-  return result;
-}
-
-// Faz fetch na rota backend que consulta o Jira e normaliza os tickets
+// tickets da clínica (rota esperada: GET /jira/listar/:nomeClinica)
 async function carregarTicketsClinica(nomeClinica, token) {
   try {
-    const safeName = encodeURIComponent((nomeClinica || '').replaceAll(' ', '_'));
-    const res = await fetch(`/jira/listar/tudoClinica/${safeName}`, { headers: { 'Authorization': `Bearer ${token}` } });
-
-    if (!res.ok) {
-      console.error('carregarTicketsClinica - resposta não OK', res.status, await res.text());
-      throw new Error('Falha ao carregar tickets Jira');
-    }
-
-    const rawTickets = await res.json(); // array vindo do jiraModel (cada item pode ser fields ou fields direto)
-
-    // normaliza em um shape simples (o dashboard usa esses campos)
-    ticketsClinica = rawTickets.map((f, idx) => {
-      const fields = f.fields ? f.fields : f; // tolerância se backend já devolveu fields
-      const descText = extrairDescriptionTexto(fields.description);
-      const parsed = parseDescriptionFields(descText);
-
-      const priorityName = (fields.priority && fields.priority.name) ? fields.priority.name : (fields.severidade || null);
-      const detectado_em = fields.created || fields.detectado_em || null;
-      const resolvido_em = fields.resolutiondate || fields.resolvido_em || fields.updated || null;
-      const statusName = (fields.status && fields.status.name) ? fields.status.name : (fields.status || '');
-      const issuetype = (fields.issuetype && fields.issuetype.name) ? fields.issuetype.name : (fields.issuetype || '');
-
-      return {
-        // padronizado
-        uuid: parsed.uuid || null,
-        tipo_alerta: parsed.tipo_alerta || issuetype || null,
-        severidade: priorityName || null,
-        detectado_em,
-        resolvido_em,
-        status: statusName,
-        descricao_raw: parsed.raw,
-        resumo: parsed.resumo || null,
-        equipe: parsed.equipe || null,
-        original: fields,
-        _idx: idx
-      };
-    });
-
-    console.log('carregarTicketsClinica -> normalizados:', ticketsClinica.slice(0, 8));
+    const nomeUrl = encodeURIComponent(nomeClinica.replaceAll(' ', '_'));
+    const res = await fetch(`/jira/listar/${nomeUrl}`, { headers: { 'Authorization': `Bearer ${token}` } });
+    if (!res.ok) throw new Error('Falha ao carregar tickets Jira');
+    ticketsClinica = await res.json();
   } catch (err) {
     console.error('carregarTicketsClinica', err);
     ticketsClinica = [];
   }
 }
-// ---------- PARTE 3: KPIs, gráficos, filtros e utilitários ----------
 
-// rota usada no dashboard_modelo.js para buscar por modelo (mantive)
+// rota usada no dashboard_modelo.js para buscar por modelo
 async function buscarTicketsPorModelo(nomeClinica, idModelo, token) {
   try {
     const resposta = await fetch('/jira/listar/modelo', {
@@ -259,21 +141,23 @@ async function buscarTicketsPorModelo(nomeClinica, idModelo, token) {
   }
 }
 
-// ---------- Segmento 1: Geral da Clínica (KPIs de Dimensão e Risco Operacional) ----------
-function montarKPIsSegmento1() {
-  // dispositivos com alertas não resolvidos = contagem de tickets cujo status NÃO indica resolvido/closed
-  const naoResolvidos = ticketsClinica.filter(t => {
-    const s = (t.status || '').toString().toLowerCase();
-    return !(s.includes('resolv') || s.includes('done') || s.includes('closed') || s.includes('resolved'));
-  });
+// ---------- Segmento 1: Geral da Clínica (KPIs e Risco Operacional) ----------
 
-  // qtd dispositivos com alertas não resolvidos (conta por UUID *distinct*)
-  const uuidsSet = new Set();
-  naoResolvidos.forEach(t => { if (t.uuid) uuidsSet.add(t.uuid); });
-  const devicesWithUnresolved = uuidsSet.size;
+function montarKPIsSegmento1() {
+  // dispositivos com alertas não resolvidos = devices únicos extraídos dos ticketsClinica
+  const uniqueDeviceUuids = new Set();
+  ticketsClinica.forEach(t => {
+    try {
+      const description = t.description?.content?.[0]?.content?.[0]?.text || '';
+      const firstLine = description.split('\n')[0] || '';
+      const uuid = (firstLine.split(':')[1] || '').trim().substring(0, 36);
+      if (uuid) uniqueDeviceUuids.add(uuid);
+    } catch (e) { /* ignore */ }
+  });
+  const devicesWithUnresolved = uniqueDeviceUuids.size;
   if (qtdUnsolvedEl) qtdUnsolvedEl.innerText = devicesWithUnresolved;
 
-  // barra nível (percentual em relação ao total de devices cadastrados no banco)
+  // barra nível
   const totalDevices = Number(kpiQtdDevicesEl?.innerText || 0);
   const pct = totalDevices === 0 ? 0 : Math.round((devicesWithUnresolved / totalDevices) * 100);
   if (levelUnsolvedEl) {
@@ -281,14 +165,20 @@ function montarKPIsSegmento1() {
     levelUnsolvedEl.style.background = pct > 50 ? '#e74c3c' : (pct > 0 ? '#f1c40f' : '#10982bff');
   }
 
-  /*
-  // equipes sobrecarregadas (>30 não resolvidos) - conta tickets nao resolvidos por equipe (heurística)
-  const countUnsolvedPorEquipe = {};
-  naoResolvidos.forEach(t => {
-    const equipe = t.equipe || 'Sem Equipe';
-    countUnsolvedPorEquipe[equipe] = (countUnsolvedPorEquipe[equipe] || 0) + 1;
+  // equipes sobrecarregadas (>30 não resolvidos)
+  // Heurística: tenta extrair "Equipe: X" do description do ticket; se não houver, conta como 'Sem Equipe'
+  const countPorEquipe = {};
+  ticketsClinica.forEach(t => {
+    try {
+      const description = t.description?.content?.[0]?.content?.[0]?.text || '';
+      const lines = description.split('\n').map(l => l.trim());
+      let equipeLine = lines.find(l => /^Equipe\s*:/i.test(l));
+      let equipe = equipeLine ? equipeLine.split(':')[1].trim() : 'Sem Equipe';
+      countPorEquipe[equipe] = (countPorEquipe[equipe] || 0) + 1;
+    } catch (e) { /* ignore */ }
   });
-  const overwhelmedCount = Object.values(countUnsolvedPorEquipe).filter(v => v > 30).length;
+
+  const overwhelmedCount = Object.values(countPorEquipe).filter(v => v > 30).length;
   if (qtdOverwhelmedEl) qtdOverwhelmedEl.innerText = overwhelmedCount;
   if (levelOverwhelmedEl) {
     const squadCount = equipes.length || 1;
@@ -296,21 +186,19 @@ function montarKPIsSegmento1() {
     levelOverwhelmedEl.style.width = Math.min(100, pctSquads) + '%';
     levelOverwhelmedEl.style.background = pctSquads > 50 ? '#e74c3c' : (pctSquads > 0 ? '#f1c40f' : '#10982bff');
   }
-  */
 
-  // tempo médio de resolução (dias) - usamos detectado_em e resolvido_em quando disponíveis
+  // tempo médio de resolução (dias) - tickets com campo resolvido_em
   let somaDias = 0;
   let n = 0;
   ticketsClinica.forEach(t => {
     try {
       const detectado = t.detectado_em ? new Date(t.detectado_em) : null;
-      // considera resolvido_em como resolutiondate ou updated conforme já normalizado
       const resolvido = t.resolvido_em ? new Date(t.resolvido_em) : null;
       if (detectado && resolvido) {
         somaDias += (resolvido - detectado) / (1000 * 60 * 60 * 24);
         n++;
       }
-    } catch (e) { /* ignorar */ }
+    } catch (e) { /* ignore */ }
   });
   const mediaDias = n === 0 ? 0 : Math.round((somaDias / n) * 10) / 10;
   if (meanTimeResolutionEl) {
@@ -320,17 +208,25 @@ function montarKPIsSegmento1() {
 }
 
 // ---------- Segmento 2: Gráfico de barras empilhadas por equipe ----------
+
 function montarSegmento2() {
+  // Agrupa ticketsClinica por equipe e por status
   const grupos = {}; // { equipe: { resolvidos, em_analise, ativos } }
 
   ticketsClinica.forEach(t => {
-    const equipe = t.equipe || 'Sem Equipe';
-    if (!grupos[equipe]) grupos[equipe] = { resolvidos: 0, em_analise: 0, ativos: 0 };
+    try {
+      const description = t.description?.content?.[0]?.content?.[0]?.text || '';
+      const lines = description.split('\n').map(l => l.trim());
+      let equipeLine = lines.find(l => /^Equipe\s*:/i.test(l));
+      let equipe = equipeLine ? equipeLine.split(':')[1].trim() : 'Sem Equipe';
 
-    const status = (t.status || '').toString().toLowerCase();
-    if (status.includes('resolv') || status.includes('done') || status.includes('closed') || status.includes('resolved')) grupos[equipe].resolvidos++;
-    else if (status.includes('analy') || status.includes('in progress') || status.includes('backlog')) grupos[equipe].em_analise++;
-    else grupos[equipe].ativos++;
+      if (!grupos[equipe]) grupos[equipe] = { resolvidos: 0, em_analise: 0, ativos: 0 };
+
+      const status = (t.status || t.fields?.status?.name || '').toString().toLowerCase();
+      if (status.includes('resolv') || status.includes('done') || status.includes('closed')) grupos[equipe].resolvidos++;
+      else if (status.includes('anal') || status.includes('in progress') || status.includes('em analis')) grupos[equipe].em_analise++;
+      else grupos[equipe].ativos++;
+    } catch (e) { /* ignore */ }
   });
 
   const labels = Object.keys(grupos);
@@ -361,6 +257,7 @@ function montarSegmento2() {
 }
 
 // ---------- Segmento 3: filtros por modelo + KPIs, gráficos e lista ----------
+
 function popularSelectModelos() {
   if (!selectFilterModel) return;
   selectFilterModel.innerHTML = '';
@@ -390,64 +287,42 @@ async function aplicarFiltroModelo(valor) {
   if (valor === 'geral') {
     ticketsFiltrados = ticketsClinica.slice();
   } else {
-    // buscarTicketsPorModelo retorna raw tickets do backend; normalizamos minimalmente aqui
-    const raw = await buscarTicketsPorModelo(nomeClinica, Number(valor), token);
-    // tentar transformar em mesmo formato: se for fields[], aplica extrairDescriptionTexto+parse
-    ticketsFiltrados = raw.map((f, idx) => {
-      const fields = f.fields ? f.fields : f;
-      const descText = extrairDescriptionTexto(fields.description);
-      const parsed = parseDescriptionFields(descText);
-      return {
-        uuid: parsed.uuid || null,
-        tipo_alerta: parsed.tipo_alerta || (fields.issuetype && fields.issuetype.name) || null,
-        severidade: (fields.priority && fields.priority.name) || fields.severidade || null,
-        detectado_em: fields.created || fields.detectado_em || null,
-        resolvido_em: fields.resolutiondate || fields.resolvido_em || fields.updated || null,
-        status: (fields.status && fields.status.name) || fields.status || '',
-        descricao_raw: parsed.raw,
-        resumo: parsed.resumo || fields.summary || null,
-        equipe: parsed.equipe || null,
-        original: fields,
-        _idx: idx
-      };
-    });
+    ticketsFiltrados = await buscarTicketsPorModelo(nomeClinica, Number(valor), token);
   }
 
   montarSegmento3();
 }
 
 function montarSegmento3() {
-  montarStatusAlertas();
+  montarKPIsStatusAlertas();
   montarGraficoTempoResolucaoPorEquipe();
   popularListaAlertasRecentes();
 }
 
 // KPIs status alertas + donut
-function montarStatusAlertas() {
+function montarKPIsStatusAlertas() {
   const total = ticketsFiltrados.length;
   const resolvidos = ticketsFiltrados.filter(t => {
-    const status = (t.status || '').toString().toLowerCase();
-    return status.includes('resolv') || status.includes('done') || status.includes('closed') || status.includes('resolved');
+    const status = (t.status || t.fields?.status?.name || '').toString().toLowerCase();
+    return status.includes('resolv') || status.includes('done') || status.includes('closed');
   }).length;
   const emAcompanhamento = ticketsFiltrados.filter(t => {
-    const status = (t.status || '').toString().toLowerCase();
-    return status.includes('analy') || status.includes('in progress');
+    const status = (t.status || t.fields?.status?.name || '').toString().toLowerCase();
+    return status.includes('anal') || status.includes('in progress');
   }).length;
   const ativos = total - resolvidos;
 
-  montarKPIsStatusAlertas({ total, resolvidos, emAcompanhamento, ativos });
-  montarGraficoDonutStatus({ resolvidos, emAcompanhamento, ativos });
-}
-
-function montarKPIsStatusAlertas({ total, resolvidos, emAcompanhamento, ativos }) {
   document.getElementById('kpi_alerts_total').innerText = total;
   document.getElementById('kpi_alerts_solved').innerText = resolvidos;
   document.getElementById('kpi_alerts_in_progress').innerText = emAcompanhamento;
   document.getElementById('kpi_alerts_active').innerText = ativos;
 
+  // cores simples
   document.getElementById('kpi_alerts_solved').style.color = resolvidos > 0 ? '#10982bff' : '#555';
   document.getElementById('kpi_alerts_in_progress').style.color = emAcompanhamento > 0 ? '#f1c40f' : '#555';
   document.getElementById('kpi_alerts_active').style.color = ativos > 0 ? '#e74c3c' : '#555';
+
+  montarGraficoDonutStatus({ resolvidos, emAcompanhamento, ativos });
 }
 
 function montarGraficoDonutStatus({ resolvidos, emAcompanhamento, ativos }) {
@@ -465,11 +340,16 @@ function montarGraficoDonutStatus({ resolvidos, emAcompanhamento, ativos }) {
 }
 
 function montarGraficoTempoResolucaoPorEquipe() {
+  // média por equipe (somente tickets que possuem detectado_em e resolvido_em)
   const somaPorEquipe = {}; // { equipe: { totalDias, count } }
 
   ticketsFiltrados.forEach(t => {
     try {
-      const equipe = t.equipe || 'Sem Equipe';
+      const description = t.description?.content?.[0]?.content?.[0]?.text || '';
+      const lines = description.split('\n').map(l => l.trim());
+      let equipeLine = lines.find(l => /^Equipe\s*:/i.test(l));
+      let equipe = equipeLine ? equipeLine.split(':')[1].trim() : 'Sem Equipe';
+
       const detectado = t.detectado_em ? new Date(t.detectado_em) : null;
       const resolvido = t.resolvido_em ? new Date(t.resolvido_em) : null;
       if (!detectado || !resolvido) return;
@@ -478,7 +358,7 @@ function montarGraficoTempoResolucaoPorEquipe() {
       if (!somaPorEquipe[equipe]) somaPorEquipe[equipe] = { totalDias: 0, count: 0 };
       somaPorEquipe[equipe].totalDias += diffDias;
       somaPorEquipe[equipe].count++;
-    } catch (e) { /* ignorar */ }
+    } catch (e) { /* ignore */ }
   });
 
   const labels = Object.keys(somaPorEquipe);
@@ -498,19 +378,14 @@ function popularListaAlertasRecentes() {
   if (!eventsBody) return;
   eventsBody.innerHTML = '';
 
-  const sorted = ticketsFiltrados.slice().sort((a, b) => {
-    const da = a.detectado_em ? new Date(a.detectado_em) : 0;
-    const db = b.detectado_em ? new Date(b.detectado_em) : 0;
-    return db - da;
-  });
+  const sorted = ticketsFiltrados.slice().sort((a, b) => new Date(b.detectado_em) - new Date(a.detectado_em));
 
   for (let t of sorted.slice(0, 50)) {
-    const severity = (t.severidade || '').toString().toLowerCase();
+    const severity = (t.priority?.name || t.severidade || '').toString().toLowerCase();
     const detectado = t.detectado_em ? formatDateTime(t.detectado_em) : '-';
     const resolvido = t.resolvido_em ? formatDateTime(t.resolvido_em) : '-';
     const duracao = calcularDuracaoEvento(t);
-    const evento = t.resumo || t.descricao_raw || '-';
-    const uuid = t.uuid || (t.original && (t.original.dispositivo_uuid || t.original.customfield_dispositivo)) || '-';
+    const evento = extrairResumoEvento(t);
 
     const tr = document.createElement('tr');
     tr.innerHTML = `
@@ -519,8 +394,7 @@ function popularListaAlertasRecentes() {
       <td>${detectado}</td>
       <td>${resolvido}</td>
       <td>${evento}</td>
-      <td>${calcularDuracaoEvento(t)}</td>
-      <td>${uuid}</td>
+      <td>${t.duracao || '-'}</td>
     `;
     if (severity.includes('high') || severity.includes('crit')) tr.classList.add('critico');
 
@@ -556,7 +430,8 @@ function calcularDuracaoEvento(t) {
 
 function extrairResumoEvento(t) {
   try {
-    const lines = (t.descricao_raw || '').split('\n').map(l => l.trim()).filter(Boolean);
+    const description = t.description?.content?.[0]?.content?.[0]?.text || '';
+    const lines = description.split('\n').map(l => l.trim()).filter(Boolean);
     if (lines.length >= 2) return lines[1];
     return lines[0] || '-';
   } catch (e) { return '-'; }
@@ -564,4 +439,4 @@ function extrairResumoEvento(t) {
 
 // funções expostas para os onChange do HTML
 window.atualizarKpisPorModelo = (val) => aplicarFiltroModelo(val);
-// window.atualizarKpisPorPeriodo = (val) => { /* ignorado */ };
+window.atualizarKpisPorPeriodo = (val) => { /* ignorado por enquanto */ };

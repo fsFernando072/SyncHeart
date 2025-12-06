@@ -6,6 +6,10 @@ const authMiddleware = require('../middleware/authMiddleware');
 // Rota para LISTAR tickets ativos de uma clínica
 router.get('/listar/:nomeClinica', authMiddleware.verificarUsuarioAutenticado, jiraController.listar);
 
+// >>> NOVO <<<
+// Rota para LISTAR TODOS os tickets de uma clínica
+router.get('/listar/tudoClinica/:nomeClinica', authMiddleware.verificarUsuarioAutenticado, jiraController.listarTudo);
+
 // Rota para LISTAR tickets ativos de um modelo de uma clínica
 router.post('/listar/modelo', authMiddleware.verificarUsuarioAutenticado, jiraController.listarPorModelo);
 

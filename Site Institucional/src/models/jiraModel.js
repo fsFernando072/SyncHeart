@@ -70,6 +70,31 @@ async function buscarTicketsAtivos(nomeClinica) {
     }
 }
 
+// >>> NOVO <<<
+// --- FUNÇÃO QUE BUSCA TODOS OS TICKETS ATIVOS DA CLÍNICA ---
+async function buscarTodosTickets(nomeClinica) {
+    try {
+        const jql =
+            `project = "SYN" AND labels = "${nomeClinica}" ORDER BY created DESC`; // aqui já não tem o "AND status = "Open""
+
+        const response = await modeloBuscar(jql);
+        const tickets = []
+        const issues = response.data.issues || [];
+        
+        issues.forEach((issue) => {
+            const f = issue.fields;
+            tickets.push(f)
+        });
+
+        // teste para verificar
+        console.log("function buscarTodosTickets(nomeClinica) exibir tickets todos: ", tickets);
+
+        return tickets
+    } catch (error) {
+        console.error(error.response?.data || error.message);
+    }
+}
+
 // --- FUNÇÃO PARA LISTAR OS TICKETS DO JIRA DE UM MODELO DE UMA CLÍNICA ---
 async function buscarTicketsAtivosModelo(nomeClinica, idModelo) {
     try {
@@ -147,6 +172,7 @@ async function buscarTicketsPorDiaModelo(nomeClinica, idModelo, dataDoDia) {
 
 module.exports = {
     buscarTicketsAtivos,
+    buscarTodosTickets,
     buscarTicketsAtivosModelo,
     buscarTicketsUltimaSemanaModelo,
     buscarTicketsPorDiaModelo

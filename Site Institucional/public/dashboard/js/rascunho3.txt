@@ -1,0 +1,361 @@
+// public/dashboard/js/dashboard_admin.js
+// Dashboard Admin - SyncHeart
+
+document.addEventListener('DOMContentLoaded', () => {
+  iniciarDashboardAdmin();
+});
+
+// ---------- Estado local ----------
+let modelos = [];
+let dispositivosPorModelo = {}; // { modeloId: [{ dispositivo_uuid, dispositivo_id }] }
+let equipes = []; // { equipe_id, nome_equipe }
+let ticketsClinica = []; // todos tickets vindos do Jira (clínica)
+let ticketsFiltrados = []; // tickets do segmento 3 (filtrados por modelo)
+
+let chartStacked = null;
+let chartDonut = null;
+let chartMeanTime = null;
+
+// ---------- Elementos DOM ----------
+const breadcrumbClinicaInfoEl = document.getElementById('breadcrumb_path');
+const headerUserInfoEl = document.getElementById('header_user_info');
+
+const kpiQtdDevicesEl = document.getElementById('kpi_qtd_devices');
+const kpiQtdModelsEl = document.getElementById('kpi_qtd_models');
+const kpiQtdSquadsEl = document.getElementById('kpi_qtd_squads');
+
+const qtdUnsolvedEl = document.getElementById('qtd_unsolved');
+const levelUnsolvedEl = document.getElementById('level_qtd_devices_with_not_solved_alerts');
+const qtdOverwhelmedEl = document.getElementById('qtd_overwhelmed_squads');
+const levelOverwhelmedEl = document.getElementById('level_qtd_overwhelmed_squads');
+const meanTimeResolutionEl = document.getElementById('mean_time_resolution');
+
+const graficoTarefasEquipesEl = document.getElementById('graficoBarrasEmpilhadasAcompanhamentoTarefasEquipes');
+const graficoDonutStatusEl = document.getElementById('graficoDonutStatusAlertas');
+const graficoTempoEquipeEl = document.getElementById('graficoBarrasTempoMedioResolucaoCadaEquipe');
+
+const selectFilterModel = document.getElementById('filter_by_model');
+const eventsBody = document.getElementById('eventsBody');
+
+// ---------- Inicialização ----------
+async function iniciarDashboardAdmin() {
+  const dadosUsuarioLogado = JSON.parse(sessionStorage.getItem("USUARIO_LOGADO"));
+  const token = sessionStorage.getItem('authToken');
+
+  if (!dadosUsuarioLogado || !token) {
+    window.location.href = "../login.html";
+    return;
+  }
+
+  // mostra clínica no breadcrumb do cabeçalho
+  breadcrumbClinicaInfoEl.textContent = dadosUsuarioLogado.clinica.nome;
+  // mostra usuário no cabeçalho
+  headerUserInfoEl.innerHTML = `<div class="user-info"><span class="user-name">${dadosUsuarioLogado.usuario.nome}</span><span class="user-email">${dadosUsuarioLogado.usuario.email}</span></div>`;
+
+  // carrega dados essenciais (mantendo as funções que você já tem e disse para não mexer)
+  const nomeClinica = JSON.parse(sessionStorage.getItem("USUARIO_LOGADO")).clinica.nome;
+  await Promise.all([
+    carregarModelos(token),
+    carregarEquipes(dadosUsuarioLogado.usuario.clinicaId, token),
+    // carregarTicketsClinica será adicionada na próxima parte
+    carregarTicketsClinica(nomeClinica, token)
+  ]);
+
+  await carregarDispositivosDeModelos(token);
+
+  // após carregar dados básicos, monta tudo
+  montarKPIsSegmento1();
+  montarSegmento2();
+  popularSelectModelos();
+  aplicarFiltroModelo('geral'); // carrega segmento 3 com todos os tickets (últimos 90 dias)
+}
+
+// ---------- Fetchers / backend calls ----------
+
+// FUNÇÃO FUNCIONANDO BEM !!! (mantida)
+async function carregarModelos(token) {
+  try {
+    const res = await fetch('/modelos/listar', { headers: { 'Authorization': `Bearer ${token}` } });
+    if (!res.ok) throw new Error('Falha ao carregar modelos');
+    modelos = await res.json();
+    if (kpiQtdModelsEl) kpiQtdModelsEl.innerText = modelos.length; // Aqui faz exibir a KPI no html.
+  } catch (err) {
+    console.error('carregarModelos', err);
+    modelos = [];
+  }
+}
+
+// FUNÇÃO FUNCIONANDO BEM !!! (mantida)
+async function carregarEquipes(idClinica, token) {
+  try {
+    const res = await fetch(`/equipes/por-clinica/${idClinica}`, { headers: { 'Authorization': `Bearer ${token}` } });
+    if (!res.ok) throw new Error('Falha ao carregar equipes');
+    equipes = await res.json();
+    if (kpiQtdSquadsEl) kpiQtdSquadsEl.innerText = equipes.length; // Aqui faz exibir a KPI no html.
+  } catch (err) {
+    console.error('carregarEquipes', err);
+    equipes = [];
+  }
+}
+
+// FUNÇÃO FUNCIONANDO BEM !!! (mantida)
+async function carregarDispositivosDeModelos(token) {
+  // criação de array com os modelos e seus dispositivos repectivos, útil para exibir total de modelos posteriormente
+  dispositivosPorModelo = {};
+  try {
+    for (let m of modelos) {
+      try {
+        const res = await fetch(`/modelos/listar/${m.modelo_id}/dispositivos`, { headers: { 'Authorization': `Bearer ${token}` } });
+        if (!res.ok) throw new Error('Falha ao carregar dispositivos');
+        const lista = await res.json();
+        dispositivosPorModelo[m.modelo_id] = lista.map(d => ({ dispositivo_uuid: d.dispositivo_uuid, dispositivo_id: d.dispositivo_id }));
+      } catch (e) {
+        dispositivosPorModelo[m.modelo_id] = [];
+        console.error('modelo dispositivos erro', m.modelo_id, e);
+      }
+    }
+    const totalDevices = Object.values(dispositivosPorModelo).reduce((acc, arr) => acc + arr.length, 0);
+    // reduce percorre cada item do array resultante.
+    // acc é o acumulador (começa em 0).
+    // arr é cada sub-array (lista de dispositivos por modelo).
+    // arr.length pega o tamanho de cada sub-array.
+    // acc + arr.length soma todos os tamanhos.
+    if (kpiQtdDevicesEl) kpiQtdDevicesEl.innerText = totalDevices; // Aqui faz exibir a KPI no html.
+  } catch (err) {
+    console.error('carregarDispositivosDeModelos', err);
+  }
+}
+
+// ---------- FIM DA PARTE 1 ----------
+// ---------- PARTE 2: carregarTicketsClinica + parser leve ----------
+
+// Helper: extrai texto plano da description do Jira (rich-text) com fallback
+function extrairDescriptionTexto(descriptionField) {
+  try {
+    // Alguns tickets já chegam com description como string simples
+    if (typeof descriptionField === 'string') return descriptionField.trim();
+
+    // Estrutura Atlassian: description.content => [ { content: [ { text: '...' } ] } ]
+    // Vamos caminhar recursivamente para concatenar possíveis textos.
+    const parts = [];
+
+    function walk(node) {
+      if (!node) return;
+      if (typeof node === 'string') {
+        parts.push(node);
+        return;
+      }
+      if (Array.isArray(node)) {
+        node.forEach(walk);
+        return;
+      }
+      if (node.text) {
+        parts.push(node.text);
+      }
+      // iteração por possíveis campos (content, content[].content, value, etc)
+      for (const k of Object.keys(node)) {
+        if (k === 'text') continue;
+        const v = node[k];
+        if (v && (typeof v === 'object' || Array.isArray(v))) walk(v);
+      }
+    }
+
+    walk(descriptionField);
+    return parts.join('\n').replace(/\n{2,}/g, '\n').trim();
+  } catch (e) {
+    return '';
+  }
+}
+
+// Helper: tenta extrair uuid e tipo do texto da descrição (heurística)
+function parseDescriptionFields(descText) {
+  const lines = (descText || '').split('\n').map(l => l.trim()).filter(Boolean);
+  const result = {
+    raw: descText || '',
+    uuid: null,
+    tipo_alerta: null,
+    equipe: null,
+    resumo: null
+  };
+
+  if (lines.length === 0) return result;
+
+  // Heurística: primeira linha costuma ser "UUID: <uuid>"
+  const first = lines[0];
+  if (/uuid\s*[:\-]/i.test(first) || /device/i.test(first) || first.includes('-') && first.length >= 8) {
+    const maybe = first.split(':').slice(1).join(':').trim() || first;
+    // pega até 36 chars (uuid padrão) ou a token inteira
+    result.uuid = maybe.substring(0, 36);
+  }
+
+  // procura por "Tipo:" ou "Componente:" em linhas próximas
+  for (let i = 0; i < Math.min(6, lines.length); i++) {
+    const l = lines[i];
+    if (/tipo\s*[:\-]/i.test(l) || /componente\s*[:\-]/i.test(l)) {
+      result.tipo_alerta = l.split(':').slice(1).join(':').trim();
+    }
+    if (/equipe\s*[:\-]/i.test(l)) {
+      result.equipe = l.split(':').slice(1).join(':').trim();
+    }
+  }
+
+  // resumo: por convenção a segunda linha (se existir) costuma descrever o evento
+  if (lines.length >= 2) result.resumo = lines[1];
+  else result.resumo = lines[0];
+
+  return result;
+}
+
+// Faz fetch na rota backend que consulta o Jira e normaliza os tickets
+async function carregarTicketsClinica(nomeClinica, token) {
+  try {
+    // nomeClinica pode ter espaços; o backend espera "_" no lugar se você já fez replace lá.
+    // Aqui chamamos exatamente a rota que você já tem: /jira/listar/tudoClinica/:nomeClinica
+    const safeName = encodeURIComponent(nomeClinica.replaceAll(' ', '_'));
+    const res = await fetch(`/jira/listar/tudoClinica/${safeName}`, { headers: { 'Authorization': `Bearer ${token}` } });
+
+    if (!res.ok) {
+      console.error('carregarTicketsClinica - resposta não OK', res.status, await res.text());
+      throw new Error('Falha ao carregar tickets Jira');
+    }
+
+    // espera um array de "fields" ou objetos parecidos (conforme seu jiraModel retorna)
+    const rawTickets = await res.json();
+
+    // Normaliza cada ticket para um objeto simples e consistente para uso no front
+    ticketsClinica = rawTickets.map((f, idx) => {
+      // f pode já ser o "fields" do issue; se o backend devolve issues inteiras, trate conforme
+      const fields = f.fields ? f.fields : f; // tolerância
+      const descriptionField = fields.description;
+      const descText = extrairDescriptionTexto(descriptionField);
+
+      const parsed = parseDescriptionFields(descText);
+
+      // prioridade / severidade
+      const priorityName = (fields.priority && fields.priority.name) ? fields.priority.name : (fields.severidade || null);
+
+      // datas: created (detectado), resolutiondate (resolvido) ou updated (fallback)
+      const detectado_em = fields.created || fields.detectado_em || null;
+      const resolvido_em = fields.resolutiondate || fields.resolvido_em || fields.updated || null;
+
+      // status textual
+      const statusName = (fields.status && fields.status.name) ? fields.status.name : (fields.status || '');
+
+      // tipo/issuetype
+      const issuetype = (fields.issuetype && fields.issuetype.name) ? fields.issuetype.name : (fields.issuetype || '');
+
+      // montando objeto final
+      return {
+        // campos padronizados que seu dashboard usa
+        uuid: parsed.uuid || null,
+        tipo_alerta: parsed.tipo_alerta || issuetype || null,
+        severidade: priorityName || null,
+        detectado_em,
+        resolvido_em,
+        status: statusName,
+        descricao_raw: parsed.raw,
+        resumo: parsed.resumo || null,
+        equipe: parsed.equipe || null,
+        // mantemos o original para casos especiais
+        original: fields,
+        // índice para rastrear
+        _idx: idx
+      };
+    });
+
+    // debug
+    console.log('carregarTicketsClinica -> ticketsClinica normalizados (amostra 10):', ticketsClinica.slice(0, 10));
+
+  } catch (err) {
+    console.error('carregarTicketsClinica', err);
+    ticketsClinica = [];
+  }
+}
+    // --- PARTE 3: Normalização dos dados + Merge Banco ↔ Jira ---
+
+    // Normaliza formato de tickets vindos do Jira
+    const normalizarTicketsJira = (issues = []) => {
+        return issues.map(issue => ({
+            id: issue.id,
+            key: issue.key,
+            resumo: issue.fields?.summary ?? '',
+            descricao: issue.fields?.description ?? '',
+            prioridade: issue.fields?.priority?.name ?? 'Sem prioridade',
+            status: issue.fields?.status?.name ?? 'Desconhecido',
+            criadoEm: issue.fields?.created ?? null,
+            atualizadoEm: issue.fields?.updated ?? null,
+            reporter: issue.fields?.reporter?.displayName ?? '',
+            dispositivo_uuid: issue.fields?.customfield_XXXXX ?? null, // preencher depois com o campo certo
+            tipo: issue.fields?.issuetype?.name ?? '',
+            fonte: 'jira'
+        }));
+    };
+
+    // Normaliza tickets do banco
+    const normalizarTicketsBanco = (rows = []) => {
+        return rows.map(r => ({
+            id: r.id,
+            key: null,
+            resumo: r.titulo,
+            descricao: r.descricao,
+            prioridade: r.prioridade,
+            status: r.status,
+            criadoEm: r.criado_em,
+            atualizadoEm: r.atualizado_em,
+            reporter: r.usuario_responsavel,
+            dispositivo_uuid: r.dispositivo_uuid,
+            tipo: r.tipo,
+            fonte: 'banco'
+        }));
+    };
+
+    const ticketsJiraNormalizados = normalizarTicketsJira(jiraIssues);
+    const ticketsBancoNormalizados = normalizarTicketsBanco(ticketsBanco);
+
+    // Junta tudo
+    const ticketsCombinados = [...ticketsBancoNormalizados, ...ticketsJiraNormalizados];
+
+    // Filtro por clínica
+    const ticketsFiltrados = ticketsCombinados.filter(t => {
+        return dispositivosIds.includes(t.dispositivo_uuid);
+    });
+
+    // Ordenação por data de criação
+    ticketsFiltrados.sort((a, b) => new Date(b.criadoEm) - new Date(a.criadoEm));
+    // --- PARTE 4: KPIs + retorno final ---
+
+    const kpis = {
+        total: ticketsFiltrados.length,
+        porStatus: {},
+        porPrioridade: {},
+        ultimos7dias: 0
+    };
+
+    const agora = Date.now();
+    const seteDiasMs = 7 * 24 * 60 * 60 * 1000;
+
+    ticketsFiltrados.forEach(t => {
+        // Contagem por status
+        kpis.porStatus[t.status] = (kpis.porStatus[t.status] || 0) + 1;
+
+        // Contagem por prioridade
+        kpis.porPrioridade[t.prioridade] = (kpis.porPrioridade[t.prioridade] || 0) + 1;
+
+        // Criados nos últimos 7 dias
+        if (t.criadoEm) {
+            const criado = new Date(t.criadoEm).getTime();
+            if (agora - criado <= seteDiasMs) {
+                kpis.ultimos7dias++;
+            }
+        }
+    });
+
+    return {
+        tickets: ticketsFiltrados,
+        kpis,
+        origem: {
+            banco: ticketsBancoNormalizados.length,
+            jira: ticketsJiraNormalizados.length
+        }
+    };
+};

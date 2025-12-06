@@ -114,13 +114,13 @@
                       <div class="colored-level" id="level_qtd_devices_with_not_solved_alerts"></div>
                     </div>
                   </div>
-                  <div class="mini-kpi colored-module-border">
+                  <!-- <div class="mini-kpi colored-module-border">
                     <div class="mini-label">Quantidade de equipes sobrecarregadas (>30 alertas não resolvidos)</div>
                     <div class="mini-value" id="qtd_overwhelmed_squads">XX</div>
                     <div class="level-indicator-bar">
                       <div class="colored-level" id="level_qtd_overwhelmed_squads"></div>
                     </div>
-                  </div>
+                  </div> -->
                   <div class="mini-kpi colored-module-border">
                     <div class="mini-label">Tempo médio de resolução dos alertas (em dias):</div>
                     <div class="mini-value" id="mean_time_resolution">XX</div>
@@ -172,7 +172,8 @@
                   <option value="biotronik-a-ilivia-neo7-vr-t">Biotronik A: Ilivia Neo7 VR-T</option>
                 </select>
               </h3>
-              <!-- <h3>
+              <!-- ignorar aqui...
+              <h3>
                 <label>Filtrar por tempo:</label>
                 <select name="" id="filter_by_period" onchange="atualizarKpisPorPeriodo(this.value)">
                   <option value="last_7_days">últimos 7 dias</option>
@@ -183,7 +184,8 @@
                   <option value="last_1_year">último 1 ano</option>
                   <option value="since_always">Desde sempre</option>
                 </select>
-              </h3> -->
+              </h3>
+              -->
             </div>
 
             <div class="segment-row segment-row-3">
@@ -245,10 +247,11 @@
                     <tr>
                       <th>Severidade</th>
                       <th>Tempo de resolução</th>
-                      <th>Horário</th>
+                      <th>Horário captura</th>
                       <th>Data de resolução</th>
-                      <th>Evento</th>
+                      <th>Tipo de alerta</th>
                       <th>Duração evento</th>
+                      <th>UUID Dispositivo</th>
                     </tr>
                   </thead>
                   <tbody id="eventsBody">
@@ -258,7 +261,8 @@
                       <td>2025-10-12 03:12</td>
                       <td>2025-10-14 15:30</td>
                       <td>RAM &lt; 90%</td>
-                      <td>5 min</td>
+                      <td>>5 min</td>
+                      <td>600d9011-c393-4113-85b1-0b1531237225</td>
                     </tr>
                     <tr>
                       <td>Crítico</td>
@@ -266,7 +270,8 @@
                       <td>2025-10-11 10:45</td>
                       <td>2025-10-24 09:39</td>
                       <td>CPU &gt; 80%</td>
-                      <td>2 min</td>
+                      <td>>2 min</td>
+                      <td>600d9011-c393-4113-85b1-0b1531237229</td>
                     </tr>
                     <!-- outras linhas -->
                   </tbody>
