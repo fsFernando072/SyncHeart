@@ -1,6 +1,5 @@
 // public/dashboard/js/dashboard_admin.js
 // Dashboard Admin - SyncHeart
-// Versão corrigida: extração de Componente + Valor detectado, equipes artificiais, código simplificado e comentado.
 
 document.addEventListener('DOMContentLoaded', () => {
   iniciarDashboardAdmin();
@@ -10,7 +9,7 @@ document.addEventListener('DOMContentLoaded', () => {
 let modelos = [];
 let dispositivosPorModelo = {}; // { modeloId: [{ dispositivo_uuid, dispositivo_id }] }
 let equipes = []; // { equipe_id, nome_equipe }
-let ticketsClinica = []; // todos tickets vindos do Jira (normalizados)
+let ticketsClinica = []; // todos tickets vindos do Jira (clínica)
 let ticketsFiltrados = []; // tickets do segmento 3 (filtrados por modelo)
 
 let chartStacked = null;
@@ -70,7 +69,7 @@ async function iniciarDashboardAdmin() {
   aplicarFiltroModelo('geral'); // carrega segmento 3 com todos os tickets (últimos 90 dias)
 }
 
-// ---------- Fetchers / backend calls (mantidos) ----------
+// ---------- Fetchers / backend calls ----------
 
 // FUNÇÃO FUNCIONANDO BEM !!! (mantida)
 async function carregarModelos(token) {
@@ -120,7 +119,6 @@ async function carregarDispositivosDeModelos(token) {
     console.error('carregarDispositivosDeModelos', err);
   }
 }
-
 // ---------- PARTE 2: carregarTicketsClinica + parser leve ----------
 
 // Helper: extrai texto plano da description do Jira (rich-text) com fallback
@@ -155,56 +153,41 @@ function extrairDescriptionTexto(descriptionField) {
   }
 }
 
-// Helper: tenta extrair uuid, componente, valor detectado, equipe e resumo do texto da descrição (heurística)
+// Helper: tenta extrair uuid e tipo do texto da descrição (heurística)
 function parseDescriptionFields(descText) {
   const lines = (descText || '').split('\n').map(l => l.trim()).filter(Boolean);
   const result = {
     raw: descText || '',
     uuid: null,
     tipo_alerta: null,
-    componente: null,
-    valor_detectado: null,
     equipe: null,
     resumo: null
   };
 
   if (lines.length === 0) return result;
 
-  // heurística para uuid (procura UUID-like ou linha com "UUID:" / "Device:")
-  for (let i = 0; i < Math.min(6, lines.length); i++) {
-    const l = lines[i];
-    if (/uuid\s*[:\-]/i.test(l) || /device\s*[:\-]/i.test(l)) {
-      const maybe = l.split(':').slice(1).join(':').trim() || l;
-      result.uuid = maybe.substring(0, 36);
-      break;
+  // heurística para uuid (primeira linha)
+  const first = lines[0];
+  if (/uuid\s*[:\-]/i.test(first) || /device\s*[:\-]/i.test(first)) {
+    const maybe = first.split(':').slice(1).join(':').trim() || first;
+    result.uuid = maybe.substring(0, 36);
+  } else {
+    // fallback: procura algo que pareça com UUID ao longo das primeiras 3 linhas
+    for (let i = 0; i < Math.min(3, lines.length); i++) {
+      const m = lines[i].match(/[0-9a-fA-F\-]{8,}/);
+      if (m) { result.uuid = lines[i].substring(0, 36); break; }
     }
-    // fallback para detectar string com hífens e muitos hex (possible uuid)
-    const m = l.match(/[0-9a-fA-F]{8,}-[0-9a-fA-F\-]{8,}/);
-    if (m) { result.uuid = m[0].substring(0,36); break; }
   }
 
-  // procura por Componente / Tipo / Valor detectado / Equipe
-  for (let i = 0; i < Math.min(12, lines.length); i++) {
+  // procura tipo e equipe
+  for (let i = 0; i < Math.min(8, lines.length); i++) {
     const l = lines[i];
-
-    // Componente: Disco
-    const compMatch = l.match(/(?:componente|componete|component)\s*[:\-]\s*(.+)/i);
-    if (compMatch && !result.componente) result.componente = compMatch[1].trim();
-
-    // Tipo: (fallback to tipo_alerta)
-    const tipoMatch = l.match(/(?:tipo)\s*[:\-]\s*(.+)/i);
-    if (tipoMatch && !result.tipo_alerta) result.tipo_alerta = tipoMatch[1].trim();
-
-    // Valor detectado: 50.0%  OR Valor: 50%
-    const valorMatch = l.match(/(?:valor(?:\s*detectad[oa])?|valor)\s*[:\-]\s*([0-9]+(?:[.,][0-9]+)?\s*%?)/i);
-    if (valorMatch && !result.valor_detectado) result.valor_detectado = valorMatch[1].trim();
-
-    // Equipe:
-    const eqMatch = l.match(/(?:equipe)\s*[:\-]\s*(.+)/i);
-    if (eqMatch && !result.equipe) result.equipe = eqMatch[1].trim();
+    if (!result.tipo_alerta && /tipo\s*[:\-]/i.test(l)) result.tipo_alerta = l.split(':').slice(1).join(':').trim();
+    if (!result.tipo_alerta && /componente\s*[:\-]/i.test(l)) result.tipo_alerta = l.split(':').slice(1).join(':').trim();
+    if (!result.equipe && /equipe\s*[:\-]/i.test(l)) result.equipe = l.split(':').slice(1).join(':').trim();
   }
 
-  // resumo: por convenção a segunda linha costuma descrever (fallbacks)
+  // resumo: segunda linha costuma descrever (fallbacks)
   if (lines.length >= 2) result.resumo = lines[1];
   else result.resumo = lines[0];
 
@@ -223,11 +206,6 @@ async function carregarTicketsClinica(nomeClinica, token) {
     }
 
     const rawTickets = await res.json(); // array vindo do jiraModel (cada item pode ser fields ou fields direto)
-
-    // Aviso sobre limites do Jira (causa comum de ver só 100 issues)
-    if (Array.isArray(rawTickets) && rawTickets.length >= 100) {
-      console.warn('JIRA_LIMIT_WARNING: resposta do backend contém >=100 tickets. Verifique maxResults/paginação no backend (Jira API costuma limitar a 100 por página).');
-    }
 
     // normaliza em um shape simples (o dashboard usa esses campos)
     ticketsClinica = rawTickets.map((f, idx) => {
@@ -252,44 +230,18 @@ async function carregarTicketsClinica(nomeClinica, token) {
         descricao_raw: parsed.raw,
         resumo: parsed.resumo || null,
         equipe: parsed.equipe || null,
-        componente: parsed.componente || parsed.tipo_alerta || null,
-        valor_detectado: parsed.valor_detectado || null,
         original: fields,
         _idx: idx
       };
     });
 
-    // Atribui equipes artificiais onde não há equipe (Alpha/Beta/Gamma)
-    ticketsClinica = assignArtificialTeams(ticketsClinica);
-
-    console.log('carregarTicketsClinica -> normalizados e com equipes (amostra 10):', ticketsClinica.slice(0, 10));
+    console.log('carregarTicketsClinica -> normalizados:', ticketsClinica.slice(0, 8));
   } catch (err) {
     console.error('carregarTicketsClinica', err);
     ticketsClinica = [];
   }
 }
-
-// ---------- Função utilitária: atribuição artificial de equipes ----------
-// Distribui tickets entre Alpha/Beta/Gamma de forma determinística.
-// Se ticket já tiver equipe, respeita; caso contrário, usa hash do uuid (ou round-robin).
-function assignArtificialTeams(tickets) {
-  const teams = ['Alpha', 'Beta', 'Gamma'];
-  let rr = 0;
-  return tickets.map(t => {
-    if (t.equipe && typeof t.equipe === 'string' && t.equipe.trim().length > 0) return t;
-    // tenta hash por uuid
-    let team = null;
-    const uuid = t.uuid || (t.original && (t.original.dispositivo_uuid || '')) || '';
-    if (uuid) {
-      let sum = 0;
-      for (let i = 0; i < uuid.length; i++) sum += uuid.charCodeAt(i);
-      team = teams[sum % teams.length];
-    } else {
-      team = teams[(rr++) % teams.length];
-    }
-    return { ...t, equipe: team };
-  });
-}
+// ---------- PARTE 3: KPIs, gráficos, filtros e utilitários ----------
 
 // rota usada no dashboard_modelo.js para buscar por modelo (mantive)
 async function buscarTicketsPorModelo(nomeClinica, idModelo, token) {
@@ -300,29 +252,7 @@ async function buscarTicketsPorModelo(nomeClinica, idModelo, token) {
       body: JSON.stringify({ nomeClinica, idModelo })
     });
     if (!resposta.ok) throw new Error('Falha ao buscar tickets por modelo');
-    const raw = await resposta.json();
-    // normaliza e garante equipes artificiais também
-    const norm = raw.map((f, idx) => {
-      const fields = f.fields ? f.fields : f;
-      const descText = extrairDescriptionTexto(fields.description);
-      const parsed = parseDescriptionFields(descText);
-      return {
-        uuid: parsed.uuid || null,
-        tipo_alerta: parsed.tipo_alerta || (fields.issuetype && fields.issuetype.name) || null,
-        severidade: (fields.priority && fields.priority.name) || fields.severidade || null,
-        detectado_em: fields.created || fields.detectado_em || null,
-        resolvido_em: fields.resolutiondate || fields.resolvido_em || fields.updated || null,
-        status: (fields.status && fields.status.name) || fields.status || '',
-        descricao_raw: parsed.raw,
-        resumo: parsed.resumo || fields.summary || null,
-        componente: parsed.componente || parsed.tipo_alerta || null,
-        valor_detectado: parsed.valor_detectado || null,
-        equipe: parsed.equipe || null,
-        original: fields,
-        _idx: idx
-      };
-    });
-    return assignArtificialTeams(norm);
+    return await resposta.json();
   } catch (err) {
     console.error('buscarTicketsPorModelo', err);
     return [];
@@ -391,11 +321,8 @@ function montarKPIsSegmento1() {
 
 // ---------- Segmento 2: Gráfico de barras empilhadas por equipe ----------
 function montarSegmento2() {
-  // Vamos garantir que temos ao menos Alpha/Beta/Gamma para visualização (mesmo que não existam equipes no DB)
-  const forcedTeams = ['Alpha', 'Beta', 'Gamma'];
-
-  // Conta tickets por equipe e por status
   const grupos = {}; // { equipe: { resolvidos, em_analise, ativos } }
+
   ticketsClinica.forEach(t => {
     const equipe = t.equipe || 'Sem Equipe';
     if (!grupos[equipe]) grupos[equipe] = { resolvidos: 0, em_analise: 0, ativos: 0 };
@@ -406,10 +333,6 @@ function montarSegmento2() {
     else grupos[equipe].ativos++;
   });
 
-  // Se não houver equipes reais suficientes, insere as forçadas (com zero)
-  forcedTeams.forEach(tn => { if (!grupos[tn]) grupos[tn] = { resolvidos: 0, em_analise: 0, ativos: 0 }; });
-
-  // Se houver muitas equipes reais (caso queira ver só as top3, poderia limitar), aqui vou mostrar todas
   const labels = Object.keys(grupos);
   const dadosResolvidos = labels.map(l => grupos[l].resolvidos);
   const dadosEmAnalise = labels.map(l => grupos[l].em_analise);
@@ -437,7 +360,7 @@ function montarSegmento2() {
   });
 }
 
-// ---------- PARTE 4: Segmento 3, listas, utilitários finais ----------
+// ---------- Segmento 3: filtros por modelo + KPIs, gráficos e lista ----------
 function popularSelectModelos() {
   if (!selectFilterModel) return;
   selectFilterModel.innerHTML = '';
@@ -467,7 +390,27 @@ async function aplicarFiltroModelo(valor) {
   if (valor === 'geral') {
     ticketsFiltrados = ticketsClinica.slice();
   } else {
-    ticketsFiltrados = await buscarTicketsPorModelo(nomeClinica, Number(valor), token);
+    // buscarTicketsPorModelo retorna raw tickets do backend; normalizamos minimalmente aqui
+    const raw = await buscarTicketsPorModelo(nomeClinica, Number(valor), token);
+    // tentar transformar em mesmo formato: se for fields[], aplica extrairDescriptionTexto+parse
+    ticketsFiltrados = raw.map((f, idx) => {
+      const fields = f.fields ? f.fields : f;
+      const descText = extrairDescriptionTexto(fields.description);
+      const parsed = parseDescriptionFields(descText);
+      return {
+        uuid: parsed.uuid || null,
+        tipo_alerta: parsed.tipo_alerta || (fields.issuetype && fields.issuetype.name) || null,
+        severidade: (fields.priority && fields.priority.name) || fields.severidade || null,
+        detectado_em: fields.created || fields.detectado_em || null,
+        resolvido_em: fields.resolutiondate || fields.resolvido_em || fields.updated || null,
+        status: (fields.status && fields.status.name) || fields.status || '',
+        descricao_raw: parsed.raw,
+        resumo: parsed.resumo || fields.summary || null,
+        equipe: parsed.equipe || null,
+        original: fields,
+        _idx: idx
+      };
+    });
   }
 
   montarSegmento3();
@@ -497,15 +440,14 @@ function montarStatusAlertas() {
 }
 
 function montarKPIsStatusAlertas({ total, resolvidos, emAcompanhamento, ativos }) {
-  const elTotal = document.getElementById('kpi_alerts_total');
-  const elSolved = document.getElementById('kpi_alerts_solved');
-  const elProgress = document.getElementById('kpi_alerts_in_progress');
-  const elActive = document.getElementById('kpi_alerts_active');
+  document.getElementById('kpi_alerts_total').innerText = total;
+  document.getElementById('kpi_alerts_solved').innerText = resolvidos;
+  document.getElementById('kpi_alerts_in_progress').innerText = emAcompanhamento;
+  document.getElementById('kpi_alerts_active').innerText = ativos;
 
-  if (elTotal) elTotal.innerText = total;
-  if (elSolved) { elSolved.innerText = resolvidos; elSolved.style.color = resolvidos > 0 ? '#10982bff' : '#555'; }
-  if (elProgress) { elProgress.innerText = emAcompanhamento; elProgress.style.color = emAcompanhamento > 0 ? '#f1c40f' : '#555'; }
-  if (elActive) { elActive.innerText = ativos; elActive.style.color = ativos > 0 ? '#e74c3c' : '#555'; }
+  document.getElementById('kpi_alerts_solved').style.color = resolvidos > 0 ? '#10982bff' : '#555';
+  document.getElementById('kpi_alerts_in_progress').style.color = emAcompanhamento > 0 ? '#f1c40f' : '#555';
+  document.getElementById('kpi_alerts_active').style.color = ativos > 0 ? '#e74c3c' : '#555';
 }
 
 function montarGraficoDonutStatus({ resolvidos, emAcompanhamento, ativos }) {
@@ -539,11 +481,8 @@ function montarGraficoTempoResolucaoPorEquipe() {
     } catch (e) { /* ignorar */ }
   });
 
-  // garantir Alpha/Beta/Gamma exibidos mesmo se não existirem
-  ['Alpha', 'Beta', 'Gamma'].forEach(tn => { if (!somaPorEquipe[tn]) somaPorEquipe[tn] = { totalDias: 0, count: 0 }; });
-
   const labels = Object.keys(somaPorEquipe);
-  const medias = labels.map(l => somaPorEquipe[l].count ? Math.round((somaPorEquipe[l].totalDias / somaPorEquipe[l].count) * 10) / 10 : 0);
+  const medias = labels.map(l => Math.round((somaPorEquipe[l].totalDias / somaPorEquipe[l].count) * 10) / 10);
 
   if (!graficoTempoEquipeEl) return;
   if (chartMeanTime) chartMeanTime.destroy();
@@ -555,8 +494,6 @@ function montarGraficoTempoResolucaoPorEquipe() {
   });
 }
 
-// ---------- Lista de alertas recentes (tabela) ----------
-// Exibe "Componente: Valor" na coluna de componente
 function popularListaAlertasRecentes() {
   if (!eventsBody) return;
   eventsBody.innerHTML = '';
@@ -567,31 +504,12 @@ function popularListaAlertasRecentes() {
     return db - da;
   });
 
-  // limita linhas para performance
   for (let t of sorted.slice(0, 50)) {
     const severity = (t.severidade || '').toString().toLowerCase();
     const detectado = t.detectado_em ? formatDateTime(t.detectado_em) : '-';
     const resolvido = t.resolvido_em ? formatDateTime(t.resolvido_em) : '-';
     const duracao = calcularDuracaoEvento(t);
-
-    // → COMBINAÇÃO: Componente + Valor detectado (robusto)
-    // t.componente e t.valor_detectado foram já preenchidos na normalização quando possível
-    let componente = (t.componente || '').toString().trim();
-    let valor = (t.valor_detectado || '').toString().trim();
-
-    // Se vierem vazios, tentamos caminhos alternativos dentro de original (caso backend retorne campos diferentes)
-    if (!componente && t.original) {
-      componente = t.original.componente || t.original.componentName || t.original.tipo || '';
-    }
-    if ((!valor || valor === '') && t.original) {
-      valor = t.original.valor_detectado || t.original.valorDetectado || t.original.value || '';
-    }
-
-    // limpeza básica: trocar comma por dot e manter % quando houver
-    if (valor && typeof valor === 'string') valor = valor.replace(',', '.');
-
-    const tipoAlerta = componente ? (valor ? `${componente}: ${valor}` : componente) : '-';
-
+    const evento = t.resumo || t.descricao_raw || '-';
     const uuid = t.uuid || (t.original && (t.original.dispositivo_uuid || t.original.customfield_dispositivo)) || '-';
 
     const tr = document.createElement('tr');
@@ -600,11 +518,10 @@ function popularListaAlertasRecentes() {
       <td>${duracao}</td>
       <td>${detectado}</td>
       <td>${resolvido}</td>
-      <td>${tipoAlerta}</td>
-      <td>${duracao}</td>
+      <td>${evento}</td>
+      <td>${calcularDuracaoEvento(t)}</td>
       <td>${uuid}</td>
     `;
-
     if (severity.includes('high') || severity.includes('crit')) tr.classList.add('critico');
 
     eventsBody.appendChild(tr);

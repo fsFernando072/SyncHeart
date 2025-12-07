@@ -128,7 +128,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 break;
             case 3: // Eletrofisiologista
                 htmlBotoes = `
-                    <a href="provisionar_dispositivo..html" class="action-btn">
+                    <a href="provisionar_dispositivo.html" class="action-btn">
                         (Eletrofisiologista)<br>
                         Provisionar Marcapasso
                     </a>
