@@ -82,7 +82,7 @@ function login() {
                     window.location.href = "solicitacoes.html";
                 } else {
                     // Corrigindo o caminho para a pasta dashboard
-                    window.location.href = "./dashboard/dashboard.html";
+                    window.location.href = "./dashboard/dash_geral.html";
                 }
             }, 1500);
         }

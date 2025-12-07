@@ -1,0 +1,50 @@
+[
+  {
+    "device_id": "680fab1b-5333-4caa-970b-091a484dcf7d",
+    "battery_level": 85.5,
+    "last_update": "2025-12-06T10:30:00Z",
+    "modelo": "Amvia"
+  },
+  {
+    "device_id": "5017d328-3322-496b-b6f3-a5ddb1a8492c",
+    "battery_level": 72.3,
+    "last_update": "2025-12-06T10:25:00Z",
+    "modelo": "Amvia"
+  },
+  {
+    "device_id": "3c7675fd-eaab-46e3-902b-352d41c115f1",
+    "battery_level": 45.8,
+    "last_update": "2025-12-06T10:20:00Z",
+    "modelo": "Sentiva"
+  },
+  {
+    "device_id": "e0dd679e-03cf-43ee-b8c9-e54851310e3d",
+    "battery_level": 92.1,
+    "last_update": "2025-12-06T10:15:00Z",
+    "modelo": "Sentiva"
+  },
+  {
+    "device_id": "26b76fd9-beaa-4428-a328-461eed1f2013",
+    "battery_level": 12.7,
+    "last_update": "2025-12-06T10:10:00Z",
+    "modelo": "Amvia"
+  },
+  {
+    "device_id": "6a2eee55-f6b0-4475-b0ba-4ef39211e66e",
+    "battery_level": 67.4,
+    "last_update": "2025-12-06T10:05:00Z",
+    "modelo": "Amvia"
+  },
+  {
+    "device_id": "5a83fe84-3d16-44ed-9dd0-9c21b35a2271",
+    "battery_level": 88.9,
+    "last_update": "2025-12-06T10:00:00Z",
+    "modelo": "Amvia"
+  },
+  {
+    "device_id": "9df4a175-49d0-4ab7-bd79-a430f39bba51",
+    "battery_level": 54.2,
+    "last_update": "2025-12-06T09:55:00Z",
+    "modelo": "Sentiva"
+  }
+]
