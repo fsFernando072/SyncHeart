@@ -339,7 +339,7 @@ document.addEventListener('DOMContentLoaded', () => {
             alertas.forEach(alerta => {
                 let description = alerta.description.content[0].content[0].text.trim().split('\n');
                 let tipo_alerta = description[2].split(":")[1].trim();
-
+                
                 if (alerta.priority.name == "High") {
                     criticos += 1;
                 }

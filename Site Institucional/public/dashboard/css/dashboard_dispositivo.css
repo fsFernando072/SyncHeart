@@ -416,23 +416,60 @@ input {
     gap: 40px;
     margin-bottom: 20px;
     margin-top: 20px;
+    flex-wrap: wrap;
+    justify-content: flex-start;
 }
 
 .kpi-card {
     background: white;
     padding: 20px;
-    
     border-radius: 12px;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
     border-left: 5px solid;
-    transition: transform 0.2s, box-shadow 0.2s;
+    transition: all 0.3s ease;
     height: 7.5rem;
     width: 20rem;
+    position: relative;
 }
 
 .kpi-card:hover {
     transform: translateY(-5px);
-    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.08);
+    box-shadow: 0 12px 20px rgba(0, 0, 0, 0.1);
+}
+
+/* CORES DINÂMICAS BASEADAS NA BATERIA */
+.kpi-card.battery {
+    /* Card da bateria atual — muda de cor conforme o nível */
+    border-left-color: #27ae60; /* padrão (verde) */
+}
+
+.kpi-card.battery.nivel-verde {
+    border-left-color: #27ae60;
+    background: linear-gradient(90deg, rgba(39, 174, 96, 0.08) 0%, transparent 100%);
+}
+
+.kpi-card.battery.nivel-laranja {
+    border-left-color: #e67e22;
+    background: linear-gradient(90deg, rgba(230, 126, 34, 0.1) 0%, transparent 100%);
+}
+
+.kpi-card.battery.nivel-vermelho {
+    border-left-color: #e74c3c;
+    background: linear-gradient(90deg, rgba(231, 76, 60, 0.12) 0%, transparent 100%);
+    animation: pulse-red 2s infinite;
+}
+
+/* Animação sutil quando estiver crítico (opcional, mas fica foda) */
+@keyframes pulse-red {
+    0%, 100% { box-shadow: 0 4px 12px rgba(231, 76, 60, 0.15); }
+    50% { box-shadow: 0 8px 24px rgba(231, 76, 60, 0.3); }
+}
+
+/* Os outros cards mantêm verde fixo */
+.kpi-card.alert,
+.kpi-card.devices {
+    border-left-color: #34db55;
+    background: linear-gradient(90deg, rgba(52, 219, 85, 0.08) 0%, transparent 100%);
 }
 
 .kpi-card h2 {
@@ -443,27 +480,16 @@ input {
 }
 
 .kpi-card .kpi-value {
-    font-size: 36px;
+    font-size: 22px;
     font-weight: 700;
     color: #333;
     display: block;
+    margin: 8px 0;
 }
 
 .kpi-card .kpi-description {
     font-size: 12px;
     color: #999;
-}
-
-.kpi-card.alert {
-    border-left-color: #34db55;
-}
-
-.kpi-card.devices {
-    border-left-color: #34db55;
-}
-
-.kpi-card.battery {
-    border-left-color: #34db55;
 }
 
 

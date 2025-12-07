@@ -10,10 +10,11 @@
   "author": "Feito pelos desenvolvedores @ São Paulo Tech School / Bandtec Digital School",
   "license": "MIT",
   "dependencies": {
-    "@aws-sdk/client-s3": "^3.x.x",
-    "aws-sdk": "^2.1692.0",
+    "@aws-sdk/client-s3": "^3.946.0",
+    "axios": "^1.13.2",
     "cors": "^2.8.5",
     "dotenv": "^16.4.5",
+    "ejs": "^3.1.10",
     "express": "^4.17.1",
     "jsonwebtoken": "^9.0.2",
     "mysql2": "^3.9.4",
@@ -22,6 +23,7 @@
     "uuid": "^13.0.0",
     "ejs": "^3.1.10",
     "papaparse": "^5.4.1",
-    "axios": "^1.13.2"
+    "path": "^0.12.7",
+    "uuid": "^13.0.0"
   }
 }
