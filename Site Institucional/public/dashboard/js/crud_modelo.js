@@ -92,7 +92,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const CARGO_ENG_CLINICA = 4;
 
         if (!dadosUsuarioLogado || dadosUsuarioLogado.usuario.cargoId !== CARGO_ENG_CLINICA) {
-            document.body.innerHTML = `<div style="text-align: center; padding: 50px;"><h2>Acesso Negado</h2><p>Apenas um Engenheiro Clínico pode gerenciar os modelos de dispositivos.</p><a href="dashboard.html">← Voltar</a></div>`;
+            document.body.innerHTML = `<div style="text-align: center; padding: 50px;"><h2>Acesso Negado</h2><p>Apenas um Engenheiro Clínico pode gerenciar os modelos de dispositivos.</p><a href="dash_geral.html">← Voltar</a></div>`;
             return;
         }
 

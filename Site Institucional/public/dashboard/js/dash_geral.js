@@ -20,7 +20,7 @@ document.addEventListener('DOMContentLoaded', () => {
   const nomeUsuario = (dadosSessao.usuario && dadosSessao.usuario.nome) || '';
   const emailUsuario = (dadosSessao.usuario && dadosSessao.usuario.email) || '';
   const nomeClinica = (dadosSessao.clinica && dadosSessao.clinica.nome) || '';
-  // Usar textContent/element creation para evitar injeção
+
   const userInfoEl = document.createElement('div');
   userInfoEl.className = 'user-info';
   const spanName = document.createElement('span');
@@ -45,41 +45,14 @@ document.addEventListener('DOMContentLoaded', () => {
   let graficoHistoricoApex = null;
   let graficoBateriaApex = null;
 
-  //DADOS BASE
-  const days = ['Dom', 'Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sáb'];
-  const dailyAlerts = days.map(day => ({
-    day,
-    cpu: Math.floor(Math.random() * 5),
-    bateria: Math.floor(Math.random() * 4),
-    ram: Math.floor(Math.random() * 3),
-    disco: Math.floor(Math.random() * 1)
-  }));
-
-  //DADOS MOCKADOS
-  const models = ['Precision R80', 'Azure XT DR', 'Vitalio LDR', 'BioBeacon X1'];
-  const hotspots = models.map((model) => ({
-    model,
-    x: Math.floor(Math.random() * 60) + 20,
-    alerts: Math.floor(Math.random() * 50) + 10,
-    devices: Math.floor(Math.random() * 25) + 5
-  }));
+  // Dados globais (vindos da API /holistica/dashboard)
   let dadosMockadosGlobais = {
-    "kpis":
-      { "total": 29, "atencao": 10, "critico": 2 },
-
-    "matrizStress": [{ "x": 1, "y": "Média Geral", "v": 23 },
-    { "x": 2, "y": "Média Geral", "v": 77 },
-    { "x": 3, "y": "Média Geral", "v": 50 }],
-
-    "hotspot": hotspots,
-    "historico": dailyAlerts,
-    "capacidade": { "ativos": 29, "totalSuportado": 1000 },
-    "saudeBateria": { "saudavel": [17], "atencao": [10], "critico": [2] },
-    "filaTriagem": [
-      { "id": 1, "idModelo": 1, "idDispositivo": "680fab1b-5333-4caa-970b-09btnmtdcf7d", "tipo": "critico", "texto": "Alto Consumo de Processador", "tempo": "Agora", "metrica": "CPU", "valor": "27.1%" },
-      { "id": 2, "idModelo": 1, "idDispositivo": "120reb1b-5653-4caa-970b-091gth4dcf7d", "tipo": "atencao", "texto": "Alta Demanda de Memória", "tempo": "2 min", "metrica": "RAM", "valor": "84.3%" },
-      { "id": 3, "idModelo": 1, "idDispositivo": "310fab1b-5542-4caa-970b-091a4asdff7d", "tipo": "atencao", "texto": "Alta Demanda de Memória", "tempo": "5 min", "metrica": "RAM", "valor": "88.5%" }]
-  }
+    "kpis": { "total": 0, "atencao": 0, "critico": 0, "desconectados": 0 },
+    "filaTriagem": [],
+    "hotspot": [],
+    "historico": [],
+    "saudeBateria": { "saudavel": [0], "atencao": [0], "critico": [0] }
+  };
 
 
 
@@ -87,11 +60,12 @@ document.addEventListener('DOMContentLoaded', () => {
   // --- 2. FUNÇÃO MESTRE DE UPDATE ---
   async function atualizarTodosOsModulos(filtroModeloId) {
     try {
+      console.log('🔄 Atualizando todos os módulos...', filtroModeloId ? `Filtro: ${filtroModeloId}` : 'Sem filtro');
       mostrarFeedback('Sincronizando...', 'loading');
       await new Promise((r) => setTimeout(r, 500));
 
       const dados = filtrarDados(filtroModeloId);
-
+      console.log('📦 Dados filtrados:', dados);
 
       carregarKPIsCards(dados.kpis);
       carregarGraficoHotspot(dados.hotspot);
@@ -103,14 +77,56 @@ document.addEventListener('DOMContentLoaded', () => {
       btnLimparFiltro.style.display = filtroModeloId ? 'block' : 'none';
 
       mostrarFeedback('', 'hide');
+      console.log('✅ Todos os módulos atualizados com sucesso');
     } catch (err) {
-      console.error(err);
+      console.error('❌ Erro na atualização:', err);
       mostrarFeedback('Erro na atualização', 'error');
     }
   }
 
 
   // --- 2. FUNÇÃO MESTRE DE ATUALIZAÇÃO DE DADOS ---
+  async function buscarDadosDoAPI() {
+    // Busca dados da API backend (Holística Dashboard)
+    // Tenta buscar dados reais. Em caso de falha, mantém o mock local
+    try {
+      mostrarFeedback('Sincronizando dados...', 'loading');
+      
+      const token = sessionStorage.getItem('authToken');
+      if (!token) {
+        console.warn('⚠️ Token não encontrado. Redirecionando para login.');
+        window.location.href = '/login.html';
+        return;
+      }
+      
+      const response = await fetch('/holistica/dashboard', {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`
+        }
+      });
+
+      if (!response.ok) {
+        console.warn('❌ Não foi possível obter dados da API. Status:', response.status);
+        console.warn('Usando dados mockados localmente.');
+        mostrarFeedback('Usando dados em cache local', 'info');
+        return;
+      }
+
+      const dados = await response.json();
+      console.log('✅ Dados recebidos com sucesso da API:', dados);
+      
+      if (dados && typeof dados === 'object') {
+        dadosMockadosGlobais = dados;
+        mostrarFeedback('Dados sincronizados com sucesso', 'success');
+      }
+    } catch (error) {
+      console.warn('⚠️ Erro ao buscar dados da API, mantendo mock local.', error);
+      mostrarFeedback('Usando dados em cache (API indisponível)', 'warning');
+    }
+  }
+
   async function buscarDadosDoArquivo(nomeDoArquivo) {
     // Tenta buscar dados reais. Em caso de falha, mantém o mock local
     const safeClinica = encodeURIComponent(nomeClinica || '');
@@ -135,8 +151,7 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   async function carregarJira() {
-
-
+    // Função reservada para carregamento futuro de dados específicos do Jira
   }
 
 
@@ -182,65 +197,178 @@ document.addEventListener('DOMContentLoaded', () => {
   // --- 3. RENDERIZAÇÃO DOS MÓDULOS ---
 
   function carregarKPIsCards(dados) {
-    const desconectados = (dados && typeof dados.desconectados === 'number') ? dados.desconectados : 0;
-    const total = (dados && typeof dados.total === 'number') ? dados.total : 0;
-    const estaveis = Math.max(0, total - ((dados.atencao || 0) + (dados.critico || 0) + desconectados));
+    const desconectados = parseInt(dados.desconectados) || 0;
+    const total = parseInt(dados.total) || 0;
+    const atencao = parseInt(dados.atencao) || 0;
+    const critico = parseInt(dados.critico) || 0;
+    // Estáveis = Total - (Crítico + Atenção + Desconectados)
+    const estaveis = Math.max(0, total - critico - atencao - desconectados);
 
     kpiContainer.innerHTML = `
         <div class="kpi-card kpi-red" onclick="aplicarFiltroGlobal('critico')">
             <div class="kpi-text">
                 <span class="kpi-title">Marcapassos em Situação Crítica</span>
-                <span class="kpi-value" style="color: #e74c3c;">${dados.critico}</span>
-                <span style="color:grey; margin-top:5px; padding:0px">
-                    <span><span style="color:red; font-size:x-large">⚠</span> Requer ação</span>
+                <span class="kpi-value" style="color: #e74c3c;">${critico}</span>
+                <span style="color:grey; margin-top:5px;">
+                    <span style="color:red; font-size:large">⚠</span> Requer ação
+                </span>
             </div>
-            <div style="display: flex; flex-direction:row" id="kpi-critico-graph"></div>
+            <div id="kpi-critico-graph"></div>
         </div>
 
         <div class="kpi-card kpi-yellow" onclick="aplicarFiltroGlobal('atencao')">
             <div class="kpi-text">
                 <span class="kpi-title">Marcapassos em Situação de Atenção</span>
-                <span class="kpi-value" style="color: #f1c40f;">${dados.atencao}</span>
-                <span style="color:grey; margin-top:5px; padding:0px">Ficar de Olho</span>
+                <span class="kpi-value" style="color: #f39c12;">${atencao}</span>
+                <span style="color:grey; margin-top:5px;">Ficar de Olho</span>
             </div>
-            <div style="display: flex; flex-direction:row" id="kpi-atencao-graph"></div>
+            <div id="kpi-atencao-graph"></div>
         </div>
 
         <div class="kpi-card kpi-gray" onclick="aplicarFiltroGlobal('desconectados')">
           <div class="kpi-text">
             <span class="kpi-title">Marcapassos Desconectados</span>
-            <span class="kpi-value" style="color: grey">${desconectados}</span>
-            <span style="color:grey; margin-top:5px; padding:0px">Sem Atualização de Dados</span>
+            <span class="kpi-value" style="color: #95a5a6;">${desconectados}</span>
+            <span style="color:grey; margin-top:5px;">Sem Atualização de Dados</span>
           </div>
-          <div style="display: flex; flex-direction:row" id="kpi-offline-graph"></div>
+          <div id="kpi-offline-graph"></div>
         </div>
 
         <div class="kpi-card kpi-green" onclick="aplicarFiltroGlobal('estaveis')">
             <div class="kpi-text">
                 <span class="kpi-title">Marcapassos Estáveis</span>
-                <span class="kpi-value" style="color: #2ecc71;">${estaveis}</span>
-                <span style="color:grey; margin-top:5px; padding:0px">Operando Normalmente</span>
+                <span class="kpi-value" style="color: #27ae60;">${estaveis}</span>
+                <span style="color:grey; margin-top:5px;">Operando Normalmente</span>
             </div>
-            <div style="display: flex; " id="kpi-estavel-graph"></div>
+            <div id="kpi-estavel-graph"></div>
         </div>`;
 
-    // Helper simples para criar opções semelhantes para pequenos sparklines
+    // Gerar dados históricos simulados mantendo a soma consistente
+    const generateConsistentTrendData = (currentValue, totalDevices, variance = 0.3) => {
+      const data = [];
+      const base = Math.max(0, currentValue);
+      const maxVariation = Math.min(base, totalDevices * variance);
+      
+      for (let i = 0; i < 10; i++) {
+        const randomVariance = (Math.random() - 0.5) * maxVariation;
+        const value = Math.max(0, Math.min(totalDevices, Math.round(base + randomVariance)));
+        data.push(value);
+      }
+      // Garantir que o último valor seja o atual
+      data[9] = currentValue;
+      return data;
+    };
+
+    // Determinar cor predominante baseada na tendência geral
+    const getTrendColor = (data, isGoodWhenLower = false) => {
+      if (!data || data.length < 2) return '#95a5a6';
+      
+      const firstValue = data[0];
+      const lastValue = data[data.length - 1];
+      const diff = lastValue - firstValue;
+      
+      // Threshold de 10% para considerar mudança significativa
+      const threshold = Math.max(1, Math.abs(firstValue * 0.15));
+      
+      if (Math.abs(diff) < threshold) {
+        return '#95a5a6'; // cinza - manteve estável
+      }
+      
+      if (isGoodWhenLower) {
+        // Crítico, Atenção, Desconectados: bom quando diminui
+        return diff < 0 ? '#27ae60' : '#e74c3c';
+      } else {
+        // Estáveis: bom quando aumenta
+        return diff > 0 ? '#27ae60' : '#e74c3c';
+      }
+    };
+
+    // Gerar dados com pontos coloridos individualmente
+    const generateColoredDataPoints = (data, isGoodWhenLower = false) => {
+      if (!data || data.length < 2) return { data, colors: ['#95a5a6'] };
+      
+      const coloredPoints = [];
+      const fillColors = [];
+      
+      for (let i = 0; i < data.length; i++) {
+        coloredPoints.push(data[i]);
+        
+        if (i === 0) {
+          fillColors.push('#95a5a6');
+        } else {
+          const diff = data[i] - data[i - 1];
+          if (diff === 0) {
+            fillColors.push('#95a5a6');
+          } else if (isGoodWhenLower) {
+            fillColors.push(diff < 0 ? '#27ae60' : '#e74c3c');
+          } else {
+            fillColors.push(diff > 0 ? '#27ae60' : '#e74c3c');
+          }
+        }
+      }
+      
+      return { data: coloredPoints, colors: fillColors };
+    };
+
     const emptyFormatter = () => '';
-    const makeSparkOptions = (id, data, extra = {}) => ({
-      chart: { id, group: 'sparks', type: 'line', height: 150, sparkline: { enabled: false }, dropShadow: { enabled: true, top: 1, left: 1, blur: 2, opacity: 0.5 } },
-      series: [{ data }],
-      stroke: { show: true, curve: 'straight', lineCap: 'butt', width: 2 },
-      markers: { size: 0 },
-      grid: { padding: { top: 40, bottom: 10, left: 0 } },
-      tooltip: { x: { show: true }, y: { title: { formatter: emptyFormatter } } },
-      ...extra
+    const makeSparkOptions = (id, data, isGoodWhenLower, extra = {}) => {
+      const mainColor = getTrendColor(data, isGoodWhenLower);
+      const { data: processedData } = generateColoredDataPoints(data, isGoodWhenLower);
+      
+      return {
+        chart: { 
+          id, 
+          group: 'sparks', 
+          type: 'area', 
+          height: 80, 
+          sparkline: { enabled: true }, 
+          animations: { enabled: true, easing: 'easeinout', speed: 800 }
+        },
+        series: [{ name: 'Dispositivos', data: processedData }],
+        stroke: { 
+          show: true, 
+          curve: 'smooth', 
+          lineCap: 'round', 
+          width: 2.5 
+        },
+        colors: [mainColor],
+        fill: { 
+          type: 'gradient', 
+          gradient: { 
+            opacityFrom: 0.6, 
+            opacityTo: 0.1 
+          } 
+        },
+        markers: { size: 0 },
+        tooltip: { 
+          enabled: true,
+          x: { show: false }, 
+          y: { 
+            title: { formatter: emptyFormatter },
+            formatter: (val) => val ? Math.round(val) : 0
+          },
+          marker: { show: false }
+        },
+        ...extra
+      };
+    };
+
+    // Gerar dados históricos respeitando: Total = Crítico + Atenção + Desconectados + Estáveis
+    const criticoData = generateConsistentTrendData(critico, total, 0.4);
+    const atencaoData = generateConsistentTrendData(atencao, total, 0.35);
+    const desconectadosData = generateConsistentTrendData(desconectados, total, 0.3);
+    
+    // Estáveis deve ser calculado dinamicamente para cada ponto histórico
+    const estaveisData = criticoData.map((crit, i) => {
+      const estavel = total - crit - atencaoData[i] - desconectadosData[i];
+      return Math.max(0, estavel);
     });
 
-    const spark1 = makeSparkOptions('spark1', [25, 66, 41, 59, 25, 44, 12, 36, 9, 21], { grid: { padding: { top: 50, left: 0 } } });
-    const spark2 = makeSparkOptions('spark2', [12, 14, 2, 47, 32, 44, 14, 55, 41, 69], { colors: ['#ee4731ff'] });
-    const spark3 = makeSparkOptions('spark3', [47, 45, 74, 32, 56, 31, 44, 33, 45, 19], { colors: ['#fdb61bff'] });
-    // spark4: evitar branco puro sobre fundo branco
-    const spark4 = makeSparkOptions('spark4', [15, 75, 47, 65, 14, 32, 19, 54, 44, 61], { colors: ['#7f8c8d'] });
+    // Criar sparklines com cores dinâmicas por segmento
+    const spark1 = makeSparkOptions('spark1', criticoData, true); // bom quando diminui
+    const spark2 = makeSparkOptions('spark2', atencaoData, true); // bom quando diminui
+    const spark3 = makeSparkOptions('spark3', desconectadosData, true); // bom quando diminui
+    const spark4 = makeSparkOptions('spark4', estaveisData, false); // bom quando aumenta
 
     new ApexCharts(document.querySelector('#kpi-critico-graph'), spark1).render();
     new ApexCharts(document.querySelector('#kpi-atencao-graph'), spark2).render();
@@ -366,20 +494,24 @@ function getBubbleColor(x, y) {
   function carregarGraficoHotspot(hotspots) {
     // Usa dados centralizados se parâmetro não for fornecido
     const source = hotspots || dadosMockadosGlobais.hotspot;
-    // Transforma os dados para o formato do ApexCharts
-    const bubbleData = source.map((h) => ({ x: h.x, y: h.devices, z: h.alerts, model: h.model }));
-    const bubbleDataWithColor = source.map((h) => ({
-      x: h.x,
-      y: h.devices,
-      z: h.alerts,
-      model: h.model,
-      fillColor: getBubbleColor(h.x, h.devices) // Calculate color based on x and y
-    }));
+    
+    if (!source || source.length === 0) {
+      console.warn('⚠️ Nenhum dado de hotspot disponível');
+      return;
+    }
 
-    const bubbleSeries = [{
-      name: 'Dispositivos',
-      data: bubbleDataWithColor
-    }];
+    console.log('📊 Carregando gráfico Hotspot com', source.length, 'modelos:', source);
+    
+    // Criar uma série para cada modelo (permite clicar individualmente)
+    const bubbleSeries = source.map((h) => ({
+      name: h.model,
+      data: [{
+        x: h.x,
+        y: h.alerts, // Taxa de alertas no eixo Y
+        z: h.devices, // Tamanho da bolha = quantidade de dispositivos
+        fillColor: getBubbleColor(h.x, h.alerts)
+      }]
+    }));
 
     const options = {
       series: bubbleSeries,
@@ -387,9 +519,6 @@ function getBubbleColor(x, y) {
         height: 300,
         type: 'bubble',
         fontFamily: 'Lexend, sans-serif',
-
-
-
         toolbar: { show: true },
         events: {
           dataPointSelection(event, chartContext, config) {
@@ -440,23 +569,41 @@ function getBubbleColor(x, y) {
       }
     };
 
+    const chartElement = document.querySelector('#scatter-chart');
+    if (!chartElement) {
+      console.error('❌ Elemento #scatter-chart não encontrado no DOM');
+      return;
+    }
+
     if (graficoHotspotApex) {
       try {
         graficoHotspotApex.updateOptions(options);
         graficoHotspotApex.updateSeries(bubbleSeries);
+        console.log('✅ Gráfico Hotspot atualizado');
         return;
       } catch (e) {
+        console.warn('⚠️ Erro ao atualizar gráfico, recriando...', e);
         try { graficoHotspotApex.destroy(); } catch (_) {}
         graficoHotspotApex = null;
       }
     }
 
-    graficoHotspotApex = new ApexCharts(document.querySelector('#scatter-chart'), options);
-    graficoHotspotApex.render();
+    graficoHotspotApex = new ApexCharts(chartElement, options);
+    graficoHotspotApex.render()
+      .then(() => console.log('✅ Gráfico Hotspot renderizado'))
+      .catch(err => console.error('❌ Erro ao renderizar Hotspot:', err));
   }
 
   function carregarGraficoHistorico(dadosHistorico) {
     const source = dadosHistorico || dadosMockadosGlobais.historico;
+    
+    if (!source || source.length === 0) {
+      console.warn('⚠️ Nenhum dado de histórico disponível');
+      return;
+    }
+
+    console.log('📊 Carregando gráfico Histórico com', source.length, 'dias');
+    
     const seriesData = [
       { name: 'CPU', data: source.map((d) => d.cpu) },
       { name: 'Bateria', data: source.map((d) => d.bateria) },
@@ -494,23 +641,41 @@ function getBubbleColor(x, y) {
       dataLabels: { enabled: false }
     };
 
+    const chartElement = document.querySelector('#bar-chart');
+    if (!chartElement) {
+      console.error('❌ Elemento #bar-chart não encontrado no DOM');
+      return;
+    }
+
     // Se o gráfico já existe, atualizamos os dados para manter a animação
     if (graficoHistoricoApex) {
-      graficoHistoricoApex.updateOptions({ xaxis: { categories: source.map((d) => d.day) } });
-      graficoHistoricoApex.updateSeries(seriesData);
+      try {
+        graficoHistoricoApex.updateOptions({ xaxis: { categories: source.map((d) => d.day) } });
+        graficoHistoricoApex.updateSeries(seriesData);
+        console.log('✅ Gráfico Histórico atualizado');
+      } catch (e) {
+        console.warn('⚠️ Erro ao atualizar gráfico histórico:', e);
+      }
     } else {
-      graficoHistoricoApex = new ApexCharts(document.querySelector('#bar-chart'), options);
-      graficoHistoricoApex.render();
+      graficoHistoricoApex = new ApexCharts(chartElement, options);
+      graficoHistoricoApex.render()
+        .then(() => console.log('✅ Gráfico Histórico renderizado'))
+        .catch(err => console.error('❌ Erro ao renderizar Histórico:', err));
     }
   }
   function carregarGraficoSaudeBateria(dados) {
     const source = dados || dadosMockadosGlobais.saudeBateria;
-    if (!source) return;
+    if (!source) {
+      console.warn('⚠️ Nenhum dado de saúde de bateria disponível');
+      return;
+    }
 
     // Extrai os valores com segurança (usa 0 se estiver vazio)
     const valorSaudavel = (source.saudavel && source.saudavel.length > 0) ? source.saudavel[0] : 0;
     const valorAtencao = (source.atencao && source.atencao.length > 0) ? source.atencao[0] : 0;
     const valorCritico = (source.critico && source.critico.length > 0) ? source.critico[0] : 0;
+
+    console.log('📊 Carregando gráfico Saúde Bateria:', { valorSaudavel, valorAtencao, valorCritico });
 
     const seriesData = [
       { name: 'Nível Alto', data: [valorSaudavel] },
@@ -572,21 +737,40 @@ function getBubbleColor(x, y) {
       }
     };
 
+    const chartElement = document.querySelector('#grafico_saude_bateria');
+    if (!chartElement) {
+      console.error('❌ Elemento #grafico_saude_bateria não encontrado no DOM');
+      return;
+    }
+
     if (graficoBateriaApex) {
-      graficoBateriaApex.updateSeries(seriesData);
+      try {
+        graficoBateriaApex.updateSeries(seriesData);
+        console.log('✅ Gráfico Saúde Bateria atualizado');
+      } catch (e) {
+        console.warn('⚠️ Erro ao atualizar gráfico bateria:', e);
+      }
     } else {
-      graficoBateriaApex = new ApexCharts(document.querySelector('#grafico_saude_bateria'), options);
-      graficoBateriaApex.render();
+      graficoBateriaApex = new ApexCharts(chartElement, options);
+      graficoBateriaApex.render()
+        .then(() => console.log('✅ Gráfico Saúde Bateria renderizado'))
+        .catch(err => console.error('❌ Erro ao renderizar Saúde Bateria:', err));
     }
   }
 
-  function filtrarDados(id) {
+  function filtrarDados(filtroModeloNome) {
     const base = dadosMockadosGlobais || {};
-    if (!id) return base;
+    if (!filtroModeloNome) return base;
+    
+    // Filtrar hotspot e fila de triagem pelo nome do modelo
     return {
       ...base,
-      kpis: base.kpis || { total: (base.capacidade && base.capacidade.ativos) || 0, atencao: 0, critico: 0 },
-      filaTriagem: (base.filaTriagem || []).filter((f) => f.idModelo === id)
+      hotspot: (base.hotspot || []).filter((h) => h.model === filtroModeloNome),
+      filaTriagem: (base.filaTriagem || []).filter((f) => {
+        // Encontrar o modelo correspondente ao alerta
+        const modeloDoAlerta = base.hotspot.find(h => h.model === filtroModeloNome);
+        return modeloDoAlerta && f.idModelo === modeloDoAlerta.modelo_id;
+      })
     };
   }
 
@@ -609,10 +793,13 @@ function getBubbleColor(x, y) {
     feedbackTimeout = setTimeout(() => divFeedback.classList.remove('show'), 3000);
   }
 
-  window.aplicarFiltroGlobal = (t) => {
-    mostrarFeedback(`Filtro: ${t}`, 'success');
-    if (t === 'critico') atualizarTodosOsModulos(1);
-    else atualizarTodosOsModulos(null);
+  window.aplicarFiltroGlobal = (tipo) => {
+    console.log('🔍 Aplicando filtro global:', tipo);
+    // Filtros de KPI não filtram por modelo, apenas dão feedback visual
+    // O filtro real por modelo vem do clique nas bolhas do gráfico
+    mostrarFeedback(`Visualizando: ${tipo}`, 'info');
+    // Não aplicar filtro, apenas feedback visual
+    // Se quiser implementar filtro por status no futuro, adicionar lógica aqui
   };
 
   window.abrirModal = (dev, txt) => {
@@ -633,7 +820,7 @@ function getBubbleColor(x, y) {
   btnLimparFiltro.onclick = () => atualizarTodosOsModulos(null);
 
   async function carregar() {
-    await buscarDadosDoArquivo("dashboardHolistica.json")
+    await buscarDadosDoAPI();
     atualizarTodosOsModulos(null);
   }
   carregar();

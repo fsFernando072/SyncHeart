@@ -145,9 +145,32 @@ async function buscarTicketsPorDiaModelo(nomeClinica, idModelo, dataDoDia) {
     }
 }
 
+// Buscar todos os tickets de uma clínica para gerar histórico
+async function buscarHistoricoTickets(nomeClinica, dataInicio) {
+    try {
+        // JQL para buscar tickets criados a partir de dataInicio com label da clínica
+        const formattedDate = `${dataInicio.getFullYear()}-${String(dataInicio.getMonth() + 1).padStart(2, '0')}-${String(dataInicio.getDate()).padStart(2, '0')}`;
+        const jql = `project = "SYN" AND labels = "${nomeClinica}" AND created >= "${formattedDate}"`;
+        
+        const response = await modeloBuscar(jql);
+        if (response && response.data && response.data.issues) {
+            return response.data.issues.map(issue => ({
+                created: issue.fields.created,
+                summary: issue.fields.summary,
+                priority: issue.fields.priority
+            }));
+        }
+        return [];
+    } catch (error) {
+        console.error('Erro ao buscar histórico de tickets:', error);
+        return [];
+    }
+}
+
 module.exports = {
     buscarTicketsAtivos,
     buscarTicketsAtivosModelo,
     buscarTicketsUltimaSemanaModelo,
-    buscarTicketsPorDiaModelo
+    buscarTicketsPorDiaModelo,
+    buscarHistoricoTickets
 };

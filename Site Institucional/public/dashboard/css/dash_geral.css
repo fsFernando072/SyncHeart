@@ -85,12 +85,24 @@ body {
     transition: transform 0.2s, box-shadow 0.2s;
     display: flex;
     flex-direction: row;
-    justify-content: center;
+    justify-content: space-between;
+    align-items: center;
+    gap: 15px;
 }
 .kpi-text{
     display: flex;
     flex-direction: column;
-    
+    flex: 1;
+}
+
+/* Containers dos gráficos sparkline */
+#kpi-critico-graph,
+#kpi-atencao-graph,
+#kpi-offline-graph,
+#kpi-estavel-graph {
+    width: 120px;
+    height: 80px;
+    flex-shrink: 0;
 }
 
 .kpi-card:hover { transform: translateY(-3px); box-shadow: 0 6px 15px rgba(0,0,0,0.1); }
@@ -105,24 +117,72 @@ body {
 .kpi-gray {border-left-color:gray}
 
 /* --- 5. LAYOUT E MÓDULOS --- */
-.dashboard-grid { display: grid; grid-template-columns: 2fr 1fr; gap: 30px; margin-bottom: 10px; }
-.main-column, .side-column { display: flex; flex-direction: column; gap: 30px; }
+.dashboard-grid { 
+    display: grid; 
+    grid-template-columns: 2fr 1fr; 
+    gap: 30px; 
+    margin-bottom: 10px;
+}
+.main-column, .side-column { 
+    display: flex; 
+    flex-direction: column; 
+    gap: 30px;
+    min-width: 0;
+}
 
 .dashboard-module {
-    background: white; padding: 25px; border-radius: 12px;
+    background: white; 
+    padding: 25px; 
+    border-radius: 12px;
     box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+    overflow: hidden;
 }
 .dashboard-module h2 { font-size: 18px; color: #4A154B; margin-bottom: 10px; }
 .module-content { min-height: 250px; display: flex; align-items: center; justify-content: center; }
 
 /* --- 6. FILA DE TRIAGEM (ESTILO CAIXINHAS) --- */
+#module_fila_triagem {
+    display: flex;
+    flex-direction: column;
+    height: 400px;
+}
+
 #module_fila_triagem .module-content {
-    align-items: flex-start; justify-content: flex-start; width: 100%;
+    align-items: flex-start; 
+    justify-content: flex-start; 
+    width: 100%;
+    flex: 1;
+    overflow-y: auto;
+    overflow-x: hidden;
+    min-height: 0;
+    padding-right: 10px;
 }
 
 .lista-fila-triagem {
-    width: 100%; list-style: none;
-    display: flex; flex-direction: column; gap: 12px;
+    width: 100%; 
+    list-style: none;
+    display: flex; 
+    flex-direction: column; 
+    gap: 12px;
+}
+
+/* Custom scrollbar for fila */
+#module_fila_triagem .module-content::-webkit-scrollbar {
+    width: 8px;
+}
+
+#module_fila_triagem .module-content::-webkit-scrollbar-track {
+    background: #f1f1f1;
+    border-radius: 4px;
+}
+
+#module_fila_triagem .module-content::-webkit-scrollbar-thumb {
+    background: #888;
+    border-radius: 4px;
+}
+
+#module_fila_triagem .module-content::-webkit-scrollbar-thumb:hover {
+    background: #555;
 }
 
 .fila-item {
@@ -134,7 +194,12 @@ body {
     border-left: 4px solid transparent;
     cursor: pointer;
     transition: all 0.2s ease;
-    display: flex; flex-direction: column; gap: 6px;
+    display: flex; 
+    flex-direction: column; 
+    gap: 6px;
+    max-width: 100%;
+    box-sizing: border-box;
+    overflow: hidden;
 }
 
 .fila-item:hover {
@@ -291,6 +356,9 @@ body {
     cursor: pointer;
     transition: transform 0.2s, box-shadow 0.2s;
     font-family: 'Lexend', sans-serif;
+    max-width: 100%;
+    box-sizing: border-box;
+    position: relative;
 }
 
 .card-alerta:hover {
@@ -330,6 +398,9 @@ body {
     align-items: center;
     gap: 8px;
     font-size: 14px;
+    flex-wrap: wrap;
+    flex: 1;
+    min-width: 0;
 }
 
 .icone-alerta {
@@ -354,19 +425,24 @@ body {
 .alerta-body {
     display: flex;
     justify-content: space-between;
-    align-items: flex-end;
+    align-items: flex-start;
     font-size: 13px;
     color: #555;
+    gap: 8px;
+    flex-wrap: wrap;
 }
 
 .info-ids {
     font-size: 12px;
     color: #7f8c8d;
-    max-width: 60%;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
     text-align: right;
+    word-break: break-word;
+    flex-shrink: 0;
+}
+
+.info-metrica {
+    flex: 0 1 auto;
+    min-width: 0;
 }
 
 .ids-texto {

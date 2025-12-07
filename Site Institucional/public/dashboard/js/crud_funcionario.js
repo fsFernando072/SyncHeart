@@ -36,7 +36,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const CARGO_ADMIN_CLINICA = 2;
         
         if (!dadosUsuarioLogado || dadosUsuarioLogado.usuario.cargoId !== CARGO_ADMIN_CLINICA) {
-            document.body.innerHTML = `<div style="text-align: center; padding: 50px;"><h2>Acesso Negado</h2><p>Apenas um Administrador da Clínica pode gerenciar a equipe.</p><a href="dashboard.html">← Voltar</a></div>`;
+            document.body.innerHTML = `<div style="text-align: center; padding: 50px;"><h2>Acesso Negado</h2><p>Apenas um Administrador da Clínica pode gerenciar a equipe.</p><a href="dash_geral.html">← Voltar</a></div>`;
             return;
         }
         

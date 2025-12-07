@@ -10,7 +10,7 @@
   "author": "Feito pelos desenvolvedores @ São Paulo Tech School / Bandtec Digital School",
   "license": "MIT",
   "dependencies": {
-    "@aws-sdk/client-s3": "^3.946.0",
+    "@aws-sdk/client-s3": "^3.x.x",
     "aws-sdk": "^2.1692.0",
     "cors": "^2.8.5",
     "dotenv": "^16.4.5",
@@ -20,7 +20,6 @@
     "nodemon": "^2.0.7",
     "path": "^0.12.7",
     "uuid": "^13.0.0",
-    "@aws-sdk/client-s3": "^3.x.x",
     "ejs": "^3.1.10",
     "papaparse": "^5.4.1",
     "axios": "^1.13.2"
