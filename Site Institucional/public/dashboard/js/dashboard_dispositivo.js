@@ -21,51 +21,37 @@ const kpiDeltaConsumo = document.getElementById('kpi_delta_consumo');
 const kpiProximaRecarga = document.getElementById('kpi_proxima_recarga');
 
 document.addEventListener('DOMContentLoaded', async () => {
-  if (!token || !usuarioLogado) {
-    window.location.href = '../login.html';
-    return;
-  }
+    if (!token || !usuarioLogado) {
+        window.location.href = '../login.html';
+        return;
+    }
 
-  // Info do usuário logado
-  headerUserInfoEl.innerHTML = `
+    headerUserInfoEl.innerHTML = `
         <div class="user-info">
             <span class="user-name">${usuarioLogado.usuario.nome}</span>
             <span class="user-email">${usuarioLogado.usuario.email}</span>
         </div>`;
 
-  await carregarListaDispositivos();
+    await carregarListaDispositivos();
 });
 
-// Carrega lista de dispositivos 
 async function carregarListaDispositivos() {
     try {
-        // CORREÇÃO 1: pegue o ID correto do usuário logado
         const usuarioId = usuarioLogado?.usuario?.id;
-
         if (!usuarioId) {
-            console.error("ID do usuário não encontrado no token");
             alert("Erro de autenticação. Faça login novamente.");
-            
+            return;
         }
 
-        console.log("Buscando dispositivos do usuário:", usuarioId); // debug
-
         const res = await fetch(`/dashboard-dispositivos/${usuarioId}`, {
-            headers: { 
+            headers: {
                 'Authorization': `Bearer ${token}`,
                 'Content-Type': 'application/json'
             }
         });
 
-        if (!res.ok) {
-            const erro = await res.text();
-            console.error("Erro na resposta:", res.status, erro);
-            throw new Error(`HTTP ${res.status}`);
-        }
-
+        if (!res.ok) throw new Error(`HTTP ${res.status}`);
         const data = await res.json();
-
-        // CORREÇÃO 2: garante que é sempre um array
         const dispositivos = Array.isArray(data) ? data : data.dispositivos || [];
 
         if (dispositivos.length === 0) {
@@ -80,6 +66,7 @@ async function carregarListaDispositivos() {
             tr.dataset.device = dev.dispositivo_uuid;
 
             const pacienteCodigo = dev.id_paciente_na_clinica || dev.paciente_codigo || '—';
+            tr.dataset.pacienteCodigo = pacienteCodigo;
 
             tr.innerHTML = `
                 <td class="col-device">
@@ -94,7 +81,6 @@ async function carregarListaDispositivos() {
             listaBody.appendChild(tr);
         });
 
-        // Seleciona o primeiro automaticamente
         if (dispositivos.length > 0) {
             listaBody.querySelector('.device-row').click();
         }
@@ -105,23 +91,17 @@ async function carregarListaDispositivos() {
     }
 }
 
-// Quando clica em um dispositivo
 async function selecionarDispositivo(deviceId, elementoTR) {
-  document.querySelectorAll('.device-row').forEach(r => r.classList.remove('selected'));
-  elementoTR.classList.add('selected');
-  headerTitleEl.textContent = `Visão do paciente — ${pacienteCodigo}`;
-
-  await carregarDashboardBateria(deviceId);
+    document.querySelectorAll('.device-row').forEach(r => r.classList.remove('selected'));
+    elementoTR.classList.add('selected');
+    headerTitleEl.textContent = `Visão do paciente — ${elementoTR.dataset.pacienteCodigo}`;
+    await carregarDashboardBateria(deviceId);
 }
-
-const clinicaId = usuarioLogado?.clinica?.id;
 
 async function carregarDashboardBateria(deviceId) {
     try {
         const clinicaUrl = encodeURIComponent(nomeClinica);
-
         const resposta = await fetch(`/clinicas/${clinicaUrl}/dispositivos/${deviceId}/dashboard-bateria`, {
-            method: 'GET',
             headers: {
                 'Authorization': `Bearer ${token}`,
                 'Content-Type': 'application/json'
@@ -134,11 +114,37 @@ async function carregarDashboardBateria(deviceId) {
             return;
         }
 
-        if (!resposta.ok) {
-            throw new Error(`HTTP ${resposta.status}`);
-        }
+        if (!resposta.ok) throw new Error(`HTTP ${resposta.status}`);
 
         const data = await resposta.json();
+
+        
+        const valores = data.bateriaPorHora?.valores || [];
+        const ultimas24h = valores.slice(-24);
+        const consumos = [];
+        for (let i = 1; i < ultimas24h.length; i++) {
+            consumos.push(ultimas24h[i-1] - ultimas24h[i]);
+        }
+        const media = consumos.reduce((a, b) => a + b, 0) / consumos.length || 0.08;
+        const variancia = consumos.reduce((a, c) => a + Math.pow(c - media, 2), 0) / consumos.length;
+        const desvioPadrao = Math.sqrt(variancia) || 0.03;
+
+        const previsao = [];
+        let bateriaAtual = data.bateriaAtual;
+        for (let i = 1; i <= 24; i++) {
+            const variacao = Math.min(0, (Math.random() - 0.3) * 2 * desvioPadrao);
+            const consumo = media + variacao;
+            bateriaAtual = Math.max(0, bateriaAtual - Math.max(0, consumo));
+            previsao.push(bateriaAtual);
+        }
+
+        data.bateriaPorHora.previsao = previsao;
+        data.bateriaPorHora.labelsFuturos = Array.from({ length: 24 }, (_, i) => {
+            const futuro = new Date(Date.now() + (i + 1) * 60 * 60 * 1000);
+            return `${futuro.getHours().toString().padStart(2,'0')}:${futuro.getMinutes().toString().padStart(2,'0')}`;
+        });
+
+        data.proximaRecarga = `${previsao[0].toFixed(1)}% na próxima hora`;
 
         atualizarKPIs(data);
         atualizarGraficoBateriaPorHora(data.bateriaPorHora);
@@ -155,140 +161,171 @@ async function carregarDashboardBateria(deviceId) {
     }
 }
 
-
-
 function limparDashboard() {
-  kpiBateriaAtual.textContent = '--%';
-  kpiMediaConsumo.textContent = '--%/semana';
-  kpiDeltaConsumo.textContent = '--%';
-  kpiProximaRecarga.textContent = 'Indeterminado';
-
-  if (chartBateriaHora) chartBateriaHora.destroy();
-  if (chartConsumoSemanal) chartConsumoSemanal.destroy();
-
-  eventsBody.innerHTML = '<tr><td colspan="3">Nenhum dado disponível</td></tr>';
+    kpiBateriaAtual.textContent = '--%';
+    kpiMediaConsumo.textContent = '--%/semana';
+    kpiDeltaConsumo.textContent = '--%';
+    kpiProximaRecarga.textContent = 'Indeterminado';
+    if (chartBateriaHora) chartBateriaHora.destroy();
+    if (chartConsumoSemanal) chartConsumoSemanal.destroy();
+    eventsBody.innerHTML = '<tr><td colspan="3">Nenhum dado disponível</td></tr>';
 }
 
-
 function atualizarEventosRecentes(eventos) {
-  eventsBody.innerHTML = '';
-  if (!eventos || eventos.length === 0) {
-    eventsBody.innerHTML = '<tr><td colspan="3">Nenhum evento recente</td></tr>';
-    return;
-  }
-
-  eventos.slice(0, 10).forEach(e => {
-    const tr = document.createElement('tr');
-    tr.innerHTML = `
-      <td>${e.horario}</td>
-      <td><span style="color: ${e.severidade === 'critico' ? '#e74c3c' : e.severidade === 'atencao' ? '#f1c40f' : '#27ae60'}">${e.severidade.toUpperCase()}</span></td>
-      <td>${e.duracao}</td>
-    `;
-    eventsBody.appendChild(tr);
-  });
+    eventsBody.innerHTML = '';
+    if (!eventos || eventos.length === 0) {
+        eventsBody.innerHTML = '<tr><td colspan="3">Nenhum evento recente</td></tr>';
+        return;
+    }
+    eventos.slice(0, 10).forEach(e => {
+        const tr = document.createElement('tr');
+        tr.innerHTML = `
+            <td>${e.horario}</td>
+            <td><span style="color: ${e.severidade === 'critico' ? '#e74c3c' : e.severidade === 'atencao' ? '#f1c40f' : '#27ae60'}">${e.severidade.toUpperCase()}</span></td>
+            <td>${e.duracao}</td>
+        `;
+        eventsBody.appendChild(tr);
+    });
 }
 
 function atualizarKPIs(data) {
-    kpiBateriaAtual.textContent = `${data.bateriaAtual?.toFixed(2) || '--'}%`;
+    const valorAtual = data.bateriaAtual || 0;
+    const cardBateria = document.querySelector('.kpi-card.battery');
+    const textoBateria = document.getElementById('kpi_bateria_atual');
+    const deltaBateriaEl = document.getElementById('kpi_delta_bateria');
 
-    kpiMediaConsumo.textContent =
-        `${data.mediaConsumoSemanal?.toFixed(2) || '--'}%/semana`;
+    textoBateria.textContent = `${valorAtual.toFixed(1)}%`;
+    cardBateria.classList.remove('nivel-verde', 'nivel-laranja', 'nivel-vermelho');
+    textoBateria.style.color = '';
 
-    kpiDeltaConsumo.textContent =
-        `${data.deltaConsumo?.toFixed(2) || '--'}%`;
+    if (valorAtual > 50) {
+        cardBateria.classList.add('nivel-verde');
+        textoBateria.style.color = '#27ae60';
+    } else if (valorAtual <= 50) {
+        cardBateria.classList.add('nivel-laranja');
+        textoBateria.style.color = '#e67e22';
+    } else if (valorAtual <= 15) {
+        cardBateria.classList.add('nivel-vermelho');
+        textoBateria.style.color = '#e74c3c';
+    }
 
-    kpiProximaRecarga.textContent =
-        data.proximaRecarga || "Indeterminado";
+    const bateriaPorHora = data.bateriaPorHora?.valores || [];
+    const valorOntem = bateriaPorHora[bateriaPorHora.length - 48] || valorAtual;
+    const deltaBateria = valorAtual - valorOntem;
+
+    let textoDelta = '';
+    let corDelta = '#999';
+    if (deltaBateria > 0) {
+        textoDelta = `${deltaBateria.toFixed(1)}%`;
+        corDelta = '#27ae60';
+    } else if (deltaBateria < 0) {
+        textoDelta = `${deltaBateria.toFixed(1)}%`;
+        corDelta = '#e74c3c';
+    } else {
+        textoDelta = '0%';
+    }
+    deltaBateriaEl.textContent = textoDelta;
+    deltaBateriaEl.style.color = corDelta;
+    deltaBateriaEl.style.fontWeight = 'bold';
+
+    kpiMediaConsumo.textContent = `${data.mediaConsumoSemanal?.toFixed(2) || '--'}% na semana`;
+    kpiDeltaConsumo.textContent = `${data.deltaConsumo?.toFixed(2) || '--'}%`;
+    kpiProximaRecarga.textContent = data.proximaRecarga || "Indeterminado";
 }
 
-
-
 function atualizarGraficoConsumoSemanal(historico) {
-  const ctx = document.getElementById('graficoConsumoSemanal').getContext('2d');
-  if (chartConsumoSemanal) chartConsumoSemanal.destroy();
+    const ctx = document.getElementById('graficoConsumoSemanal').getContext('2d');
+    if (chartConsumoSemanal) chartConsumoSemanal.destroy();
 
-  chartConsumoSemanal = new Chart(ctx, {
-    type: 'bar',
-    data: {
-      labels: historico.labels || ["19/11 a 25/11" , "30/11 a 06/12"],  // ex: ["01/12 a 07/12", "08/12 a 14/12"]
-      datasets: [{
-        label: 'Consumo semanal (%)',
-        data: historico.valores || [1.2, 1.5],  // ex: [1.2, 1.5, 0.8]
-        backgroundColor: '#D6166F'
-      }]
-    },
-    options: {
-      responsive: true,
-      maintainAspectRatio: false,
-      scales: { y: { beginAtZero: true } }
-    }
-  });
+    chartConsumoSemanal = new Chart(ctx, {
+        type: 'bar',
+        data: {
+            labels: historico.labels || [],
+            datasets: [{
+                label: 'Consumo semanal (%)',
+                data: historico.valores || [],
+                backgroundColor: '#D6166F'
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            scales: { y: { beginAtZero: true } }
+        }
+    });
 }
 
 function atualizarGraficoBateriaPorHora(bateriaPorHora) {
     const ctx = document.getElementById('graficoBateriaHora').getContext('2d');
+    if (chartBateriaHora) chartBateriaHora.destroy();
 
-    if (chartBateriaHora) {
-        chartBateriaHora.destroy();
-    }
+    const labels = [...bateriaPorHora.labels, ...bateriaPorHora.labelsFuturos];
+    const dadosReais = [...bateriaPorHora.valores, ...Array(24).fill(null)];
+    const dadosPrevisao = [...Array(bateriaPorHora.valores.length).fill(null), ...bateriaPorHora.previsao];
 
     chartBateriaHora = new Chart(ctx, {
         type: 'line',
         data: {
-            labels: bateriaPorHora?.labels || [],
+            labels: labels,
             datasets: [
                 {
-                    label: "Bateria (%)",
-                    data: bateriaPorHora?.valores || [],
-                    borderColor: "#D6166F",
-                    borderWidth: 2,
-                    fill: false,
-                    tension: 0.2
+                    label: 'Bateria (%)',
+                    data: dadosReais,
+                    borderColor: '#D6166F',
+                    backgroundColor: 'rgba(214, 22, 111, 0.1)',
+                    borderWidth: 3,
+                    pointRadius: 4,
+                    pointHoverRadius: 7,
+                    tension: 0.3,
+                    fill: false
+                },
+                {
+                    label: 'Previsão',
+                    data: dadosPrevisao,
+                    borderColor: '#043192ff',
+                    backgroundColor: 'rgba(52, 152, 219, 0.05)',
+                    borderDash: [8, 6],
+                    borderWidth: 2.5,
+                    pointRadius: 3,
+                    pointHoverRadius: 6,
+                    tension: 0.3,
+                    fill: false
                 }
             ]
         },
         options: {
             responsive: true,
             maintainAspectRatio: false,
-            scales: {
-                y: {
-                    beginAtZero: false,
-                    suggestedMin: 0,
-                    suggestedMax: 100
+            plugins: {
+                legend: { position: 'top' },
+                annotation: {
+                    annotations: [
+                        { type: 'line', yMin: 50, yMax: 50, borderColor: '#e67e22', borderWidth: 2.5, borderDash: [8, 6],
+                          label: { content: 'Alerta (50%)', enabled: true, position: 'end', backgroundColor: 'rgba(230,126,34,0.9)', color: 'white', font: { size: 11, weight: 'bold' } } },
+                        { type: 'line', yMin: 15, yMax: 15, borderColor: '#e74c3c', borderWidth: 2.5, borderDash: [8, 6],
+                          label: { content: 'Crítico (15%)', enabled: true, position: 'end', backgroundColor: '#e74c3c', color: 'white', font: { size: 11, weight: 'bold' } } }
+                    ]
                 }
-            }
+            },
+            scales: { y: { min: 0, max: 100, ticks: { stepSize: 10 } } }
         }
     });
 }
 
 function atualizarListaBateria(deviceId, bateriaAtual) {
-    // procura a linha da tabela correspondente ao dispositivo
     const linha = document.querySelector(`tr[data-device="${deviceId}"]`);
+    if (!linha) return;
 
-    if (!linha) {
-        console.warn(`Linha do dispositivo ${deviceId} não encontrada para atualizar bateria.`);
-        return;
-    }
-
-    // acha o elemento que mostra a bateria (%)
     const celulaBateria = linha.querySelector(".device-batt");
+    if (!celulaBateria) return;
 
-    if (!celulaBateria) {
-        console.warn(`Célula de bateria não encontrada na linha do dispositivo ${deviceId}.`);
-        return;
-    }
-
-    // atualiza o texto
     celulaBateria.textContent = `${bateriaAtual.toFixed(1)}%`;
 
-    // MUDA A COR baseado no nível
-    const valor = bateriaAtual;
-
-    if (valor >= 70) {
-        celulaBateria.style.color = "green";
-    } else if (valor >= 50) {
-        celulaBateria.style.color = "#e6a800"; // amarelo
-    } else {
-        celulaBateria.style.color = "red";
+    if (bateriaAtual > 50) {
+        celulaBateria.style.color = '#27ae60';
+    } else if (bateriaAtual <= 50) {
+        celulaBateria.style.color = '#e67e22';
+    } else if (bateriaAtual <= 15) {
+        celulaBateria.style.color = '#e74c3c';
     }
 }
