@@ -74,7 +74,7 @@ async function buscarTicketsAtivos(nomeClinica) {
 async function buscarTicketsAtivosModelo(nomeClinica, idModelo) {
     try {
         const jql =
-            `project = "SYN" AND status = "Open" AND labels = "${nomeClinica}" AND description ~ "Modelo_ID: ${idModelo} " ORDER BY created DESC`;
+            `project = "SYN" AND status = "Open" AND labels = "${nomeClinica}" AND description ~ "\\\"Modelo_ID: ${idModelo}\\\"" ORDER BY created DESC`;
 
         const response = await modeloBuscar(jql);
         const tickets = []
@@ -97,7 +97,7 @@ async function buscarTicketsUltimaSemanaModelo(nomeClinica, idModelo) {
         const jql =
             `project = "SYN" 
             AND labels = "${nomeClinica}" 
-            AND description ~ "Modelo_ID: ${idModelo} "
+            AND description ~ "\\\"Modelo_ID: ${idModelo}\\\""
             AND status WAS ("Open") BY endOfWeek(-1w) BEFORE startOfWeek()
             ORDER BY created DESC`;
 
@@ -125,7 +125,7 @@ async function buscarTicketsPorDiaModelo(nomeClinica, idModelo, dataDoDia) {
         const jql =
             `project = "SYN" 
             AND labels = "${nomeClinica}" 
-            AND description ~ "Modelo_ID: ${idModelo} "
+            AND description ~ "\\\"Modelo_ID: ${idModelo}\\\""
             AND status WAS ("Open") 
             AFTER "${inicioDoDia}" BEFORE "${fimDoDia}"
             ORDER BY created DESC`;

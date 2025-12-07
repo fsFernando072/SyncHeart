@@ -59,10 +59,10 @@ document.addEventListener('DOMContentLoaded', () => {
 
         await carregarModelo();
         let alertas = await buscarTicketsPorModelo(nomeClinica, idModelo, token);
-        
+
         let alertasUltSemana = await buscarTicketsPorModeloUltimaSemana(nomeClinica, idModelo, token);
-        alertaData = alertas;
-        await carregarAlertasAtivos(alertas);
+        alertaData = alertas.slice();
+        await carregarAlertasAtivos(alertaData);
         await carregarParametros();
         await carregarDispositivos(dispositivoData, alertas);
         carregarKPIs(alertasUltSemana);
@@ -350,21 +350,22 @@ document.addEventListener('DOMContentLoaded', () => {
                 tbodyFinal += "<tr>";
             }
 
-            if (data[i].tipo_alerta == "CPU") {
+            if (data[i].tipo_alerta.toUpperCase() == "CPU") {
                 dadosTiposAlertas.valores[0] += 1;
-            } else if (data[i].tipo_alerta == "BATERIA") {
+            } else if (data[i].tipo_alerta.toUpperCase() == "BATERIA") {
                 dadosTiposAlertas.valores[1] += 1;
-            } else if (data[i].tipo_alerta == "RAM") {
+            } else if (data[i].tipo_alerta.toUpperCase() == "RAM") {
                 dadosTiposAlertas.valores[2] += 1;
-            } else if (data[i].tipo_alerta == "DISCO") {
+            } else if (data[i].tipo_alerta.toUpperCase() == "DISCO") {
                 dadosTiposAlertas.valores[3] += 1;
             } else {
                 dadosTiposAlertas.valores[4] += 1;
             }
-
+            
+            tbodyFinal += `<td>${data[i].dispositivo_uuid}</td>`;
             tbodyFinal += `<td>${data[i].tipo_alerta}</td>`;
             tbodyFinal += `<td>${data[i].severidade}</td>`;
-            tbodyFinal += `<td class="acoes"><button class="btn-acao btn-editar">Ver Situação</button></td>`;
+            tbodyFinal += `<td class="acoes"><button class="btn-acao btn-editar" data-id="${data[i].dispositivo_id}">Ver Situação</button></td>`;
             tbodyFinal += "</tr>";
         }
 
@@ -537,6 +538,16 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function configurarEventListeners() {
+        listaAlertasContainer.addEventListener('click', (event) => {
+            if (event.target.classList.contains('btn-editar')) {
+                const idDispositivo = event.target.dataset.id;
+
+                sessionStorage.setItem("idDispositivo", idDispositivo);
+
+                window.location = "dashboard_dispositivo_eng.html";
+            }
+        });
+
         listaDispositivosContainer.addEventListener('click', (event) => {
             if (event.target.classList.contains('btn-editar')) {
                 const idDispositivo = event.target.dataset.id;
@@ -783,7 +794,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
             if (!resposta.ok) throw new Error('Falha ao carregar tickets.');
 
-            let tickets = await resposta.json();            
+            let tickets = await resposta.json();
 
             let alertas = [];
 
@@ -793,10 +804,11 @@ document.addEventListener('DOMContentLoaded', () => {
                 severidade = severidade == "High" ? "CRÍTICO" : "ATENÇÃO";
                 let dispositivo_uuid = description[0].split(":")[1].trim();
                 let tipo_alerta = description[2].split(":")[1].trim();
-                dispositivo_uuid = dispositivo_uuid.substring(0, 15)
+                let dispositivo_id = description[5].split(":")[1].trim();
 
                 let alerta = {
                     "dispositivo_uuid": dispositivo_uuid.substring(0, 15),
+                    "dispositivo_id": dispositivo_id,
                     "tipo_alerta": tipo_alerta,
                     "severidade": severidade
                 }
