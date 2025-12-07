@@ -11,8 +11,9 @@ function listar(modeloId) {
 function listarAtual(dispositivoid) {
     var instrucaoSql = `
         SELECT 
-            dispositivo_id, 
-            SUBSTRING(dispositivo_uuid, 1, 15) as dispositivo_uuid,
+            dispositivo_id,
+            dispositivo_uuid, 
+            SUBSTRING(dispositivo_uuid, 1, 15) as dispositivo_uuid_reduzido,
             id_paciente_na_clinica idp 
         FROM Dispositivos d
         JOIN Pacientes p ON d.paciente_id = p.paciente_id

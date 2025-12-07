@@ -8,11 +8,8 @@ const s3Client = new S3Client({
 
 async function lerArquivo(req, res) {
     try {
-        const fileKey = req.params.arquivo;
+        const fileKey = decodeURIComponent(req.params.arquivo);
 
-        if (!/^[\w.\-]+$/.test(fileKey)) {
-            return res.status(400).send('❌ Nome de arquivo inválido.');
-        }
 
         const params = {
             Bucket: process.env.S3_BUCKET,

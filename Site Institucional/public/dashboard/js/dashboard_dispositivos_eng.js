@@ -9,12 +9,27 @@ document.addEventListener('DOMContentLoaded', () => {
     const cardContainer = document.getElementById('card_container');
     const listaAlertasContainer = document.getElementById('lista_alertas_container');
 
+    const dadosTiposAlertas = { labels: ['CPU', 'Bateria', 'RAM', 'Disco', 'Offline'], valores: [0, 0, 0, 0, 0] };
+
     async function iniciarDashboard() {
         const dadosUsuarioLogado = JSON.parse(sessionStorage.getItem("USUARIO_LOGADO"));
         if (!dadosUsuarioLogado) {
             window.location.href = "../login.html";
             return;
         }
+
+        const respostaDispositivo = await fetch(`/dispositivosEng/${idDispositivo}`, { headers: { 'Authorization': `Bearer ${token}` }});
+        if (!respostaDispositivo.ok) throw new Error('Falha ao carregar dispositivo.');
+        let infoDispositivo = await respostaDispositivo.json();
+
+        const respostaModelo = await fetch(`/modelos/${idModelo}`, { headers: { 'Authorization': `Bearer ${token}`}});
+        let infoModelo = await respostaModelo.json();
+
+        const key = encodeURIComponent(`${nomeClinica}/${infoModelo.nome_modelo}/${infoDispositivo[0].dispositivo_uuid}/arquivo-modelo.json`);
+
+        const resposta = await fetch(`/s3Route/dados/${key}`, { headers: { 'Authorization': `Bearer ${token}` }});
+        if (!resposta.ok) throw new Error('Falha ao carregar dispositivo.');
+        let infoArquivo = await resposta.json();
 
         const nomeUsuario = dadosUsuarioLogado.usuario.nome;
         const emailUsuario = dadosUsuarioLogado.usuario.email;
@@ -23,44 +38,130 @@ document.addEventListener('DOMContentLoaded', () => {
 
         await carregarDispositivo();
         let alertas = await buscarTicketsPorModelo(nomeClinica, idModelo, token);
-        await carregarAlertasAtivos(alertas);
+        await carregarAlertasAtivos(alertas, infoDispositivo);
         await carregarDispositivos(dispositivoData, alertas);
-        carregarGraficos();
+        await carregarKpis(infoArquivo);
+        await carregarGraficos(infoArquivo);
+        
         configurarEventListeners();
     }
 
-    async function carregarGraficos() {
-          const ctx = document.getElementById('myChart');
-          const ctx2 = document.getElementById('myChart2');
-          const ctx3 = document.getElementById('myChart3');
-          const ctx4 = document.getElementById('myChart4');
+    async function carregarKpis(infoArquivo) {
+        const percentualBateria = document.getElementById('dado_bateria_atual');
+        percentualBateria.innerHTML = `${infoArquivo.kpiEng.valorBateria}%`;
 
-        const respostaModelo = await fetch(`/modelos/${idModelo}`, { headers: { 'Authorization': `Bearer ${token}`}});
-        let infoModelo = await respostaModelo.json();
+        const barraBateria = document.getElementById('barra_bateria');
 
-        const respostaDispositivo = await fetch(`/dispositivosEng/${idDispositivo}`, { headers: { 'Authorization': `Bearer ${token}` }});
-        if (!respostaDispositivo.ok) throw new Error('Falha ao carregar dispositivo.');
-        let infoDispositivo = await respostaDispositivo.json();
-        
+        if(infoArquivo.kpiEng.valorBateria > 70) {
+            percentualBateria.style.color = "rgb(16, 152, 43)";
+            barraBateria.style.backgroundColor = "rgb(16, 152, 43)"  ;
 
-        const resposta = await fetch(`/s3Route/dados/${infoModelo.nome_modelo}/5a83fe84-3d16-44ed-9dd0-9c21b35a2271/atividade-lambda5.json`, { headers: { 'Authorization': `Bearer ${token}` }});
-        if (!resposta.ok) throw new Error('Falha ao carregar dispositivo.');
-        let infoArquivo = await resposta.json();
+        } else if (infoArquivo.kpiEng.valorBateria > 30) {
+            percentualBateria.style.color = "#f1c40f";
+            barraBateria.style.backgroundColor = "#f1c40f";
+
+        } else if (infoArquivo.kpiEng.valorBateria > 15) {
+            percentualBateria.style.color = "#f1750fff";
+            barraBateria.style.backgroundColor = "#f1750fff";
+
+        } else {
+            percentualBateria.style.color = "#e74c3c";
+            barraBateria.style.backgroundColor = "#e74c3c";
+        }
+
+        barraBateria.style.width = infoArquivo.kpiEng.valorBateria + "%";
+
+        const percentualCpu = document.getElementById('dado_cpu_atual');
+        percentualCpu.innerHTML = `${infoArquivo.kpiEng.valorCpu}%`;
+
+        const barraCpu = document.getElementById('barra_cpu');
+
+        if(infoArquivo.kpiEng.valorCpu < 30) {
+            percentualCpu.style.color = "rgb(16, 152, 43)";
+            barraCpu.style.backgroundColor = "rgb(16, 152, 43)";
+            
+        } else if (infoArquivo.kpiEng.valorCpu < 50) {
+            percentualCpu.style.color = "#f1c40f";
+            barraCpu.style.backgroundColor = "#f1c40f";
+
+        } else if (infoArquivo.kpiEng.valorCpu < 80) {
+            percentualCpu.style.color = "#f1750fff";
+            barraCpu.style.backgroundColor = "#f1750fff";
+
+        } else {
+            percentualCpu.style.color = "#e74c3c";
+            barraCpu.style.backgroundColor = "#e74c3c";
+        }
+
+        barraCpu.style.width = infoArquivo.kpiEng.valorCpu + "%"
+
+        const percentualRam = document.getElementById('dado_ram_atual');
+        percentualRam.innerHTML = `${infoArquivo.kpiEng.valorRam}%`;
+
+        const barraRam = document.getElementById('barra_ram');   
+
+        if(infoArquivo.kpiEng.valorRam < 30) {
+            percentualRam.style.color = "rgb(16, 152, 43)";
+            barraRam.style.backgroundColor = "rgb(16, 152, 43)";
+
+        } else if (infoArquivo.kpiEng.valorRam < 50) {
+            percentualRam.style.color = "#f1c40f";
+            barraRam.style.backgroundColor = "#f1c40f";
+
+        } else if (infoArquivo.kpiEng.valorRam < 80) {
+            percentualRam.style.color = "#f1750fff";
+            barraRam.style.backgroundColor = "#f1750fff";
+
+        } else {
+            percentualRam.style.color = "#e74c3c";
+            barraRam.style.backgroundColor = "#e74c3c";
+        }
+
+        barraRam.style.width = infoArquivo.kpiEng.valorRam + "%";
+
+        const percentualDisco = document.getElementById('dado_disco_atual');
+        percentualDisco.innerHTML = `${infoArquivo.kpiEng.valorDisco}%`;
+
+        const barraDisco = document.getElementById('barra_disco');
+
+        if(infoArquivo.kpiEng.valorDisco < 30) {
+            percentualDisco.style.color = "rgb(16, 152, 43)";
+            barraDisco.style.backgroundColor = "rgb(16, 152, 43)";
+
+        } else if (infoArquivo.kpiEng.valorDisco < 60) {
+            percentualDisco.style.color = "#f1c40f";
+            barraDisco.style.backgroundColor = "#f1c40f";
+
+        } else if (infoArquivo.kpiEng.valorDisco < 80) {
+            percentualDisco.style.color = "#f1750fff";
+            barraDisco.style.backgroundColor = "#f1750fff";
+
+        } else {
+            percentualDisco.style.color = "#e74c3c";
+            barraDisco.style.backgroundColor = "#e74c3c";
+        }
+
+        barraDisco.style.width = infoArquivo.kpiEng.valorDisco + "%";
+    }
+
+    async function carregarGraficos(infoArquivo) {
+        const dash_bateria = document.getElementById('dash_bateria');
+        const dash_cpu_ram = document.getElementById('dash_cpu_ram');
+        const dash_disco = document.getElementById('dash_disco');
+        const dash_alertas = document.getElementById('dash_alertas');
 
         console.log(infoArquivo);
+        console.log(infoArquivo.kpiEng.valorBateria);
+        
         
 
-        console.log(infoArquivo);
-        
-
-
-            new Chart(ctx, {
+            new Chart(dash_bateria, {
                 type: 'line',
                 data: {
-                labels: ['14:00', '14:10', '14:20', '14:30', '14:40', '14:50'],
+                labels: infoArquivo.dashBateria.labels,
                 datasets: [{
                     label: 'Bateria (%)',
-                    data: [100, 100, 100, 99, 99, 98],
+                    data: infoArquivo.dashBateria.valores,
                     borderWidth: 2,
                     pointBackgroundColor: 'rgba(17, 196, 121, 1)',
                     borderColor: 'rgba(17, 196, 121, 1)',
@@ -69,7 +170,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 },
                 {
                     label: 'Previsão',
-                    data: [99, 99, 99, 98, 98, 97],
+                    data: infoArquivo.dashBateria.projecao,
                     borderWidth: 2,
                     pointBackgroundColor: 'rgba(111, 8, 245, 1)',
                     borderColor: 'rgba(111, 8, 245, 1)',
@@ -125,13 +226,13 @@ document.addEventListener('DOMContentLoaded', () => {
                 }
             });
 
-            new Chart(ctx2, {
+            new Chart(dash_cpu_ram, {
                 type: 'line',
                 data: {
-                labels: ['14:00', '14:10', '14:20', '14:30', '14:40', '14:50'],
+                labels: infoArquivo.dashCpuRam.labels,
                 datasets: [{
                     label: 'CPU (%)',
-                    data: [30, 33, 38, 44, 36, 30],
+                    data: infoArquivo.dashCpuRam.cpu,
                     borderWidth: 2,
                     pointBackgroundColor: 'rgba(2, 133, 255, 1)',
                     borderColor: 'rgba(2, 133, 255, 1)',
@@ -140,7 +241,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 },
                 {
                    label: 'RAM (%)',
-                    data: [40, 39, 36, 40, 49, 42],
+                    data: infoArquivo.dashCpuRam.ram,
                     borderWidth: 2,
                     pointBackgroundColor: 'rgba(255, 2, 213, 1)',
                     borderColor: 'rgba(255, 2, 213, 1)',
@@ -196,13 +297,13 @@ document.addEventListener('DOMContentLoaded', () => {
                 }
             });
 
-                new Chart(ctx3, {
+                new Chart(dash_disco, {
                 type: 'line',
                 data: {
-                labels: ['14:00', '14:10', '14:20', '14:30', '14:40', '14:50'],
+                labels: infoArquivo.dashDisco.labels,
                 datasets: [{
                     label: 'Disco (%)',
-                    data: [30, 30, 31, 31, 32, 29],
+                    data: infoArquivo.dashDisco.disco,
                     borderWidth: 2,
                     fill: 'origin',
                     pointBackgroundColor: 'rgba(2, 255, 242, 0.84)',
@@ -260,7 +361,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 }
             });
 
-                new Chart(ctx4, {
+                new Chart(dash_alertas, {
                 type: 'bar',
                 data: {
                 labels: ['Crítico', 'Atenção'],
@@ -308,12 +409,12 @@ document.addEventListener('DOMContentLoaded', () => {
         
 
         document.querySelector("#id_dispositivo").innerHTML += `${infoDispositivo[0].dispositivo_id}`;
-        document.querySelector("#uuid_dispositivo").innerHTML += `${infoDispositivo[0].dispositivo_uuid}`;
+        document.querySelector("#uuid_dispositivo").innerHTML += `${infoDispositivo[0].dispositivo_uuid_reduzido}`;
         document.querySelector("#id_paciente").innerHTML += `${infoDispositivo[0].idp}`
         let primeiroCaminho = document.querySelector("#breadcrumb_path").querySelectorAll("a")[1];
         let segundoCaminho = document.querySelector("#breadcrumb_path").querySelectorAll("a")[2];
         primeiroCaminho.innerHTML += `${infoModelo.nome_fabricante} ${infoModelo.nome_modelo}`;
-        segundoCaminho.innerHTML += `${infoDispositivo[0].dispositivo_uuid}`;
+        segundoCaminho.innerHTML += `${infoDispositivo[0].dispositivo_uuid_reduzido}`;
 
     }
 
@@ -331,6 +432,9 @@ document.addEventListener('DOMContentLoaded', () => {
                 if (!resposta.ok) throw new Error('Falha ao carregar dispositivos do modelo.');
                 dispositivoData = await resposta.json();
 
+
+                console.log(dispositivoData);
+                
                 if (dispositivoData.length === 0) {
                     cardContainer.innerHTML = '<p>Nenhum dispositivo encontrado.</p>';
                     return;
@@ -347,8 +451,13 @@ document.addEventListener('DOMContentLoaded', () => {
                         if (ticket.dispositivo_uuid == dispositivoData[i].dispositivo_uuid) {
                             dispositivoData[i].alertas_ativos += 1;
 
+                            if (ticket.severidade == "CRÍTICO") {
+                                dispositivoData[i].alertas_criticos += 1;
+                            }
+
                             if (ticket.tipo_alerta == "Offline") {
                                 dispositivoData[i].status = "Offline";
+                                alertaKpi.dispositivos_offline += 1;
                             }
 
                             tickets.splice(j, 1);
@@ -358,9 +467,20 @@ document.addEventListener('DOMContentLoaded', () => {
                     if (dispositivoData[i].dispositivo_id == idDispositivo) {
                         const dataAtualizacao = new Date(dispositivoData[i].ultima_atualizacao);
                         const dataFormatada = dataAtualizacao.toLocaleString().replace(",", " ");
+
+                        console.log(dispositivoData[i].alertas_ativos);
+                        
                         
 
-                        kpiAlertas.innerHTML += `<span class="valor-info alertas-ativos">${dispositivoData[i].alertas_ativos}</span>`;
+                        if (dispositivoData[i].alertas_ativos < 1) {
+                            kpiAlertas.innerHTML += `<span class="valor-info alertas-ativos-baixo">${dispositivoData[i].alertas_ativos}</span>`;
+                        } else if (dispositivoData[i].alertas_ativos < 3) {
+                            kpiAlertas.innerHTML += `<span class="valor-info alertas-ativos-medio">${dispositivoData[i].alertas_ativos}</span>`;
+                        } else {
+                            kpiAlertas.innerHTML += `<span class="valor-info alertas-ativos-alto">${dispositivoData[i].alertas_ativos}</span>`;
+                        }
+                        
+
                         kpiUltimaAtt.innerHTML += `<span class="valor-info" id="ultima_atualizacao_dispositivo">${dataFormatada}</span`;
 
                         if (dispositivoData[i].status == "Offline") {
@@ -391,7 +511,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
             const dataFormatada = new Date(data[i].ultima_atualizacao);
 
-            card += `<div class="dispositivo-card" id="dispositivo_card_${data[i].dispositivo_id}">`;
+            card += `<div class="dispositivo-card" id="dispositivo_card_${data[i].dispositivo_id}" data-alertas="${data[i].alertas_ativos}" data-att="${dataFormatada.toISOString()}">`;
             card += `<div class="card-container" id="card_container">`;
             card += `<div class="card-cima">`;
             card += `<div class="titulo-card">`;
@@ -408,7 +528,14 @@ document.addEventListener('DOMContentLoaded', () => {
             card += `<h4 id="dispositivo_card_uuid">${data[i].dispositivo_uuid}</h4>`;
             card += `</div>`;
             card += `<div class="card-baixo">`;
-            card += `<h4>Alertas ativos: <span id="dispositivo_card_alertas_ativos">${data[i].alertas_ativos}</span></h4>`;
+            if (data[i].alertas_ativos < 1) {
+                card += `<h4>Alertas ativos: <span class="alertas-ativos-baixo" id="dispositivo_card_alertas_ativos">${data[i].alertas_ativos}</span></h4>`;
+            } else if (data[i].alertas_ativos < 3) {
+                card += `<h4>Alertas ativos: <span class="alertas-ativos-medio" id="dispositivo_card_alertas_ativos">${data[i].alertas_ativos}</span></h4>`;
+            } else {
+                card += `<h4>Alertas ativos: <span class="alertas-ativos-alto" id="dispositivo_card_alertas_ativos">${data[i].alertas_ativos}</span></h4>`;
+            }
+            
             card += `<h5 id="dispositivo_card_ultima_att">${dataFormatada.toLocaleString().replace(",", " ")}</h5>`;
             card += `</div>`;
             card += `</div>`;
@@ -446,7 +573,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
                 let alerta = {
                     "dispositivo_uuid": dispositivo_uuid.substring(0, 15),
-                    "tipo_alerta": tipo_alerta
+                    "tipo_alerta": tipo_alerta,
+                    "severidade": severidade
                 }
 
                 alertas.push(alerta);
@@ -461,7 +589,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
-    async function carregarAlertasAtivos(data) {
+    async function carregarAlertasAtivos(data, info) {
 
         const tbodyTabelaAlertas = listaAlertasContainer.querySelector("tbody");
 
@@ -472,31 +600,33 @@ document.addEventListener('DOMContentLoaded', () => {
         }
 
         for (let i = 0; i < data.length; i++) {
-            if (data[i].dispositivo_id = idDispositivo) {
-                            if (data[i].severidade == "CRÍTICO") {
-                tbodyFinal += '<tr class="critico">';
+        
+            if (data[i].dispositivo_uuid == info[0].dispositivo_uuid_reduzido) {
+                if (data[i].severidade == "CRÍTICO") {
+                    tbodyFinal += '<tr class="critico">';
             } else {
-                tbodyFinal += "<tr>";
+                    tbodyFinal += "<tr>";
             }
 
             if (data[i].tipo_alerta == "CPU") {
-                dadosTiposAlertas.valores[0] += 1;
+                    dadosTiposAlertas.valores[0] += 1;
             } else if (data[i].tipo_alerta == "BATERIA") {
-                dadosTiposAlertas.valores[1] += 1;
+                    dadosTiposAlertas.valores[1] += 1;
             } else if (data[i].tipo_alerta == "RAM") {
-                dadosTiposAlertas.valores[2] += 1;
+                    dadosTiposAlertas.valores[2] += 1;
             } else if (data[i].tipo_alerta == "DISCO") {
-                dadosTiposAlertas.valores[3] += 1;
+                    dadosTiposAlertas.valores[3] += 1;
             } else {
-                dadosTiposAlertas.valores[4] += 1;
+                    dadosTiposAlertas.valores[4] += 1;
             }
 
-            tbodyFinal += `<td>${data[i].dispositivo_uuid}</td>`;
             tbodyFinal += `<td>${data[i].tipo_alerta}</td>`;
             tbodyFinal += `<td>${data[i].severidade}</td>`;
             tbodyFinal += `<td class="acoes"><button class="btn-acao btn-editar">Ver Situação</button></td>`;
             tbodyFinal += "</tr>";
-            }
+
+            }       
+            
         }
 
         tbodyTabelaAlertas.innerHTML = tbodyFinal;

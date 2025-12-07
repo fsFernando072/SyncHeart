@@ -82,11 +82,11 @@
               <div class="lista-dispositivos">
                 <div class="lista-cima">
                     <h3>Dispositivos</h3>
-                    <select name="" id="" class="filtro-dispositivos">
+                    <!-- <select name="" id="filtro" class="filtro-dispositivos">
                       <option value="#">Filtrar</option>
                       <option value="1">Quantidade de alertas</option>
                       <option value="2">Alertas mais recentes</option>
-                    </select>
+                    </select> -->
                 </div>
 
                 <div class="lista-baixo" id="lista_dispositivos">
@@ -184,9 +184,9 @@
                             <h3>Bateria</h3>
                         </div>
                         <div class="dado-baixo">
-                            <h4>Nível de bateria atual:</h4>
+                            <h4>Nível de bateria atual: <span id="dado_bateria_atual" class="dado-atual"></span></h4>
                             <div class="barra-container">
-                                <div class="barra-progresso valor-bateria"></div>
+                                <div class="barra-progresso valor-bateria" id="barra_bateria"></div>
                             </div>
                         </div>
                     </div>
@@ -197,9 +197,9 @@
                             <h3>CPU</h3>
                         </div>
                         <div class="dado-baixo">
-                            <h4>Portentagem de CPU:</h4>
+                            <h4>Porcentagem de CPU: <span id="dado_cpu_atual" class="dado-atual"></span></h4>
                             <div class="barra-container">
-                                <div class="barra-progresso valor-cpu"></div>
+                                <div class="barra-progresso valor-cpu" id="barra_cpu"></div>
                             </div>
                         </div>
                     </div>
@@ -210,9 +210,9 @@
                             <h3>Memória RAM</h3>
                         </div>
                         <div class="dado-baixo">
-                            <h4>Porcentagem de RAM:</h4>
+                            <h4>Porcentagem de RAM: <span id="dado_ram_atual" class="dado-atual"></span></h4>
                             <div class="barra-container">
-                                <div class="barra-progresso valor-ram"></div>
+                                <div class="barra-progresso valor-ram" id="barra_ram"></div>
                             </div>
                         </div>
                     </div>
@@ -223,9 +223,9 @@
                             <h3>Armazenamento</h3>
                         </div>
                         <div class="dado-baixo">
-                            <h4>Espaço ocupado:</h4>
+                            <h4>Espaço ocupado: <span id="dado_disco_atual" class="dado-atual"></span></h4>
                             <div class="barra-container">
-                                <div class="barra-progresso valor-flash"></div>
+                                <div class="barra-progresso valor-flash" id="barra_disco"></div>
                             </div>
                         </div>
                     </div>
@@ -234,16 +234,16 @@
 
                 <div class="graficos">
                   <section class="graficos-principais">
-                        <canvas id="myChart" class="teste"></canvas>
+                        <canvas id="dash_bateria" class="dash"></canvas>
                   </section>
                   <section class="graficos-principais">
-                        <canvas id="myChart2" class="teste"></canvas>
+                        <canvas id="dash_cpu_ram" class="dash"></canvas>
                   </section>
                   <section class="graficos-principais">
-                        <canvas id="myChart3" class="teste"></canvas>
+                        <canvas id="dash_disco" class="dash"></canvas>
                   </section>
                   <section class="graficos-principais">
-                    <canvas id="myChart4" class="teste"></canvas>
+                    <canvas id="dash_alertas" class="dash"></canvas>
                   </section>
                 </div>
 
