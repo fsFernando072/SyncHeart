@@ -10,6 +10,8 @@
   <link rel="stylesheet" href="./css/dashboard_dispositivo.css">
   <link href="https://fonts.googleapis.com/css2?family=Lexend:wght@100..900&display=swap" rel="stylesheet">
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script
+    src="https://cdn.jsdelivr.net/npm/chartjs-plugin-annotation@3.0.1/dist/chartjs-plugin-annotation.min.js"></script>
 </head>
 
 <body>
@@ -115,9 +117,12 @@
           <!-- KPIs -->
           <h2>Resumo atual</h2>
           <section class="kpi-line" id="kpi_container">
-            <div class="kpi-card devices">
+            <div class="kpi-card battery">
               <h2>Bateria atual</h2>
               <span class="kpi-value" id="kpi_bateria_atual" style="color: green;">87%</span>
+              <span class="kpi-description">
+                <span id="kpi_delta_bateria">0%</span> vs. ontem
+              </span>
             </div>
 
             <div class="kpi-card alert">
@@ -129,7 +134,7 @@
             </div>
 
             <div class="kpi-card battery">
-              <h2>Previsão de recarga</h2>
+              <h2>Previsão de bateria</h2>
               <span class="kpi-value" id="kpi_proxima_recarga">inderteminado</span>
             </div>
           </section>
