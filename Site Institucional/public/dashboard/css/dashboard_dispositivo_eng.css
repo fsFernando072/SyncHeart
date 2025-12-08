@@ -408,6 +408,10 @@ body {
     justify-content: space-around;
 }
 
+.borda {
+    border-left: 5px solid;
+}
+
 .imagem {
     height: 80%;
     width: 18%;
