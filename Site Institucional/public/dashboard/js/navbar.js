@@ -108,7 +108,7 @@ function configurarBotaoCadastro(cargoId) {
             // Administrador da Clínica -> crud_funcionario.html
             botaoCadastro.href = 'crud_funcionario.html';
             botaoCadastro.title = 'Gerenciar Funcionários';
-            if (labelCadastro) labelCadastro.textContent = 'Funcionários';
+            if (labelCadastro) labelCadastro.textContent = 'Gerenciar Funcionários';
             botaoCadastro.style.display = 'flex';
             break;
             
@@ -116,7 +116,7 @@ function configurarBotaoCadastro(cargoId) {
             // Engenheiro Clínico -> lista_modelos.html
             botaoCadastro.href = 'crud_modelo.html';
             botaoCadastro.title = 'Gerenciar Modelos';
-            if (labelCadastro) labelCadastro.textContent = 'Modelos';
+            if (labelCadastro) labelCadastro.textContent = 'Gerenciar Modelos';
             botaoCadastro.style.display = 'flex';
             
             // Substitui o ícone por um ícone de modelos
@@ -132,7 +132,7 @@ function configurarBotaoCadastro(cargoId) {
             // Eletrofisiologista -> provisionar_dispositivo.html
             botaoCadastro.href = 'provisionar_dispositivo.html';
             botaoCadastro.title = 'Provisionar Marcapasso';
-            if (labelCadastro) labelCadastro.textContent = 'Provisionar';
+            if (labelCadastro) labelCadastro.textContent = 'Provisionar Marcapassos';
             botaoCadastro.style.display = 'flex';
             break;
             

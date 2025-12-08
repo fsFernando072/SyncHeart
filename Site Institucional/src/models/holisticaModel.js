@@ -8,6 +8,51 @@ var s3Controller = require("../controllers/s3Controller");
  */
 
 // ============================================
+// Funções Auxiliares
+// ============================================
+
+/**
+ * Extrai UUID do dispositivo da descrição do ticket Jira
+ */
+function extrairDispositivoUuid(descricao) {
+    if (!descricao) return null;
+    
+    // Converter para string se for objeto
+    let descricaoTexto = descricao;
+    if (typeof descricao === 'object') {
+        descricaoTexto = JSON.stringify(descricao);
+    }
+    
+    // Tentar extrair do campo 'content' se existir (formato ADF do Jira)
+    if (typeof descricao === 'object' && descricao.content) {
+        descricaoTexto = extrairTextoDeADF(descricao);
+    }
+    
+    const match = String(descricaoTexto).match(/Dispositivo_UUID:\s*([a-zA-Z0-9-]+)/);
+    return match ? match[1] : null;
+}
+
+/**
+ * Extrai texto do formato ADF (Atlassian Document Format) do Jira
+ */
+function extrairTextoDeADF(adf) {
+    if (!adf || !adf.content) return '';
+    
+    let texto = '';
+    function extrair(node) {
+        if (node.type === 'text' && node.text) {
+            texto += node.text + ' ';
+        }
+        if (node.content && Array.isArray(node.content)) {
+            node.content.forEach(extrair);
+        }
+    }
+    
+    extrair(adf);
+    return texto;
+}
+
+// ============================================
 // KPIs - Indicadores Principais
 // ============================================
 
@@ -50,16 +95,30 @@ async function obterKPIs(clinicaId, nomeClinica) {
                 const nomeClinicaNormalizado = nomeClinica.replaceAll(" ", "_");
                 const tickets = await jiraModel.buscarTicketsAtivos(nomeClinicaNormalizado) || [];
                 
+                // Agrupar dispositivos únicos por severidade
+                const dispositivosCriticos = new Set();
+                const dispositivosAtencao = new Set();
+                
                 tickets.forEach(t => {
                     const prioridade = (t.priority && (t.priority.name || t.priority)) || '';
                     const prioridadeLower = String(prioridade).toLowerCase();
                     
-                    if (prioridadeLower.includes('highest') || prioridadeLower.includes('critical')) {
-                        critico++;
-                    } else if (prioridadeLower.includes('high')) {
-                        atencao++;
+                    // Extrair UUID do dispositivo da descrição
+                    const dispositivoUuid = extrairDispositivoUuid(t.description);
+                    
+                    if (dispositivoUuid) {
+                        if (prioridadeLower.includes('highest') || prioridadeLower.includes('critical')) {
+                            dispositivosCriticos.add(dispositivoUuid);
+                        } else if (prioridadeLower.includes('high')) {
+                            dispositivosAtencao.add(dispositivoUuid);
+                        }
                     }
                 });
+                
+                // Contar dispositivos únicos
+                critico = dispositivosCriticos.size;
+                atencao = dispositivosAtencao.size;
+                
             } catch (err) {
                 console.warn('Erro ao buscar tickets do Jira para KPIs:', err.message || err);
             }
@@ -165,13 +224,15 @@ async function obterFilaTriagemJira(nomeClinica) {
 async function obterHotspots(clinicaId, nomeClinica) {
     try {
         // Query corrigida: removido dispositivo_uuid do SELECT para evitar erro de GROUP BY
+        // Incluindo dispositivos Pendentes e Ativo/Monitorando
         const sql = `
             SELECT 
                 m.modelo_id,
                 m.nome_modelo as model,
                 COUNT(DISTINCT d.dispositivo_id) as devices
             FROM Modelos m
-            LEFT JOIN Dispositivos d ON m.modelo_id = d.modelo_id AND d.status = 'Ativo/Monitorando'
+            LEFT JOIN Dispositivos d ON m.modelo_id = d.modelo_id 
+                AND d.status IN ('Ativo/Monitorando', 'Pendente', 'Registrado - Aguardando Dados')
             WHERE m.clinica_id = ?
             GROUP BY m.modelo_id, m.nome_modelo
             LIMIT 10
@@ -206,7 +267,8 @@ async function obterHotspots(clinicaId, nomeClinica) {
                 d.dispositivo_uuid
             FROM Modelos m
             JOIN Dispositivos d ON m.modelo_id = d.modelo_id
-            WHERE m.clinica_id = ? AND d.status = 'Ativo/Monitorando'
+            WHERE m.clinica_id = ? 
+                AND d.status IN ('Ativo/Monitorando', 'Pendente', 'Registrado - Aguardando Dados')
         `;
         const dispositivos = await database.executar(sqlDispositivos, [clinicaId]);
 
@@ -322,13 +384,14 @@ async function obterHistoricoAlertas(clinicaId, dias = 7, nomeClinica) {
 
 async function obterSaudeBateria(clinicaId, nomeClinica) {
     try {
-        // Buscar dispositivos ativos com seus UUIDs
+        // Buscar dispositivos ativos com seus UUIDs (incluindo Pendentes)
         const sql = `
             SELECT 
                 d.dispositivo_uuid
             FROM Dispositivos d
             JOIN Modelos m ON d.modelo_id = m.modelo_id
-            WHERE m.clinica_id = ? AND d.status = 'Ativo/Monitorando'
+            WHERE m.clinica_id = ? 
+                AND d.status IN ('Ativo/Monitorando', 'Pendente', 'Registrado - Aguardando Dados')
         `;
 
         const dispositivos = await database.executar(sql, [clinicaId]);

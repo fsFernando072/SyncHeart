@@ -45,14 +45,23 @@ async function lerArquivo(req, res) {
 async function buscarDadosBateria(nomeClinica) {
     try {
         // Normaliza o nome da clínica para o formato do arquivo
-        const nomeArquivo = `${nomeClinica.toLowerCase().replace(/\s+/g, '-').replace(/ú/g, 'u')}-battery-data.json`;
+        // Remove acentos e converte para minúsculo, substituindo espaços por hífens
+        const nomeArquivo = nomeClinica
+            .normalize('NFD')
+            .replace(/[\u0300-\u036f]/g, '') // Remove acentos
+            .toLowerCase()
+            .replace(/\s+/g, '-')
+            + '-battery-data.json';
         
         const params = {
             Bucket: process.env.S3_BUCKET,
             Key: `clinicas/${nomeArquivo}`
         };
 
-        console.log(`🔋 Buscando dados de bateria no S3: ${params.Bucket}/${params.Key}`);
+        console.log(`🔋 Buscando dados de bateria no S3:`);
+        console.log(`   Nome Clínica Original: "${nomeClinica}"`);
+        console.log(`   Nome Arquivo: "${nomeArquivo}"`);
+        console.log(`   Path Completo: ${params.Bucket}/${params.Key}`);
 
         const command = new GetObjectCommand(params);
         const data = await s3Client.send(command);
@@ -74,13 +83,16 @@ async function buscarDadosBateria(nomeClinica) {
 
         // Normalizar formato: Array de {device_id, battery_level}
         if (Array.isArray(content)) {
-            return content.map(item => ({
+            const resultado = content.map(item => ({
                 device_id: item.device_id || item.dispositivo_uuid || item.uuid,
                 battery_level: parseFloat(item.battery_level || item.nivel_bateria || item.bateria || 50)
             }));
+            console.log(`✅ Dados de bateria carregados: ${resultado.length} dispositivos`);
+            return resultado;
         }
 
         console.warn('⚠️ Formato de dados de bateria inesperado, retornando array vazio');
+        console.warn('   Tipo de content:', typeof content);
         return [];
 
     } catch (err) {
