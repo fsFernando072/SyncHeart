@@ -458,3 +458,69 @@ body {
     border: 1px dashed #ccc;
     border-radius: 8px;
 }
+
+
+
+/* --- 2. BARRA LATERAL (SIDEBAR) --- */
+.sidebar {
+    width: 90px;
+    background: linear-gradient(180deg, #412051 0%, #9b4b7e 100%);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-between;
+    padding: 20px 0;
+    transition: width 0.3s;
+}
+
+.sidebar-top,
+.sidebar-bottom {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 15px;
+}
+
+.nav-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 75px;
+    height: 65px;
+    border-radius: 12px;
+    cursor: pointer;
+    color: white;
+    text-decoration: none;
+    transition: background-color 0.2s;
+}
+
+.nav-item:hover {
+    background-color: rgba(255, 255, 255, 0.1);
+}
+
+.nav-item.active {
+    background-color: #D6166F;
+}
+
+.logo-item {
+    margin-bottom: 10px;
+}
+
+.nav-icon {
+    width: 30px;
+    height: 30px;
+    margin-bottom: 5px;
+}
+
+.nav-icon svg {
+    width: 100%;
+    height: 100%;
+}
+
+.nav-label {
+    font-size: 11px;
+    font-weight: 500;
+    line-height: 1.2;
+    text-align: center;
+}
