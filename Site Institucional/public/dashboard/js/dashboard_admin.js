@@ -56,7 +56,7 @@ async function iniciarDashboardAdmin() {
   const nomeClinica = JSON.parse(sessionStorage.getItem("USUARIO_LOGADO")).clinica.nome;
   await Promise.all([ // Promise.all([...]) é um método que recebe um array de Promises (tarefas assíncronas).
     carregarModelos(token),
-    carregarEquipes(dadosUsuarioLogado.usuario.clinicaId, token),
+    carregarEquipes(dadosUsuarioLogado.clinica.id, token),
     carregarTicketsClinica(nomeClinica, token)
   ]);
 
