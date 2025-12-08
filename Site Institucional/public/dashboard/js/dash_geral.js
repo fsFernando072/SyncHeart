@@ -824,5 +824,14 @@ function getBubbleColor(x, y) {
     atualizarTodosOsModulos(null);
   }
   carregar();
+  const agora = new Date();
 
+// Opções para garantir HH:MM e fuso horário local
+const options = {
+    hour: '2-digit',
+    minute: '2-digit',
+    hour12: false // Define para 24 horas (ex: 14:30)
+};
+
+document.getElementById("horario") = agora.toLocaleTimeString('pt-BR', options);
 });
