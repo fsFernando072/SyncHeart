@@ -10,6 +10,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const listaAlertasContainer = document.getElementById('lista_alertas_container');
 
     const dadosTiposAlertas = { labels: ['CPU', 'Bateria', 'RAM', 'Disco', 'Offline'], valores: [0, 0, 0, 0, 0] };
+    const dadosGraficoAlertas = { labels: ['Crítico', 'Atenção'], valores: [0, 0]};
 
     async function iniciarDashboard() {
         const dadosUsuarioLogado = JSON.parse(sessionStorage.getItem("USUARIO_LOGADO"));
@@ -25,7 +26,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const respostaModelo = await fetch(`/modelos/${idModelo}`, { headers: { 'Authorization': `Bearer ${token}`}});
         let infoModelo = await respostaModelo.json();
 
-        const key = encodeURIComponent(`${nomeClinica}/${infoModelo.nome_modelo}/${infoDispositivo[0].dispositivo_uuid}/arquivo-modelo.json`);
+        const key = encodeURIComponent(`${nomeClinica}/${infoModelo.nome_modelo}/${infoDispositivo[0].dispositivo_uuid}/dashboard.json`);
 
         const resposta = await fetch(`/s3Route/dados/${key}`, { headers: { 'Authorization': `Bearer ${token}` }});
         if (!resposta.ok) throw new Error('Falha ao carregar dispositivo.');
@@ -47,98 +48,122 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     async function carregarKpis(infoArquivo) {
+        const cardBateria = document.getElementById('dado_bateria');
+        
         const percentualBateria = document.getElementById('dado_bateria_atual');
-        percentualBateria.innerHTML = `${infoArquivo.kpiEng.valorBateria}%`;
+        percentualBateria.innerHTML = `${infoArquivo.kpiEng.valorBateria.toFixed()}%`;
 
         const barraBateria = document.getElementById('barra_bateria');
 
         if(infoArquivo.kpiEng.valorBateria > 70) {
             percentualBateria.style.color = "rgb(16, 152, 43)";
-            barraBateria.style.backgroundColor = "rgb(16, 152, 43)"  ;
+            barraBateria.style.backgroundColor = "rgb(16, 152, 43)";
+            cardBateria.style.borderLeft = "5px solid rgb(16, 152, 43)";
 
         } else if (infoArquivo.kpiEng.valorBateria > 30) {
             percentualBateria.style.color = "#f1c40f";
             barraBateria.style.backgroundColor = "#f1c40f";
+            cardBateria.style.borderLeft = "5px solid #f1c40f";
 
         } else if (infoArquivo.kpiEng.valorBateria > 15) {
             percentualBateria.style.color = "#f1750fff";
             barraBateria.style.backgroundColor = "#f1750fff";
+            cardBateria.style.borderLeft = "5px solid #f1750fff";
 
         } else {
             percentualBateria.style.color = "#e74c3c";
             barraBateria.style.backgroundColor = "#e74c3c";
+            cardBateria.style.borderLeft = "5px solid #e74c3c";
         }
 
         barraBateria.style.width = infoArquivo.kpiEng.valorBateria + "%";
 
+        const cardCpu = document.getElementById('dado_cpu')
+
         const percentualCpu = document.getElementById('dado_cpu_atual');
-        percentualCpu.innerHTML = `${infoArquivo.kpiEng.valorCpu}%`;
+        percentualCpu.innerHTML = `${infoArquivo.kpiEng.valorCpu.toFixed()}%`;
 
         const barraCpu = document.getElementById('barra_cpu');
 
         if(infoArquivo.kpiEng.valorCpu < 30) {
             percentualCpu.style.color = "rgb(16, 152, 43)";
             barraCpu.style.backgroundColor = "rgb(16, 152, 43)";
+            cardCpu.style.borderLeft = "5px solid rgb(16, 152, 43)";
             
         } else if (infoArquivo.kpiEng.valorCpu < 50) {
             percentualCpu.style.color = "#f1c40f";
             barraCpu.style.backgroundColor = "#f1c40f";
+            cardCpu.style.borderLeft = "5px solid #f1c40f";
 
         } else if (infoArquivo.kpiEng.valorCpu < 80) {
             percentualCpu.style.color = "#f1750fff";
             barraCpu.style.backgroundColor = "#f1750fff";
+            cardCpu.style.borderLeft = "5px solid #f1750fff";
 
         } else {
             percentualCpu.style.color = "#e74c3c";
             barraCpu.style.backgroundColor = "#e74c3c";
+            cardCpu.style.borderLeft = "5px solid #e74c3c";
         }
 
         barraCpu.style.width = infoArquivo.kpiEng.valorCpu + "%"
 
+        const cardRam = document.getElementById('dado_ram');
+
         const percentualRam = document.getElementById('dado_ram_atual');
-        percentualRam.innerHTML = `${infoArquivo.kpiEng.valorRam}%`;
+        percentualRam.innerHTML = `${infoArquivo.kpiEng.valorRam.toFixed()}%`;
 
         const barraRam = document.getElementById('barra_ram');   
 
         if(infoArquivo.kpiEng.valorRam < 30) {
             percentualRam.style.color = "rgb(16, 152, 43)";
             barraRam.style.backgroundColor = "rgb(16, 152, 43)";
+            cardRam.style.borderLeft = "5px solid rgb(16, 152, 43)";
 
         } else if (infoArquivo.kpiEng.valorRam < 50) {
             percentualRam.style.color = "#f1c40f";
             barraRam.style.backgroundColor = "#f1c40f";
+            cardRam.style.borderLeft = "5px solid #f1c40f";
 
         } else if (infoArquivo.kpiEng.valorRam < 80) {
             percentualRam.style.color = "#f1750fff";
             barraRam.style.backgroundColor = "#f1750fff";
+            cardRam.style.borderLeft = "5px solid #f1750fff";
 
         } else {
             percentualRam.style.color = "#e74c3c";
             barraRam.style.backgroundColor = "#e74c3c";
+            cardRam.style.borderLeft = "5px solid #e74c3c";
         }
 
         barraRam.style.width = infoArquivo.kpiEng.valorRam + "%";
 
+        const cardDisco = document.getElementById('dado_disco');
+
         const percentualDisco = document.getElementById('dado_disco_atual');
-        percentualDisco.innerHTML = `${infoArquivo.kpiEng.valorDisco}%`;
+        percentualDisco.innerHTML = `${infoArquivo.kpiEng.valorDisco.toFixed()}%`;
 
         const barraDisco = document.getElementById('barra_disco');
 
         if(infoArquivo.kpiEng.valorDisco < 30) {
             percentualDisco.style.color = "rgb(16, 152, 43)";
             barraDisco.style.backgroundColor = "rgb(16, 152, 43)";
+            cardDisco.style.borderLeft = "5px solid rgb(16, 152, 43)";
 
         } else if (infoArquivo.kpiEng.valorDisco < 60) {
             percentualDisco.style.color = "#f1c40f";
             barraDisco.style.backgroundColor = "#f1c40f";
+            cardDisco.style.borderLeft = "5px solid #f1c40f";
 
         } else if (infoArquivo.kpiEng.valorDisco < 80) {
             percentualDisco.style.color = "#f1750fff";
             barraDisco.style.backgroundColor = "#f1750fff";
+            cardDisco.style.borderLeft = "5px solid #f1750fff";
 
         } else {
             percentualDisco.style.color = "#e74c3c";
             barraDisco.style.backgroundColor = "#e74c3c";
+            cardDisco.style.borderLeft = "5px solid #e74c3c";
         }
 
         barraDisco.style.width = infoArquivo.kpiEng.valorDisco + "%";
@@ -150,8 +175,6 @@ document.addEventListener('DOMContentLoaded', () => {
         const dash_disco = document.getElementById('dash_disco');
         const dash_alertas = document.getElementById('dash_alertas');
 
-        console.log(infoArquivo);
-        console.log(infoArquivo.kpiEng.valorBateria);
         
         
 
@@ -364,13 +387,15 @@ document.addEventListener('DOMContentLoaded', () => {
                 new Chart(dash_alertas, {
                 type: 'bar',
                 data: {
-                labels: ['Crítico', 'Atenção'],
+                labels: dadosGraficoAlertas.labels,
                 datasets: [{
-                    label: 'Frequência',
-                    data: [3, 7],
+                    label: 'Quantidade',
+                    data: dadosGraficoAlertas.valores,
                     borderRadius: 5,
                     borderSkipped: false,
-                    borderWidth: 3
+                    borderWidth: 3,
+                    backgroundColor: 'rgba(181, 117, 255, 1)',
+                    borderColor: 'rgba(181, 117, 255, 0.39)'
                 }]
                 },
                 options: {
@@ -379,7 +404,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 plugins: {
                     title: {
                         display: true,
-                        text: 'Frequência de Alertas',
+                        text: 'Severidade de Alertas Ativos',
                         font: {
                             size: 20
                         }
@@ -428,12 +453,10 @@ document.addEventListener('DOMContentLoaded', () => {
         card = "";
         if (data == null) {
             try {
-                const resposta = await fetch(`/modelos/listar/${idModelo}/dispositivos`, { headers: { 'Authorization': `Bearer ${token}` } });
-                if (!resposta.ok) throw new Error('Falha ao carregar dispositivos do modelo.');
-                dispositivoData = await resposta.json();
+                const respostaData = await fetch(`/modelos/listar/${idModelo}/dispositivos`, { headers: { 'Authorization': `Bearer ${token}` } });
+                if (!respostaData.ok) throw new Error('Falha ao carregar dispositivos do modelo.');
+                dispositivoData = await respostaData.json();
 
-
-                console.log(dispositivoData);
                 
                 if (dispositivoData.length === 0) {
                     cardContainer.innerHTML = '<p>Nenhum dispositivo encontrado.</p>';
@@ -460,6 +483,15 @@ document.addEventListener('DOMContentLoaded', () => {
                                 alertaKpi.dispositivos_offline += 1;
                             }
 
+                            dadosGraficoAlertas.valores[0] = dispositivoData[i].alertas_criticos;
+
+                             if (dispositivoData[i].alertas_ativos > dispositivoData[i].alertas_criticos) {
+                                dadosGraficoAlertas.valores[1] = dispositivoData[i].alertas_ativos - dispositivoData[i].alertas_criticos;
+                            } else {
+                                dadosGraficoAlertas.valores[1] = 0; 
+                            }
+
+
                             tickets.splice(j, 1);
                         }
                     };
@@ -468,7 +500,6 @@ document.addEventListener('DOMContentLoaded', () => {
                         const dataAtualizacao = new Date(dispositivoData[i].ultima_atualizacao);
                         const dataFormatada = dataAtualizacao.toLocaleString().replace(",", " ");
 
-                        console.log(dispositivoData[i].alertas_ativos);
                         
                         
 
