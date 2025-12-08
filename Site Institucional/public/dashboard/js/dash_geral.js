@@ -62,7 +62,7 @@ document.addEventListener('DOMContentLoaded', () => {
     try {
       console.log('🔄 Atualizando todos os módulos...', filtroModeloId ? `Filtro: ${filtroModeloId}` : 'Sem filtro');
       mostrarFeedback('Sincronizando...', 'loading');
-      await new Promise((r) => setTimeout(r, 500));
+      await new Promise((r) => setTimeout(r, 0));
 
       const dados = filtrarDados(filtroModeloId);
       console.log('📦 Dados filtrados:', dados);
