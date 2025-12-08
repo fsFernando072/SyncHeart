@@ -1,6 +1,5 @@
 // public/dashboard/js/dashboard_admin.js
 // Dashboard Admin - SyncHeart
-// Versão corrigida: extração de Componente + Valor detectado, equipes artificiais, código simplificado e comentado.
 
 document.addEventListener('DOMContentLoaded', () => {
   iniciarDashboardAdmin();
@@ -53,9 +52,9 @@ async function iniciarDashboardAdmin() {
   // mostra usuário no cabeçalho
   headerUserInfoEl.innerHTML = `<div class="user-info"><span class="user-name">${dadosUsuarioLogado.usuario.nome}</span><span class="user-email">${dadosUsuarioLogado.usuario.email}</span></div>`;
 
-  // carrega dados essenciais (mantendo as funções que você já tem e disse para não mexer)
+  // carrega dados essenciais
   const nomeClinica = JSON.parse(sessionStorage.getItem("USUARIO_LOGADO")).clinica.nome;
-  await Promise.all([
+  await Promise.all([ // Promise.all([...]) é um método que recebe um array de Promises (tarefas assíncronas).
     carregarModelos(token),
     carregarEquipes(dadosUsuarioLogado.usuario.clinicaId, token),
     carregarTicketsClinica(nomeClinica, token)
@@ -72,11 +71,13 @@ async function iniciarDashboardAdmin() {
 
 // ---------- Fetchers / backend calls (mantidos) ----------
 
-// FUNÇÃO FUNCIONANDO BEM !!! (mantida)
+// FUNÇÃO FUNCIONANDO BEM !!!
 async function carregarModelos(token) {
   try {
     const res = await fetch('/modelos/listar', { headers: { 'Authorization': `Bearer ${token}` } });
     if (!res.ok) throw new Error('Falha ao carregar modelos');
+      // Verifica se a resposta foi bem‑sucedida (res.ok é true para status 200–299).
+      // Se não, lança um erro que será tratado no catch.
     modelos = await res.json();
     if (kpiQtdModelsEl) kpiQtdModelsEl.innerText = modelos.length; // Aqui faz exibir a KPI no html.
   } catch (err) {
@@ -85,7 +86,7 @@ async function carregarModelos(token) {
   }
 }
 
-// FUNÇÃO FUNCIONANDO BEM !!! (mantida)
+// FUNÇÃO FUNCIONANDO BEM !!!
 async function carregarEquipes(idClinica, token) {
   try {
     const res = await fetch(`/equipes/por-clinica/${idClinica}`, { headers: { 'Authorization': `Bearer ${token}` } });
@@ -98,7 +99,7 @@ async function carregarEquipes(idClinica, token) {
   }
 }
 
-// FUNÇÃO FUNCIONANDO BEM !!! (mantida)
+// FUNÇÃO FUNCIONANDO BEM !!!
 async function carregarDispositivosDeModelos(token) {
   // criação de array com os modelos e seus dispositivos repectivos, útil para exibir total de modelos posteriormente
   dispositivosPorModelo = {};
@@ -115,19 +116,22 @@ async function carregarDispositivosDeModelos(token) {
       }
     }
     const totalDevices = Object.values(dispositivosPorModelo).reduce((acc, arr) => acc + arr.length, 0);
+       // Object.values(...) retorna apenas os arrays
+          // reduce percorre cada array e acumula um resultado.
+          // acc é o acumulador (começa em 0).
     if (kpiQtdDevicesEl) kpiQtdDevicesEl.innerText = totalDevices; // exibir a KPI
   } catch (err) {
     console.error('carregarDispositivosDeModelos', err);
   }
 }
 
-// ---------- PARTE 2: carregarTicketsClinica + parser leve ----------
+// ---------- carregarTicketsClinica + parser leve ----------
 
 // Helper: extrai texto plano da description do Jira (rich-text) com fallback
 function extrairDescriptionTexto(descriptionField) {
   try {
     if (!descriptionField) return '';
-    if (typeof descriptionField === 'string') return descriptionField.trim();
+    if (typeof descriptionField === 'string') return descriptionField.trim(); // o operador typeof retorna o tipo da variável.
 
     const parts = [];
     function walk(node) {
@@ -150,6 +154,10 @@ function extrairDescriptionTexto(descriptionField) {
     }
     walk(descriptionField);
     return parts.join('\n').replace(/\n{2,}/g, '\n').trim();
+    // parts.join('\n')
+      // Junta todos os pedaços de texto encontrados em parts, separados por quebras de linha.
+    // .replace(/\n{2,}/g, '\n')
+      // Remove quebras de linha duplicadas (se houver duas ou mais seguidas, vira apenas uma).
   } catch (e) {
     return '';
   }
@@ -174,6 +182,7 @@ function parseDescriptionFields(descText) {
   for (let i = 0; i < Math.min(6, lines.length); i++) {
     const l = lines[i];
     if (/uuid\s*[:\-]/i.test(l) || /device\s*[:\-]/i.test(l)) {
+    // Usa regex para verificar se a linha contém uuid: ou device: (case-insensitive).
       const maybe = l.split(':').slice(1).join(':').trim() || l;
       result.uuid = maybe.substring(0, 36);
       break;
@@ -437,7 +446,7 @@ function montarSegmento2() {
   });
 }
 
-// ---------- PARTE 4: Segmento 3, listas, utilitários finais ----------
+// ---------- Segmento 3, listas, utilitários finais ----------
 function popularSelectModelos() {
   if (!selectFilterModel) return;
   selectFilterModel.innerHTML = '';
