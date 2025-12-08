@@ -483,13 +483,6 @@ document.addEventListener('DOMContentLoaded', () => {
                                 alertaKpi.dispositivos_offline += 1;
                             }
 
-                            dadosGraficoAlertas.valores[0] = dispositivoData[i].alertas_criticos;
-
-                             if (dispositivoData[i].alertas_ativos > dispositivoData[i].alertas_criticos) {
-                                dadosGraficoAlertas.valores[1] = dispositivoData[i].alertas_ativos - dispositivoData[i].alertas_criticos;
-                            } else {
-                                dadosGraficoAlertas.valores[1] = 0; 
-                            }
 
 
                             tickets.splice(j, 1);
@@ -523,6 +516,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
                         
                     }
+                    
                 }
 
                 data = dispositivoData;
@@ -537,6 +531,14 @@ document.addEventListener('DOMContentLoaded', () => {
         for (let i = 0; i < data.length; i++) {
 
             if (data[i].dispositivo_id == idDispositivo) {
+                dadosGraficoAlertas.valores[0] = data[i].alertas_criticos;
+
+                if (data[i].alertas_ativos >= data[i].alertas_criticos) {
+                    dadosGraficoAlertas.valores[1] = data[i].alertas_ativos - data[i].alertas_criticos;
+                    } else {
+                        dadosGraficoAlertas.valores[1] = 0; 
+                    }
+
                 continue;
             }
 
@@ -570,8 +572,10 @@ document.addEventListener('DOMContentLoaded', () => {
             card += `<h5 id="dispositivo_card_ultima_att">${dataFormatada.toLocaleString().replace(",", " ")}</h5>`;
             card += `</div>`;
             card += `</div>`;
-            card += `</div>`;     
+            card += `</div>`;
+            
         }
+        
 
         listaDispositivos.innerHTML = card;
 
