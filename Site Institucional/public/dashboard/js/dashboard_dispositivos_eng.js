@@ -43,6 +43,7 @@ document.addEventListener('DOMContentLoaded', () => {
         await carregarDispositivos(dispositivoData, alertas);
         await carregarKpis(infoArquivo);
         await carregarGraficos(infoArquivo);
+        await redirecionamentoJira();
         
         configurarEventListeners();
     }
@@ -186,18 +187,8 @@ document.addEventListener('DOMContentLoaded', () => {
                     label: 'Bateria (%)',
                     data: infoArquivo.dashBateria.valores,
                     borderWidth: 2,
-                    pointBackgroundColor: 'rgba(17, 196, 121, 1)',
-                    borderColor: 'rgba(17, 196, 121, 1)',
-                    tension: 0.4,
-                    pointRadius: 4
-                },
-                {
-                    label: 'Previsão',
-                    data: infoArquivo.dashBateria.projecao,
-                    borderWidth: 2,
                     pointBackgroundColor: 'rgba(111, 8, 245, 1)',
                     borderColor: 'rgba(111, 8, 245, 1)',
-                    borderDash: [5, 5],
                     tension: 0.4,
                     pointRadius: 4
                 }]
@@ -208,7 +199,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 plugins: {
                     title: {
                         display: true,
-                        text: 'Consumo e Previsão de Bateria',
+                        text: 'Consumo de Bateria',
                         font: {
                             size: 20
                         }
@@ -657,7 +648,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
             tbodyFinal += `<td>${data[i].tipo_alerta}</td>`;
             tbodyFinal += `<td>${data[i].severidade}</td>`;
-            tbodyFinal += `<td class="acoes"><button class="btn-acao btn-editar">Ver Situação</button></td>`;
+            tbodyFinal += `<td class="acoes"><button class="btn-acao btn-editar" id="redirecionamento">Ver Situação</button></td>`;
             tbodyFinal += "</tr>";
 
             }       
@@ -704,7 +695,14 @@ document.addEventListener('DOMContentLoaded', () => {
                 window.location = "dashboard_dispositivo_eng.html";
             });
         }
+    }
 
+    async function redirecionamentoJira() {
+        const link = document.getElementById('redirecionamento');
+        
+        link.addEventListener('click', () => {
+            window.location.href = "https://sptech-team-hh4zjlyd.atlassian.net/jira/servicedesk/projects/SYN/list?jql=project%20%3D%20SYN%20ORDER%20BY%20created%20DESC";
+        });
     }
 
 
