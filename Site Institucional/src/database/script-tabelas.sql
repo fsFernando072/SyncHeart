@@ -158,7 +158,9 @@ INSERT INTO Usuarios VALUES
 (3, 1, 'beatriz@gmail.com', '123456', 'Beatriz', 4, 1,NULL, '2025-11-18 17:04:02'),
 (4, 1, 'andre@gmail.com', '123456', 'André', 3, 1,NULL, '2025-11-18 17:04:23');
 
-INSERT INTO EquipesCuidado VALUES (1, 'Ômega', 1);
+INSERT INTO EquipesCuidado VALUES (1, 'Alpha', 1);
+INSERT INTO EquipesCuidado VALUES (2, 'Beta', 1);
+INSERT INTO EquipesCuidado VALUES (3, 'Gamma', 1);
 
 INSERT INTO UsuarioEquipe VALUES (3, 1), (4, 1);
 
