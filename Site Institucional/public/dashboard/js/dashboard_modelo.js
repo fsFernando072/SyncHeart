@@ -89,19 +89,19 @@ document.addEventListener('DOMContentLoaded', () => {
         if (alertasUltSemana.alertas_ativos == 0) {
             ativosPercent = alertaKpi.alertas_ativos * 100;
         } else {
-            ativosPercent = (1 - alertaKpi.alertas_ativos / alertasUltSemana.alertas_ativos) * 100;
+            ativosPercent = (alertaKpi.alertas_ativos / alertasUltSemana.alertas_ativos - 1) * 100;
         }
 
         if (alertasUltSemana.dispositivos_offline == 0) {
             offlinePercent = alertaKpi.dispositivos_offline * 100;
         } else {
-            offlinePercent = (1 - alertaKpi.dispositivos_offline / alertasUltSemana.dispositivos_offline) * 100;
+            offlinePercent = (alertaKpi.dispositivos_offline / alertasUltSemana.dispositivos_offline - 1) * 100;
         }
 
         if (alertasUltSemana.alertas_criticos == 0) {
             criticoPercent = alertaKpi.alertas_criticos * 100;
         } else {
-            criticoPercent = (1 - alertaKpi.alertas_criticos / alertasUltSemana.alertas_criticos) * 100;
+            criticoPercent = (alertaKpi.alertas_criticos / alertasUltSemana.alertas_criticos - 1) * 100;
         }
 
         const kpiPercent = {
