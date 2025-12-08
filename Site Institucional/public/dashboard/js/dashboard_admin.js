@@ -56,7 +56,7 @@ async function iniciarDashboardAdmin() {
   const nomeClinica = JSON.parse(sessionStorage.getItem("USUARIO_LOGADO")).clinica.nome;
   await Promise.all([ // Promise.all([...]) é um método que recebe um array de Promises (tarefas assíncronas).
     carregarModelos(token),
-    carregarEquipes(dadosUsuarioLogado.usuario.clinicaId, token),
+    carregarEquipes(dadosUsuarioLogado.clinica.id, token),
     carregarTicketsClinica(nomeClinica, token)
   ]);
 
@@ -85,7 +85,7 @@ async function carregarModelos(token) {
     modelos = [];
   }
 }
-
+console.log("modelos:", modelos)
 // FUNÇÃO FUNCIONANDO BEM !!!
 async function carregarEquipes(idClinica, token) {
   try {
@@ -610,9 +610,10 @@ function popularListaAlertasRecentes() {
       <td>${detectado}</td>
       <td>${resolvido}</td>
       <td>${tipoAlerta}</td>
-      <td>${duracao}</td>
+      
       <td>${uuid}</td>
     `;
+    // <td>${duracao}</td>
 
     if (severity.includes('high') || severity.includes('crit')) tr.classList.add('critico');
 

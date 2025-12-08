@@ -43,6 +43,7 @@ document.addEventListener('DOMContentLoaded', () => {
         await carregarDispositivos(dispositivoData, alertas);
         await carregarKpis(infoArquivo);
         await carregarGraficos(infoArquivo);
+        await redirecionamentoJira();
         
         configurarEventListeners();
     }
@@ -186,18 +187,8 @@ document.addEventListener('DOMContentLoaded', () => {
                     label: 'Bateria (%)',
                     data: infoArquivo.dashBateria.valores,
                     borderWidth: 2,
-                    pointBackgroundColor: 'rgba(17, 196, 121, 1)',
-                    borderColor: 'rgba(17, 196, 121, 1)',
-                    tension: 0.4,
-                    pointRadius: 4
-                },
-                {
-                    label: 'Previsão',
-                    data: infoArquivo.dashBateria.projecao,
-                    borderWidth: 2,
                     pointBackgroundColor: 'rgba(111, 8, 245, 1)',
                     borderColor: 'rgba(111, 8, 245, 1)',
-                    borderDash: [5, 5],
                     tension: 0.4,
                     pointRadius: 4
                 }]
@@ -208,7 +199,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 plugins: {
                     title: {
                         display: true,
-                        text: 'Consumo e Previsão de Bateria',
+                        text: 'Consumo de Bateria',
                         font: {
                             size: 20
                         }
@@ -483,13 +474,6 @@ document.addEventListener('DOMContentLoaded', () => {
                                 alertaKpi.dispositivos_offline += 1;
                             }
 
-                            dadosGraficoAlertas.valores[0] = dispositivoData[i].alertas_criticos;
-
-                             if (dispositivoData[i].alertas_ativos > dispositivoData[i].alertas_criticos) {
-                                dadosGraficoAlertas.valores[1] = dispositivoData[i].alertas_ativos - dispositivoData[i].alertas_criticos;
-                            } else {
-                                dadosGraficoAlertas.valores[1] = 0; 
-                            }
 
 
                             tickets.splice(j, 1);
@@ -523,6 +507,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
                         
                     }
+                    
                 }
 
                 data = dispositivoData;
@@ -537,6 +522,14 @@ document.addEventListener('DOMContentLoaded', () => {
         for (let i = 0; i < data.length; i++) {
 
             if (data[i].dispositivo_id == idDispositivo) {
+                dadosGraficoAlertas.valores[0] = data[i].alertas_criticos;
+
+                if (data[i].alertas_ativos >= data[i].alertas_criticos) {
+                    dadosGraficoAlertas.valores[1] = data[i].alertas_ativos - data[i].alertas_criticos;
+                    } else {
+                        dadosGraficoAlertas.valores[1] = 0; 
+                    }
+
                 continue;
             }
 
@@ -570,8 +563,10 @@ document.addEventListener('DOMContentLoaded', () => {
             card += `<h5 id="dispositivo_card_ultima_att">${dataFormatada.toLocaleString().replace(",", " ")}</h5>`;
             card += `</div>`;
             card += `</div>`;
-            card += `</div>`;     
+            card += `</div>`;
+            
         }
+        
 
         listaDispositivos.innerHTML = card;
 
@@ -653,7 +648,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
             tbodyFinal += `<td>${data[i].tipo_alerta}</td>`;
             tbodyFinal += `<td>${data[i].severidade}</td>`;
-            tbodyFinal += `<td class="acoes"><button class="btn-acao btn-editar">Ver Situação</button></td>`;
+            tbodyFinal += `<td class="acoes"><button class="btn-acao btn-editar" id="redirecionamento">Ver Situação</button></td>`;
             tbodyFinal += "</tr>";
 
             }       
@@ -700,7 +695,14 @@ document.addEventListener('DOMContentLoaded', () => {
                 window.location = "dashboard_dispositivo_eng.html";
             });
         }
+    }
 
+    async function redirecionamentoJira() {
+        const link = document.getElementById('redirecionamento');
+        
+        link.addEventListener('click', () => {
+            window.location.href = "https://sptech-team-hh4zjlyd.atlassian.net/jira/servicedesk/projects/SYN/list?jql=project%20%3D%20SYN%20ORDER%20BY%20created%20DESC";
+        });
     }
 
 
