@@ -154,11 +154,13 @@ INSERT INTO Clinicas VALUES
 (1, 'Saúde Plena', '11.111.111/1111-11', 'thiago@gmail.com', '123456', 'Ativo', '2025-11-18 17:01:47');
 
 INSERT INTO Usuarios VALUES 
-(2, 1, 'thiago@gmail.com', '123456', 'Thiago', 2, 1,NULL, '2025-11-18 17:01:47'),
-(3, 1, 'beatriz@gmail.com', '123456', 'Beatriz', 4, 1,NULL, '2025-11-18 17:04:02'),
-(4, 1, 'andre@gmail.com', '123456', 'André', 3, 1,NULL, '2025-11-18 17:04:23');
+(2, 1, 'thiago@gmail.com', '123456', 'Thiago', 2, 1, NULL, '2025-11-18 17:01:47'),
+(3, 1, 'beatriz@gmail.com', '123456', 'Beatriz', 4, 1, NULL, '2025-11-18 17:04:02'),
+(4, 1, 'andre@gmail.com', '123456', 'André', 3, 1, NULL, '2025-11-18 17:04:23');
 
-INSERT INTO EquipesCuidado VALUES (1, 'Ômega', 1);
+INSERT INTO EquipesCuidado VALUES (1, 'Alpha', 1);
+INSERT INTO EquipesCuidado VALUES (2, 'Beta', 1);
+INSERT INTO EquipesCuidado VALUES (3, 'Gamma', 1);
 
 INSERT INTO UsuarioEquipe VALUES (3, 1), (4, 1);
 
