@@ -215,7 +215,7 @@ input {
   gap: 24px;
   box-sizing: border-box;
   z-index: 5;
-  width: 100vw;
+  width: 94vw;
 }
 
 /* Grid principal (mantém espaçamento vertical entre os grupos) */

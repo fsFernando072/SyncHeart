@@ -94,25 +94,20 @@ async function carregarListaDispositivos() {
 async function selecionarDispositivo(deviceId, elementoTR) {
     document.querySelectorAll('.device-row').forEach(r => r.classList.remove('selected'));
     elementoTR.classList.add('selected');
-    headerTitleEl.textContent = `Visão do paciente — ${elementoTR.dataset.pacienteCodigo}`;
+    headerTitleEl.textContent = `Visão do paciente `;
     await carregarDashboardBateria(deviceId);
 }
 
 async function carregarDashboardBateria(deviceId) {
     try {
-        const clinicaUrl = encodeURIComponent(nomeClinica);
-        const resposta = await fetch(`/clinicas/${clinicaUrl}/dispositivos/${deviceId}/dashboard-bateria`, {
-            headers: {
-                'Authorization': `Bearer ${token}`,
-                'Content-Type': 'application/json'
-            }
-        });
+        const respostaModelo = await fetch(`/modelos/1`, { headers: { 'Authorization': `Bearer ${token}`}});
+        let infoModelo = await respostaModelo.json();
+        const key = encodeURIComponent(`${nomeClinica}/${infoModelo.nome_modelo}/${deviceId}/dashboard_bateria.json`);
 
-        if (resposta.status === 404) {
-            limparDashboard();
-            alert("Este dispositivo ainda não possui dados de bateria processados.");
-            return;
-        }
+        const resposta = await fetch(`/s3Route/dados/${key}`, { headers: { 'Authorization': `Bearer ${token}` }});
+        if (!resposta.ok) throw new Error('Falha ao carregar dispositivo.');
+
+
 
         if (!resposta.ok) throw new Error(`HTTP ${resposta.status}`);
 

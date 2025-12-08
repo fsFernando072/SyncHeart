@@ -22,7 +22,7 @@ router.get('/:modeloId/parametros/dashboard', authMiddleware.verificarEngClinico
  * Rota para BUSCAR os dados de um único modelo pelo ID.
  * Usada para preencher o formulário de edição.
  */
-router.get('/:modeloId', authMiddleware.verificarEngClinico, modeloController.buscarPorId);
+router.get('/:modeloId', authMiddleware.verificarUsuarioAutenticado, modeloController.buscarPorId);
 
 /**
  * Rota para ATUALIZAR os dados de um modelo.

@@ -215,7 +215,7 @@ input {
 
 .main-content {
   position: relative;
-  margin-left: calc(var(--sidebar-width) + var(--device-list-width) + 10px);
+  margin-left: calc(var(--sidebar-width) + var(--device-list-width) + 80px);
   margin-top: calc(var(--header-height) + 24px);
   display: flex;
   flex-direction: column;
@@ -229,7 +229,7 @@ input {
   display: flex;
   flex-direction: column;
   align-items: center;
-  width: 3rem;
+  width: 8rem;
 }
 
 
@@ -291,8 +291,8 @@ input {
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
     border-left: 5px solid;
     transition: all 0.3s ease;
-    height: 7.5rem;
-    width: 20rem;
+    height: 9rem;
+    width: 27rem;
     position: relative;
 }
 
@@ -372,7 +372,7 @@ input {
   gap: 12px;
   padding-bottom: 12px;
   align-items: center;
-  width: 70%;
+  width: 100%;
 }
 
 /* cada módulo dentro das colunas passa a ser flexível e dividir o espaço igualmente */
@@ -392,7 +392,7 @@ input {
 /* garante que a área do canvas preencha o módulo e mantenha alturas consistentes */
 .module-content {
   height: 280px;
-  width: 500px;
+  width: 550px;
   display: flex;
   align-items: center;
   justify-content: center;
