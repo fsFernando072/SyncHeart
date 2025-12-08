@@ -179,7 +179,7 @@ document.addEventListener('DOMContentLoaded', () => {
         botaoCadastrar.style.display = 'flex';
         break;
       case 4: // Engenharia Clínica
-        labelCadastrar.textContent = 'Modelos';
+        labelCadastrar.textContent = 'Gerenciar Modelos';
         botaoCadastrar.href = 'crud_modelo.html';
         botaoCadastrar.title = 'Gerenciar Modelos de MP';
         botaoCadastrar.style.display = 'flex';
