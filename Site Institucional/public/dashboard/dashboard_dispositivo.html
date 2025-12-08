@@ -84,7 +84,6 @@
 
     <!-- ==================== CONTEÚDO PRINCIPAL ==================== -->
     <main class="main-content">
-
       <header class="page-header">
         <div class="header-info">
           <h1 id="header_title">Visão do paciente</h1>
@@ -92,94 +91,104 @@
         <div class="header-user" id="header_user_info"></div>
       </header>
 
-      <!-- === TABELA DE DISPOSITIVOS (agora no lugar certo!) === -->
-      <section class="devices-list-section">
-        <h2>Seus dispositivos</h2>
-        <div class="table-container">
-          <table class="table-dispositivos">
-            <thead>
-              <tr>
-                <th>Dispositivo / Paciente</th>
-                <th>Bateria</th>
-                <th>Alertas</th>
-              </tr>
-            </thead>
-            <tbody id="listaBody"></tbody>
-          </table>
+
+      <div class="dashboard-wrapper">
+
+
+        <div class="devices-sidebar-wrapper">
+
+          <button class="sidebar-toggle-btn" id="sidebarToggle" aria-label="Alternar lista de dispositivos">
+            <span>-</span>
+            <span>-</span>
+            <span>-</span>
+          </button>
+          <!-- Sidebar que desliza -->
+          <aside class="devices-sidebar" id="devicesSidebar">
+            <div class="devices-header">
+              <h2>Seus dispositivos</h2>
+            </div>
+            <div class="devices-list-container">
+              <table class="table-dispositivos">
+                <thead>
+                  <tr>
+                    <th>Dispositivo / Paciente</th>
+                    <th>Bateria</th>
+                    <th>Alertas</th>
+                  </tr>
+                </thead>
+                <tbody id="listaBody"></tbody>
+              </table>
+            </div>
+          </aside>
         </div>
-      </section>
 
-      <!-- ==================== DASHBOARD PRINCIPAL ==================== -->
-      <div class="dashboard-container">
+        <!-- DASHBOARD PRINCIPAL (direita) -->
+        <section class="dashboard-main">
+          <div class="dashboard-grid">
 
-        <div class="dashboard-grid">
+            <!-- KPIs -->
+            <h2>Resumo atual</h2>
+            <section class="kpi-line" id="kpi_container">
+              <div class="kpi-card battery">
+                <h2>Bateria atual</h2>
+                <span class="kpi-value" id="kpi_bateria_atual">87%</span>
+                <span class="kpi-description">
+                  <span id="kpi_delta_bateria">0%</span> vs. ontem
+                </span>
+              </div>
 
-          <!-- KPIs -->
-          <h2>Resumo atual</h2>
-          <section class="kpi-line" id="kpi_container">
-            <div class="kpi-card battery">
-              <h2>Bateria atual</h2>
-              <span class="kpi-value" id="kpi_bateria_atual" style="color: green;">87%</span>
-              <span class="kpi-description">
-                <span id="kpi_delta_bateria">0%</span> vs. ontem
-              </span>
-            </div>
+              <div class="kpi-card alert">
+                <h2>Média de consumo semanal</h2>
+                <span class="kpi-value" id="kpi_media_consumo">1.5%</span>
+                <span class="kpi-description">
+                  <span id="kpi_delta_consumo">0%</span> vs. semana anterior
+                </span>
+              </div>
 
-            <div class="kpi-card alert">
-              <h2>Média de consumo semanal</h2>
-              <span class="kpi-value" id="kpi_media_consumo" style="color: green;">1.5%</span>
-              <span class="kpi-description">
-                <span id="kpi_delta_consumo">0%</span> vs. semana anterior
-              </span>
-            </div>
-
-            <div class="kpi-card battery">
-              <h2>Previsão de bateria</h2>
-              <span class="kpi-value" id="kpi_proxima_recarga">inderteminado</span>
-            </div>
-          </section>
-
-          <!-- Gráficos -->
-          <div class="middle-row">
-
-            <section class="dashboard-module">
-              <h2>Bateria nas últimas 48 horas</h2>
-              <div class="module-content">
-                <canvas id="graficoBateriaHora"></canvas>
+              <div class="kpi-card battery">
+                <h2>Previsão de bateria</h2>
+                <span class="kpi-value" id="kpi_proxima_recarga">indeterminado</span>
               </div>
             </section>
 
-            <section class="dashboard-module">
-              <h2>Consumo semanal (últimas 14 semanas)</h2>
-              <div class="module-content">
-                <canvas id="graficoConsumoSemanal"></canvas>
+            <!-- Gráficos -->
+            <div class="middle-row">
+              <section class="dashboard-module">
+                <h2>Bateria nas últimas 48 horas</h2>
+                <div class="module-content">
+                  <canvas id="graficoBateriaHora"></canvas>
+                </div>
+              </section>
+
+              <section class="dashboard-module">
+                <h2>Consumo semanal (últimas 14 semanas)</h2>
+                <div class="module-content">
+                  <canvas id="graficoConsumoSemanal"></canvas>
+                </div>
+              </section>
+            </div>
+
+            <hr>
+
+            <!-- Eventos recentes -->
+            <section class="card events-card">
+              <div class="card-header">
+                <h2>Eventos recentes</h2>
               </div>
+              <table class="events-table">
+                <thead>
+                  <tr>
+                    <th>Horário</th>
+                    <th>Descrição</th>
+                    <th>Duração estimada</th>
+                  </tr>
+                </thead>
+                <tbody id="eventsBody"></tbody>
+              </table>
             </section>
 
           </div>
-
-          <hr>
-
-          <!-- Eventos recentes -->
-          <section class="card events-card" aria-label="Eventos recentes">
-            <div class="card-header">
-              <h2>Eventos recentes</h2>
-            </div>
-            <table class="events-table">
-              <thead>
-                <tr>
-                  <th>Horário</th>
-                  <th>Descrição</th>
-                  <th>Duração estimada</th>
-                </tr>
-              </thead>
-              <tbody id="eventsBody">
-                <!-- Preenchido via JavaScript -->
-              </tbody>
-            </table>
-          </section>
-
-        </div>
+        </section>
       </div>
     </main>
   </div>
