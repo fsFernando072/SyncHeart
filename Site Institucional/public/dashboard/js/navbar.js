@@ -69,8 +69,8 @@ function configurarBotaoDashboard(cargoId) {
         case CARGOS.ADMIN_CLINICA:
         case CARGOS.VISUALIZADOR:
             // Administrador e Visualizador -> dashboard_dispositivo.html (por enquanto)
-            botaoDashboard.href = 'dashboard_dispositivo.html';
-            botaoDashboard.title = 'Dashboard Dispositivo';
+            botaoDashboard.href = 'dashboard_admin.html';
+            botaoDashboard.title = 'Dashboard Operacional';
             if (labelDashboard) labelDashboard.textContent = 'Dashboard';
             break;
             
