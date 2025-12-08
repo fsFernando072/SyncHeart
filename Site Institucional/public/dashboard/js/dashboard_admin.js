@@ -85,7 +85,7 @@ async function carregarModelos(token) {
     modelos = [];
   }
 }
-
+console.log("modelos:", modelos)
 // FUNÇÃO FUNCIONANDO BEM !!!
 async function carregarEquipes(idClinica, token) {
   try {
@@ -610,9 +610,10 @@ function popularListaAlertasRecentes() {
       <td>${detectado}</td>
       <td>${resolvido}</td>
       <td>${tipoAlerta}</td>
-      <td>${duracao}</td>
+      
       <td>${uuid}</td>
     `;
+    // <td>${duracao}</td>
 
     if (severity.includes('high') || severity.includes('crit')) tr.classList.add('critico');
 
