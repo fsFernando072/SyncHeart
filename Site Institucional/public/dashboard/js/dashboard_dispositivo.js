@@ -329,3 +329,40 @@ function atualizarListaBateria(deviceId, bateriaAtual) {
         celulaBateria.style.color = '#e74c3c';
     }
 }
+
+// === CONTROLE DO MENU HAMBÚRGUER (mantido 100%) ===
+document.addEventListener('DOMContentLoaded', () => {
+    const toggleBtn = document.getElementById('sidebarToggle');
+    const sidebar = document.getElementById('devicesSidebar');
+    const wrapper = document.querySelector('.devices-sidebar-wrapper');
+
+    if (!toggleBtn || !sidebar || !wrapper) return;
+
+    let isOpen = true;
+
+    toggleBtn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        isOpen = !isOpen;
+
+        if (isOpen) {
+            wrapper.classList.remove('closed');
+            sidebar.classList.remove('closed');
+            toggleBtn.classList.remove('active');
+        } else {
+            wrapper.classList.add('closed');
+            sidebar.classList.add('closed');
+            toggleBtn.classList.add('active');
+        }
+    });
+
+    document.addEventListener('click', (e) => {
+        if (window.innerWidth <= 1000 && isOpen && !wrapper.contains(e.target)) {
+            isOpen = false;
+            wrapper.classList.add('closed');
+            sidebar.classList.add('closed');
+            toggleBtn.classList.add('active');
+        }
+    });
+
+    sidebar.addEventListener('click', e => e.stopPropagation());
+});
