@@ -4,9 +4,9 @@
 
 /* --- 0. VARIÁVEIS GLOBAIS DE LARGURA --- */
 :root {
-  --sidebar-width: 90px;
+  --sidebar-width: 80px;
   /* largura da barra de ícones (fixa) */
-  --device-list-width: 340px;
+  --device-list-width: 320px;
   /* espaço entre device-list e dashboard */
   --app-padding-top: 12px;
   /* distância do topo (para posicionamento na viewport) */
@@ -27,7 +27,8 @@ body {
   background-color: #F4F7FA;
   color: #3B3B3B;
   height: 100vh;
-  overflow: hidden;
+  overflow-x: hidden;
+  
 }
 
 /* --- 2. LAYOUT PRINCIPAL (container) --- */
@@ -112,7 +113,7 @@ body {
 
 /* barra de pesquisa */
 .searchbar {
-  width: 100%;
+  width: 70%;
   padding: 0x;
   border-radius: 6px;
   margin-bottom: 10px;
@@ -135,12 +136,11 @@ input {
 /* wrapper fixo ao lado da sidebar */
 .sidebar-list-devices {
   position: fixed;
-  left: calc(var(--sidebar-width) + 12px);
+  left: calc(var(--sidebar-width) + 5px);
   top: calc(var(--header-height) + 60px);
   width: var(--device-list-width);
   height: calc(100vh - (var(--header-height) + 66px));
   padding: 12px;
-  z-index: 45;
   transition: all 0.35s ease;
 }
 
@@ -151,7 +151,7 @@ input {
   border: 2px solid rgba(218, 180, 198, 0.5);
   border-radius: 12px;
   box-shadow: 0px 0px 28px rgba(36, 18, 36, 0.08);
-  height: calc(100% - 44px);
+  height: calc(100% - 10px);
   overflow: hidden;
   table-layout: fixed;
   border-collapse: separate;
@@ -159,10 +159,11 @@ input {
 
 /* THEAD: visual e alinhamento */
 .device-table thead {
-  display: table;
+  display: flex;
   width: 100%;
-  table-layout: fixed;
   background: transparent;
+  flex-direction: column;
+
 }
 
 .device-table thead th {
@@ -205,7 +206,7 @@ input {
 /* Cada linha do corpo renderizada como "row" (visualmente card) */
 /* display: table para manter alinhamento com thead via table-layout */
 .device-table tbody tr {
-  display: table;
+  display: flex;
   table-layout: fixed;
   width: 100%;
   margin-top: 10px;
@@ -298,17 +299,6 @@ input {
   border: 1px solid rgba(214, 22, 111, 0.06);
 }
 
-/* rodapé com "botão" oval escuro */
-/* .device-table::after {
-  content: "";
-  display: block;
-  height: 36px;
-  margin: 12px 6px 6px 6px;
-  border-radius: 20px;
-  background: linear-gradient(180deg,#3a1337,#38162e);
-  box-shadow: inset 0 -8px 18px rgba(0,0,0,0.25);
-} */
-
 /* foco por teclado (acessibilidade) */
 .device-table tbody tr:focus {
   outline: 3px solid rgba(214, 22, 111, 0.10);
@@ -347,7 +337,6 @@ input {
   display: flex;
   align-items: center;
   justify-content: center;
-  box-shadow: 0 4px 12px rgba(214, 22, 111, 0.2);
   transition: all 0.25s ease;
 }
 
@@ -356,66 +345,29 @@ input {
   transform: scale(1.06);
 }
 
-/* === EFEITOS DE OCULTAR LISTA === */
-
-/* animação de recolher */
-.sidebar-list-devices.hidden {
-  transform: translateX(-110%);
-  opacity: 0;
-  pointer-events: none;
-}
-
-/* expande o dashboard quando a lista some */
-.main-content.expanded {
-  margin-left: calc(var(--sidebar-width) + 72px);
-  transition: margin-left 0.35s ease;
-}
-
-@media (max-width: 1000px) {
-
-  .sidebar-list-devices.hidden {
-    transform: translateY(-110%);
-    opacity: 0;
-    pointer-events: none;
-  }
-
-  .toggle-device-list-btn {
-    display: none;
-  }
-
-  .device-table th.col-batt,
-  .device-table td.col-batt,
-  .device-table th.col-alerts,
-  .device-table td.col-alerts {
-    text-align: left;
-  }
-}
 
 
 /* --- 5. ÁREA PRINCIPAL (dashboard-container) --- */
 
 .main-content {
   position: relative;
-  margin-left: calc(var(--sidebar-width) + var(--device-list-width) + 24px);
+  margin-left: calc(var(--sidebar-width) + var(--device-list-width) + 300px);
   margin-top: calc(var(--header-height) + 24px);
   display: flex;
   flex-direction: column;
-  overflow-y: auto;
   height: calc(100vh - var(--header-height));
   background-color: #F4F7FA;
-  z-index: 5;
+  z-index: 3;
 }
 
 /* container do conteúdo do dashboard */
 .dashboard-container {
-  flex: 1;
-  padding-right: 18px;
   display: flex;
   flex-direction: column;
-  gap: 24px;
-  box-sizing: border-box;
-  z-index: 5;
+  align-items: center;
+  width: 3rem;
 }
+
 
 /* título e breadcrumb */
 .page-header {
@@ -431,7 +383,6 @@ input {
   padding-right: 22px;
     border-bottom: 1px solid #e9ecef;
   background: white;
-  z-index: 20;
 }
 
 .page-header h1 {
@@ -459,43 +410,93 @@ input {
 
 /* --- 6. RESTANTE DOS ESTILOS (mantive os seus estilos originais para módulos/KPIs) --- */
 /* KPIs (mini cards) */
-.mini-kpis {
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: 12px;
-  margin-top: 8px;
+/* KPIs */
+.kpi-line {
+    display: flex;
+    gap: 40px;
+    margin-bottom: 20px;
+    margin-top: 20px;
+    flex-wrap: wrap;
+    justify-content: flex-start;
 }
 
-.mini-kpi {
-  background: #fff;
-  border-radius: 8px;
-  padding: 12px;
-  text-align: left;
-  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.04);
-  border: 1px solid #f1e5ec;
+.kpi-card {
+    background: white;
+    padding: 20px;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+    border-left: 5px solid;
+    transition: all 0.3s ease;
+    height: 7.5rem;
+    width: 20rem;
+    position: relative;
 }
 
-.mini-label {
-  font-size: 12px;
-  color: #7d6a7d;
-  margin-bottom: 6px;
+.kpi-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 12px 20px rgba(0, 0, 0, 0.1);
 }
 
-.mini-value {
-  font-size: 20px;
-  font-weight: 800;
-  color: #412051;
+/* CORES DINÂMICAS BASEADAS NA BATERIA */
+.kpi-card.battery {
+    /* Card da bateria atual — muda de cor conforme o nível */
+    border-left-color: #27ae60; /* padrão (verde) */
 }
+
+.kpi-card.battery.nivel-verde {
+    border-left-color: #27ae60;
+    background: linear-gradient(90deg, rgba(39, 174, 96, 0.08) 0%, transparent 100%);
+}
+
+.kpi-card.battery.nivel-laranja {
+    border-left-color: #e67e22;
+    background: linear-gradient(90deg, rgba(230, 126, 34, 0.1) 0%, transparent 100%);
+}
+
+.kpi-card.battery.nivel-vermelho {
+    border-left-color: #e74c3c;
+    background: linear-gradient(90deg, rgba(231, 76, 60, 0.12) 0%, transparent 100%);
+    animation: pulse-red 2s infinite;
+}
+
+/* Animação sutil quando estiver crítico (opcional, mas fica foda) */
+@keyframes pulse-red {
+    0%, 100% { box-shadow: 0 4px 12px rgba(231, 76, 60, 0.15); }
+    50% { box-shadow: 0 8px 24px rgba(231, 76, 60, 0.3); }
+}
+
+/* Os outros cards mantêm verde fixo */
+.kpi-card.alert,
+.kpi-card.devices {
+    border-left-color: #34db55;
+    background: linear-gradient(90deg, rgba(52, 219, 85, 0.08) 0%, transparent 100%);
+}
+
+.kpi-card h2 {
+    font-size: 18px;
+    color: #555;
+    margin: 0 0 10px 0;
+    font-weight: 500;
+}
+
+.kpi-card .kpi-value {
+    font-size: 22px;
+    font-weight: 700;
+    color: #333;
+    display: block;
+    margin: 8px 0;
+}
+
+.kpi-card .kpi-description {
+    font-size: 12px;
+    color: #999;
+}
+
+
 
 /* Grid principal (mantém espaçamento vertical entre os grupos) */
 .dashboard-grid {
   display: flexbox;
-  grid-template-columns: 1fr;
-  padding: 20px;
-  margin: 12px;
-  margin-top: 20px;
-  box-shadow: 0 0 12px rgba(0, 0, 0, 0.2);
-  border-radius: 18px;
 }
 
 /* top-row, middle-row e bottom row: contém módulos que devem ficar lado-a-lado */
@@ -506,18 +507,18 @@ input {
   flex-direction: row;
   gap: 12px;
   padding-bottom: 12px;
-  align-items: stretch;
-  width: 100%;
+  align-items: center;
+  width: 70%;
 }
 
 /* cada módulo dentro das colunas passa a ser flexível e dividir o espaço igualmente */
 .dashboard-module {
   flex: 1 1 0;
   /* crescer igualmente, encolher se necessário */
-  min-width: 0;
+  min-width: 2;
   /* importante para permitir encolher dentro do flexbox */
   background: white;
-  padding: 20px;
+  padding: 15px;
   border-radius: 12px;
   box-shadow: 0px 0px 12px rgba(0, 0, 0, 0.05);
   display: flex;
@@ -526,18 +527,22 @@ input {
 
 /* garante que a área do canvas preencha o módulo e mantenha alturas consistentes */
 .module-content {
-  flex: 1 1 auto;
-  min-height: 130px;
+  height: 280px;
+  width: 500px;
   display: flex;
   align-items: center;
   justify-content: center;
-  z-index: 30;
+  
 }
 
 /* ajuste para os títulos manterem o espaçamento no layout horizontal */
-.dashboard-module h2 {
+.dashboard-module h2{
   margin: 0 0 12px 0;
   font-size: 18px;
+}
+
+.dashboard-grid h2 {
+  margin-left: 20px;
 }
 
 .donut {
@@ -557,6 +562,7 @@ input {
   .bottom-row {
     display: flex;
     flex-direction: column;
+
     width: 100%;
   }
 }

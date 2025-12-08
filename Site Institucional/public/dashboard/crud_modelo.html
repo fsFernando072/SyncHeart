@@ -15,7 +15,7 @@
     <div class="app-container">
         <nav class="sidebar">
             <div class="sidebar-top">
-                <a href="dashboard.html" class="nav-item logo-item">
+                <a href="dash_geral.html" class="nav-item logo-item">
                     <div class="nav-icon">
                         <svg viewBox="0 0 24 24" fill="currentColor">
                             <path
@@ -23,7 +23,7 @@
                         </svg>
                     </div>
                 </a>
-                <a href="dashboard.html" class="nav-item" title="Tela Inicial">
+                <a href="dash_geral.html" class="nav-item" title="Tela Inicial">
                     <div class="nav-icon">
                         <svg viewBox="0 0 24 24" fill="currentColor">
                             <path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z" />
@@ -31,7 +31,16 @@
                     </div>
                     <span class="nav-label">Tela Inicial</span>
                 </a>
-                <a href="crud_modelo.html" class="nav-item active" title="Cadastrar" id="nav_cadastrar">
+                <a href="dashboard_dispositivo_eng.html" class="nav-item" title="Dashboard Detalhado">
+                    <div class="nav-icon">
+                        <svg viewBox="0 0 24 24" fill="currentColor">
+                            <path
+                                d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z" />
+                        </svg>
+                    </div>
+                    <span class="nav-label">Dashboard</span>
+                </a>
+                <a href="#" class="nav-item active" title="Cadastrar" id="nav_cadastrar">
                     <div class="nav-icon">
                         <svg viewBox="0 0 24 24" fill="currentColor">
                             <path
@@ -39,15 +48,6 @@
                         </svg>
                     </div>
                     <span class="nav-label" id="nav_cadastrar_label">Cadastrar</span>
-                </a>
-                <a href="lista_modelos.html" class="nav-item" title="Modelos">
-                    <div class="nav-icon">
-                        <svg viewBox="0 0 24 24" fill="currentColor">
-                            <path
-                                d="M10 10.02h5V21h-5zM17 21h3c1.1 0 2-.9 2-2v-9h-5v11zm3-18H5c-1.1 0-2 .9-2 2v3h19V5c0-1.1-.9-2-2-2zM3 19c0 1.1.9 2 2 2h3V10H3v9z" />
-                        </svg>
-                    </div>
-                    <span class="nav-label">Modelos</span>
                 </a>
             </div>
             <div class="sidebar-bottom">
@@ -160,6 +160,7 @@
         </main>
     </div>
     <div id="div_feedback"></div>
+    <script src="js/navbar.js"></script>
     <script src="js/crud_modelo.js"></script>
 </body>
 

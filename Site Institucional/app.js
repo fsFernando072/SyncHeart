@@ -15,14 +15,16 @@ var app = express();
 var indexRouter = require("./src/routes/index");
 var usuarioRouter = require("./src/routes/usuarios");
 var aprovacaoRouter = require("./src/routes/aprovacao");
-var dispositivoRouter = require("./src/routes/dispositivos");
+var dispositivoRouter = require("./src/routes/dispositivos");          
+var dashDispositivoRouter = require("./src/routes/dashboard-dispositivo"); 
+const holisticaRouter = require('./src/routes/holistica');
 // == NOVO == //
 const clinicaRoutes = require('./src/routes/clinicas'); 
 const equipeRouter = require("./src/routes/equipes");
 var modeloRouter = require("./src/routes/modelos");
 const s3Router = require('./src/routes/s3Route');
-const alertaRouter = require('./src/routes/alertas');
 const jiraRouter = require('./src/routes/jira');
+var dispositivosEngRouter = require("./src/routes/dispositivosEng");
 const dashboardAdminRoute = require('./src/routes/dashboard_admin_Route');
 
 
@@ -36,7 +38,9 @@ app.use(cors());
 app.use("/", indexRouter);
 app.use("/usuarios", usuarioRouter);
 app.use("/aprovacao", aprovacaoRouter);
-app.use("/dispositivos", dispositivoRouter);
+app.use("/dispositivos", dispositivoRouter);              
+app.use("/dashboard-dispositivos", dashDispositivoRouter); 
+app.use("/holistica", holisticaRouter);
 
 
 // == NOVO == //
@@ -44,8 +48,8 @@ app.use('/s3Route', s3Router);
 app.use('/clinicas', clinicaRoutes);
 app.use("/equipes", equipeRouter);
 app.use("/modelos", modeloRouter);
-app.use("/alertas", alertaRouter);
 app.use("/jira", jiraRouter);
+app.use("/dispositivosEng", dispositivosEngRouter);
 app.use('/api/dashboard-admin', dashboardAdminRoute);
 
 app.listen(PORTA_APP, function () {

@@ -1,0 +1,639 @@
+/* ======================================================= */
+/* ARQUIVO DE ESTILO FINAL PARA O DASHBOARD - SYNC-HEART   */
+/* ======================================================= */
+
+/* --- 1. RESET E GERAL --- */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Lexend', sans-serif;
+    background-color: #f4f7fa;
+    color: #3b3b3b;
+    height: 100vh;
+    overflow: hidden;
+}
+
+.app-container {
+    display: flex;
+    height: 100%;
+}
+
+/* --- 2. BARRA LATERAL (SIDEBAR) --- */
+.sidebar {
+    width: 90px;
+ background: linear-gradient(180deg, #412051 0%, #9b4b7e 100%);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-between;
+    padding: 20px 0;
+    transition: width 0.3s;
+}
+
+.sidebar-top, .sidebar-bottom {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 15px;
+}
+
+.nav-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 75px;
+    height: 65px;
+    border-radius: 12px;
+    cursor: pointer;
+    color: white;
+    text-decoration: none;
+    transition: background-color 0.2s;
+}
+
+.nav-item:hover {
+    background-color: rgba(255, 255, 255, 0.1);
+}
+
+.nav-item.active {
+    background-color: #D6166F;
+}
+
+.logo-item {
+    margin-bottom: 10px;
+}
+
+.nav-icon {
+    width: 30px;
+    height: 30px;
+    margin-bottom: 5px;
+}
+
+.nav-icon svg {
+    width: 100%;
+    height: 100%;
+}
+
+.nav-label {
+    font-size: 11px;
+    font-weight: 500;
+    line-height: 1.2;
+    text-align: center;
+}
+
+/* --- 3. CONTEÚDO PRINCIPAL --- */
+.main-content {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    overflow-y: auto;
+}
+
+.page-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px 30px;
+    background: white;
+    border-bottom: 1px solid #e9ecef;
+}
+
+.page-header h1 {
+    margin: 0;
+    font-size: 26px;
+    color: #4A154B;
+}
+
+.user-info {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+}
+
+.breadcrumb {
+    color: #4A154B;
+    font-size: 16px;
+}
+
+.breadcrumb a {
+    color: #4A154B;
+    text-decoration: none;
+    font-size: 16px;
+}
+
+.dashboard-container {
+    padding: 30px;
+    flex: 1;
+    position: relative; 
+}
+
+/* Conteúdo das dashboards */
+.dash-content {
+  width: 100%;
+  height: fit-content;
+  display: flex;
+  justify-content: flex-start;
+  padding: 2rem;
+}
+
+/* Lista dos dispositivos */
+.lista-dispositivos {
+  width: 20%;
+  height: 50rem;
+  box-shadow: 0px 0px 12px rgba(0, 0, 0, 0.05);
+  border-radius: 10px;
+  background-color: #ffff;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-around;
+}
+
+.lista-cima {
+    height: 15%;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 1rem;
+    font-size: 20px;
+}
+
+.lista-cima h3 {
+    color: #4A154B;
+}
+
+.filtro-dispositivos {
+    width: 55%;
+    height: 25%;
+    font-weight: 800;
+}
+
+
+.lista-baixo {
+    height: 80%;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-evenly;
+    gap: 1rem;
+    overflow-y: auto;
+}
+
+.dispositivo-card {
+    width: 80%;
+    height: 9rem;
+    border: 1px solid rgb(194, 194, 194);
+    border-radius: 10px;
+    flex-shrink: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.dispositivo-card:hover {
+    border: 1px solid black;
+    transform: translateX(-5px);
+    transition: 0.5s ease;
+}
+
+.card-container {
+    height: 80%;
+    width: 90%;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: flex-start;
+}
+
+.card-cima {
+    width: 95%;
+    height: 40%;
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+}
+
+.titulo-card {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.status-dispositivo {
+    font-weight: 700;
+    font-size: 17px;
+    border-radius: 5px;
+    width: 30%;
+    text-align: center;
+    padding: 1px;
+}
+
+.online {
+    background-color: rgb(0, 247, 0);
+    color: rgb(16, 152, 43);
+}
+
+.offline {
+    background-color: red;
+    color: rgb(163, 0, 0); 
+}
+
+.card-cima h3 {
+    font-size: 17px;
+}
+
+.card-cima h4 {
+    font-size: 15px;
+    opacity: 0.6;
+    font-weight: 400;
+}
+
+.card-baixo {
+    width: 80%;
+    height: 60%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: flex-start;
+    gap: 5px;
+}
+
+.card-baixo h5 {
+    font-weight: 500;
+    opacity: 0.6;
+}
+
+/* Dashboards */
+.dashboard {
+  height: 100%;
+  width: 80%;
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.dispositivo-info {
+  width: 90%;
+  height: 10rem;
+  background-color: #ffff;
+  box-shadow: 0px 0px 12px rgba(0, 0, 0, 0.05);
+  border-radius: 10px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.card-info {
+    width: 95%;
+    height: 80%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.info-esquerda {
+    width: 30%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+}
+
+.info-esquerda h3 {
+    font-size: 25px;
+    color: #4A154B;
+}
+
+.info-esquerda h4 {
+    font-size: 18px;
+    font-weight: 500;
+    opacity: 0.8;
+}
+
+.info-direita {
+    width: 60%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.info-direita h3 {
+    color: #4A154B;
+}
+
+.info-kpi {
+    width: 32%;
+    height: 100%;
+    box-shadow: 0px 0px 12px rgba(0, 0, 0, 0.05);
+    border-radius: 10px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-around;
+    text-align: center;
+}
+
+.valor-info {
+    font-size: 35px;
+    font-weight: 700;
+}
+
+#ultima_atualizacao_dispositivo {
+    font-size: 28px;
+}
+
+.alertas-ativos-baixo {
+    color: rgb(16, 152, 43);
+}
+
+.alertas-ativos-medio {
+    color: #f1c40f;
+}
+
+.alertas-ativos-alto {
+    color: rgb(231, 76, 60);
+}
+
+.status-on {
+    color: rgb(16, 152, 43);
+}
+
+.status-off {
+    color: red;
+}
+
+.kpi-top {
+  width: 90%;
+  height: 15rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-radius: 10px;
+}
+
+.kpi-top .dado {
+  width: 24%;
+  height: 90%;
+  background-color: #ffff;
+  box-shadow: 0px 0px 12px rgba(0, 0, 0, 0.05);
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* .kpi-top .dado-bateria {
+      border-left: 5px solid rgb(16, 152, 43);
+} */
+
+.dado-container {
+    height: 90%;
+    width: 92%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-around;
+}
+
+.borda {
+    border-left: 5px solid;
+}
+
+.imagem {
+    height: 80%;
+    width: 18%;
+    background-size: cover;
+    background-position: center;
+}
+
+.bateria-icon {
+    background-image: url('https://cdn-icons-png.flaticon.com/512/46/46518.png');
+}
+
+.cpu-icon {
+    background-image: url('https://cdn-icons-png.flaticon.com/512/597/597874.png');
+}
+
+.ram-icon {
+    background-image: url('https://cdn-icons-png.flaticon.com/512/1689/1689137.png');
+}
+
+.flash-icon {
+    background-image: url('https://cdn-icons-png.flaticon.com/256/622/622397.png');
+}
+
+.dado-cima {
+    width: 100%;
+    height: 30%;
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    gap: 10px;
+}
+
+.dado-cima h3 {
+    font-size: 20px;
+}
+
+.dado-baixo {
+    width: 100%;
+    height: 40%;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: center;
+    gap: 1rem;
+}
+
+.barra-container {
+    width: 100%;
+    height: 15%;
+    background-color: rgb(228, 228, 228);
+    border-radius: 20px;
+}
+
+.valor-bateria {
+    height: 100%;
+    border-radius: 20px;
+}
+
+.valor-cpu {
+    height: 100%;
+    border-radius: 20px;
+}
+
+.valor-ram {
+    height: 100%;
+    border-radius: 20px;
+}
+
+.valor-flash {
+    height: 100%;
+    border-radius: 20px;
+}
+
+.dado-atual {
+    font-size: 25px;
+}
+
+.graficos {
+  height: fit-content;
+  width: 90%;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1rem;
+}
+
+.graficos-principais {
+    width: 48%;
+    height: 20rem;
+    box-shadow: 0px 0px 12px rgba(0, 0, 0, 0.05);
+    background-color: #ffff;
+    border-radius: 10px;
+}
+
+.list-module {
+    background: white;
+    padding: 25px;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+    width: 90%;
+}
+
+.tabela-dados {
+    width: 100%;
+    border-collapse:
+        collapse;
+}
+
+.tabela-dados th,
+.tabela-dados td {
+    text-align: center;
+    padding: 12px 15px;
+    border-bottom: 1px solid #f0f0f0;
+}
+
+.tabela-dados th {
+    color: #888;
+    font-size: 12px;
+    font-weight: 600;
+    text-transform: uppercase;
+    cursor: pointer;
+    user-select: none;
+}
+
+#lista_alertas_container tr:not(.critico) td:nth-of-type(3){
+    color: #f1c40f;
+}
+
+#lista_dispositivos_container tr:not(.critico) td:nth-of-type(4){
+    color: #34db55;
+}
+
+#lista_parametros_container tr.critico_texto td:nth-of-type(4) {
+    color: #e74c3c;
+}
+
+#lista_parametros_container tr:not(.critico_texto) td:nth-of-type(4) {
+    color: #f1c40f;
+}
+
+#lista_parametros_container td:nth-of-type(1),
+#lista_alertas_container td:nth-of-type(2) {
+    font-weight: 600;
+}
+
+.critico {
+    background-color: #c34d4030;
+}
+
+.critico td {
+    color: #e74c3c;
+}
+
+.btn-editar {
+    background: #D6166F;
+    color: white;
+    border: none;
+    padding: 8px 12px;
+    border-radius: 8px;
+    font-size: 14px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    text-align: center;
+    text-decoration: none;
+}
+
+.btn-editar:hover {
+    background: #b81360;
+    transform: translateY(-2px);
+}
+
+#lista_dispositivos_container, #lista_alertas_container {
+    scroll-margin-top: 150px;
+}
+
+.subir {
+    background-color: #00000066;
+    position: fixed;
+    right: 15px;
+    bottom: 125px;
+    border-top-left-radius: 5px;
+    border-bottom-left-radius: 5px;
+    padding: 8px 15px 0 15px;
+    line-height: 40px;
+    margin-right: -20%;
+    text-align: center;
+    cursor: pointer;
+    transition: all 1s ease-in-out;
+}
+
+.subir span {
+    line-height: 30px;
+    display: block;
+    font-size: 30px;
+    color: #fff;
+    font-weight: 300;
+    user-select: none;
+}
+
+#lista_dispositivos_container .baixo{
+    color: #34db55;
+}
+
+#lista_dispositivos_container .moderado {
+    color: #f1c40f;
+}
+
+#lista_dispositivos_container .alto {
+    color: #e74c3c;
+}
+
+#module_historico_alertas span,
+#module_tipos_alertas span {
+    text-align: center;
+    vertical-align: center;
+    font-size: 24px;
+}
+
+.dash {
+    padding: 10px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}

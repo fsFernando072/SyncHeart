@@ -99,7 +99,7 @@ async function buscarTodosTickets(nomeClinica) {
 async function buscarTicketsAtivosModelo(nomeClinica, idModelo) {
     try {
         const jql =
-            `project = "SYN" AND status = "Open" AND labels = "${nomeClinica}" AND description ~ "Modelo_ID: ${idModelo} " ORDER BY created DESC`;
+            `project = "SYN" AND status = "Open" AND labels = "${nomeClinica}" AND description ~ "\\\"Modelo_ID: ${idModelo}\\\"" ORDER BY created DESC`;
 
         const response = await modeloBuscar(jql);
         const tickets = []
@@ -109,7 +109,7 @@ async function buscarTicketsAtivosModelo(nomeClinica, idModelo) {
             const f = issue.fields;
             tickets.push(f)
         });
-
+        
         return tickets
     } catch (error) {
         console.error(error.response?.data || error.message);
@@ -122,7 +122,7 @@ async function buscarTicketsUltimaSemanaModelo(nomeClinica, idModelo) {
         const jql =
             `project = "SYN" 
             AND labels = "${nomeClinica}" 
-            AND description ~ "Modelo_ID: ${idModelo} "
+            AND description ~ "\\\"Modelo_ID: ${idModelo}\\\""
             AND status WAS ("Open") BY endOfWeek(-1w) BEFORE startOfWeek()
             ORDER BY created DESC`;
 
@@ -150,7 +150,7 @@ async function buscarTicketsPorDiaModelo(nomeClinica, idModelo, dataDoDia) {
         const jql =
             `project = "SYN" 
             AND labels = "${nomeClinica}" 
-            AND description ~ "Modelo_ID: ${idModelo} "
+            AND description ~ "\\\"Modelo_ID: ${idModelo}\\\""
             AND status WAS ("Open") 
             AFTER "${inicioDoDia}" BEFORE "${fimDoDia}"
             ORDER BY created DESC`;
@@ -170,10 +170,33 @@ async function buscarTicketsPorDiaModelo(nomeClinica, idModelo, dataDoDia) {
     }
 }
 
+// Buscar todos os tickets de uma clínica para gerar histórico
+async function buscarHistoricoTickets(nomeClinica, dataInicio) {
+    try {
+        // JQL para buscar tickets criados a partir de dataInicio com label da clínica
+        const formattedDate = `${dataInicio.getFullYear()}-${String(dataInicio.getMonth() + 1).padStart(2, '0')}-${String(dataInicio.getDate()).padStart(2, '0')}`;
+        const jql = `project = "SYN" AND labels = "${nomeClinica}" AND created >= "${formattedDate}"`;
+        
+        const response = await modeloBuscar(jql);
+        if (response && response.data && response.data.issues) {
+            return response.data.issues.map(issue => ({
+                created: issue.fields.created,
+                summary: issue.fields.summary,
+                priority: issue.fields.priority
+            }));
+        }
+        return [];
+    } catch (error) {
+        console.error('Erro ao buscar histórico de tickets:', error);
+        return [];
+    }
+}
+
 module.exports = {
     buscarTicketsAtivos,
-    buscarTodosTickets,
     buscarTicketsAtivosModelo,
     buscarTicketsUltimaSemanaModelo,
-    buscarTicketsPorDiaModelo
+    buscarTicketsPorDiaModelo,
+    buscarHistoricoTickets,
+    buscarTodosTickets,
 };

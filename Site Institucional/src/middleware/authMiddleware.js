@@ -16,8 +16,8 @@ function verificarAdminClinica(req, res, next) {
             return res.status(403).json({ erro: "Acesso negado. Você não tem permissão para esta ação." });
         }
         // Se passou por todas as verificações, anexa os dados do usuário à requisição e continua
-        req.usuario = usuario;
-        next();
+        req.usuario = usuario; 
+        next(); 
     });
 }
 

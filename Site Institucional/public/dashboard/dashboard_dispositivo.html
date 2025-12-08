@@ -4,19 +4,23 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Dashboard - SyncHeart</title>
+  <title>Dashboard Bateria - SyncHeart</title>
 
   <link rel="shortcut icon" href="../assets/Logo_contornada.png" type="image/x-icon">
   <link rel="stylesheet" href="./css/dashboard_dispositivo.css">
   <link href="https://fonts.googleapis.com/css2?family=Lexend:wght@100..900&display=swap" rel="stylesheet">
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script
+    src="https://cdn.jsdelivr.net/npm/chartjs-plugin-annotation@3.0.1/dist/chartjs-plugin-annotation.min.js"></script>
 </head>
 
 <body>
   <div class="app-container">
+
+    <!-- ==================== SIDEBAR ==================== -->
     <nav class="sidebar">
       <div class="sidebar-top">
-        <a href="dashboard.html" class="nav-item logo-item">
+        <a href="dash_geral.html" class="nav-item logo-item">
           <div class="nav-icon">
             <svg viewBox="0 0 24 24" fill="currentColor">
               <path
@@ -24,239 +28,164 @@
             </svg>
           </div>
         </a>
-        <a href="dashboard.html" class="nav-item" title="Tela Inicial">
-          <div class="nav-icon"><svg viewBox="0 0 24 24" fill="currentColor">
+
+        <a href="dash_geral.html" class="nav-item" title="Tela Inicial">
+          <div class="nav-icon">
+            <svg viewBox="0 0 24 24" fill="currentColor">
               <path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z" />
-            </svg></div>
+            </svg>
+          </div>
           <span class="nav-label">Tela Inicial</span>
         </a>
+
         <a href="dashboard_dispositivo.html" class="nav-item active" title="Dashboard Detalhado">
-          <div class="nav-icon"><svg viewBox="0 0 24 24" fill="currentColor">
+          <div class="nav-icon">
+            <svg viewBox="0 0 24 24" fill="currentColor">
               <path
                 d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z" />
-            </svg></div>
+            </svg>
+          </div>
           <span class="nav-label">Dashboard</span>
         </a>
+
         <a href="#" class="nav-item" title="Cadastrar" id="nav_cadastrar">
-          <div class="nav-icon"><svg viewBox="0 0 24 24" fill="currentColor">
+          <div class="nav-icon">
+            <svg viewBox="0 0 24 24" fill="currentColor">
               <path
                 d="M14 2H6c-1.1 0-1.99.9-1.99 2L4 20c0 1.1.89 2 2 2h8c1.1 0 2-.9 2-2V8l-6-6zm2 16H8v-2h8v2zm0-4H8v-2h8v2zm-3-5V3.5L18.5 9H13z" />
-            </svg></div>
+            </svg>
+          </div>
           <span class="nav-label" id="nav_cadastrar_label">Cadastrar</span>
         </a>
       </div>
+
       <div class="sidebar-bottom">
         <a href="#" class="nav-item" title="Minha Conta">
-          <div class="nav-icon"><svg viewBox="0 0 24 24" fill="currentColor">
+          <div class="nav-icon">
+            <svg viewBox="0 0 24 24" fill="currentColor">
               <path
                 d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z" />
-            </svg></div>
+            </svg>
+          </div>
           <span class="nav-label">Conta</span>
         </a>
+
         <a href="login.html" class="nav-item" title="Sair" id="btn_sair">
-          <div class="nav-icon"><svg viewBox="0 0 24 24" fill="currentColor">
+          <div class="nav-icon">
+            <svg viewBox="0 0 24 24" fill="currentColor">
               <path
                 d="M10.09 15.59L11.5 17l5-5-5-5-1.41 1.41L12.67 11H3v2h9.67l-2.58 2.59zM19 3H5c-1.11 0-2 .9-2 2v4h2V5h14v14H5v-4H3v4c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2z" />
-            </svg></div>
+            </svg>
+          </div>
           <span class="nav-label">Sair</span>
         </a>
       </div>
     </nav>
 
+    <!-- ==================== CONTEÚDO PRINCIPAL ==================== -->
     <main class="main-content">
+
       <header class="page-header">
         <div class="header-info">
           <h1 id="header_title">Visão do paciente</h1>
-          <div class="breadcrumb" id="breadcrumb_path">Clínica A &gt; Modelo Biotronik A &gt; Ilivia Neo7 VR-T</div>
         </div>
         <div class="header-user" id="header_user_info"></div>
       </header>
 
-      <!-- LISTA DE DISPOSITIVOS -->
+      <!-- === TABELA DE DISPOSITIVOS (agora no lugar certo!) === -->
+      <section class="devices-list-section">
+        <h2>Seus dispositivos</h2>
+        <div class="table-container">
+          <table class="table-dispositivos">
+            <thead>
+              <tr>
+                <th>Dispositivo / Paciente</th>
+                <th>Bateria</th>
+                <th>Alertas</th>
+              </tr>
+            </thead>
+            <tbody id="listaBody"></tbody>
+          </table>
+        </div>
+      </section>
 
-      <!-- Botão para ocultar/mostrar lista -->
-      <button id="toggleDeviceListBtn" class="toggle-device-list-btn" title="Mostrar/ocultar lista">
-        ☰
-      </button>
-
-      <!-- Lista em si -->
-      <div class="sidebar-list-devices" aria-label="Lista de dispositivos">
-
-        <!-- Head da lista -->
-        <table class="device-table" role="grid" aria-label="Dispositivos do modelo">
-          <thead>
-            <tr role="row" class="device-table-head">
-              <th role="columnheader" class="col-device">Lista de dispositivos:</th>
-              <th role="columnheader" class="col-batt">🔋</th>
-              <th role="columnheader" class="col-alerts">⚠️</th>
-            </tr>
-          </thead>
-
-          <!-- Input de busca -->
-          <div class="searchbar">
-            <span class="magnify-icon">🔍︎</span>
-            <input type="text" id="searchbar_input" placeholder="Buscar">
-          </div>
-
-          <!-- Corpo da lista -->
-          <tbody id="listaBody">
-            <tr role="row" class="device-row" data-device="02314" tabindex="0">
-              <td role="gridcell" class="col-device">
-                <span class="codigo-dispositivo">002314</span>
-                <span class="codigo-paciente">123MP1287512312</span>
-              </td>
-              <td role="gridcell" class="col-batt"><span class="device-batt">10%</span></td>
-              <td role="gridcell" class="col-alerts"><span class="device-alerts">5</span></td>
-            </tr>
-            <tr role="row" class="device-row selected" data-device="02315" tabindex="0" aria-selected="true">
-              <td role="gridcell" class="col-device">
-                <span class="codigo-dispositivo">002315</span>
-                <span class="codigo-paciente">123MP1287512312</span>
-              </td>
-              <td role="gridcell" class="col-batt"><span class="device-batt">10%</span></td>
-              <td role="gridcell" class="col-alerts"><span class="device-alerts">5</span></td>
-            </tr>
-            <tr role="row" class="device-row" data-device="02316" tabindex="0">
-              <td role="gridcell" class="col-device">
-                <span class="codigo-dispositivo">002316</span>
-                <span class="codigo-paciente">123MP1287512312</span>
-              </td>
-              <td role="gridcell" class="col-batt"><span class="device-batt">10%</span></td>
-              <td role="gridcell" class="col-alerts"><span class="device-alerts">5</span></td>
-            </tr>
-            <tr role="row" class="device-row" data-device="02317" tabindex="0">
-              <td role="gridcell" class="col-device">
-                <span class="codigo-dispositivo">002317</span>
-                <span class="codigo-paciente">123MP1287512312</span>
-              </td>
-              <td role="gridcell" class="col-batt"><span class="device-batt">10%</span></td>
-              <td role="gridcell" class="col-alerts"><span class="device-alerts">5</span></td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
-
-
+      <!-- ==================== DASHBOARD PRINCIPAL ==================== -->
       <div class="dashboard-container">
-        <!-- <section class="kpi-line" id="kpi_container"></section> -->
 
         <div class="dashboard-grid">
-          <div class="top-row">
 
-            <!-- KPIs: Últimos dados -->
-            <section class="dashboard-module" id="module_ultimos_dados">
-              <h2>Últimos dados:</h2>
-              <!-- 4 mini cards (bateriaXX%, cpuXX%, memoriaramXX%, memoriaflashXX%) -->
-              <div class="mini-kpis">
-                <div class="mini-kpi">
-                  <div class="mini-label">Bateria</div>
-                  <div class="mini-value" id="mini_batt">XX%</div>
-                </div>
-                <div class="mini-kpi">
-                  <div class="mini-label">CPU</div>
-                  <div class="mini-value" id="mini_cpu">XX%</div>
-                </div>
-                <div class="mini-kpi">
-                  <div class="mini-label">Memória RAM</div>
-                  <div class="mini-value" id="mini_ram">XX%</div>
-                </div>
-                <div class="mini-kpi">
-                  <div class="mini-label">Memória Flash</div>
-                  <div class="mini-value" id="mini_flash">XX%</div>
-                </div>
-              </div>
-            </section>
+          <!-- KPIs -->
+          <h2>Resumo atual</h2>
+          <section class="kpi-line" id="kpi_container">
+            <div class="kpi-card battery">
+              <h2>Bateria atual</h2>
+              <span class="kpi-value" id="kpi_bateria_atual" style="color: green;">87%</span>
+              <span class="kpi-description">
+                <span id="kpi_delta_bateria">0%</span> vs. ontem
+              </span>
+            </div>
 
-            <!-- Gráfico Donut: De onde estão vindo os alertas -->
-            <section class="dashboard-module" id="module_from_where_alertas">
-              <h2>De onde estão vindo os alertas:</h2>
-              <div class="module-content">
-                <div class="donut">
-                  <canvas id="graficoDonutsWhereFromAlertas"></canvas>
-                </div>
-              </div>
-            </section>
-          </div>
+            <div class="kpi-card alert">
+              <h2>Média de consumo semanal</h2>
+              <span class="kpi-value" id="kpi_media_consumo" style="color: green;">1.5%</span>
+              <span class="kpi-description">
+                <span id="kpi_delta_consumo">0%</span> vs. semana anterior
+              </span>
+            </div>
 
+            <div class="kpi-card battery">
+              <h2>Previsão de bateria</h2>
+              <span class="kpi-value" id="kpi_proxima_recarga">inderteminado</span>
+            </div>
+          </section>
+
+          <!-- Gráficos -->
           <div class="middle-row">
-            <!-- Gráfico Linha: Consumo de bateria (% por dia) -->
-            <section class="dashboard-module" id="module_bateria_%_por_dia">
-              <h2>Consumo de bateria (% por dia):</h2>
-              <!--  -->
+
+            <section class="dashboard-module">
+              <h2>Bateria nas últimas 48 horas</h2>
               <div class="module-content">
-                <canvas id="graficoBateria%PorDia"></canvas>
+                <canvas id="graficoBateriaHora"></canvas>
               </div>
             </section>
 
-            <!-- Gráfico Linha: Quantidade de alertas de criticidades (por dia) -->
-            <section class="dashboard-module" id="module_alertas_por_dia">
-              <h2>Quantidade de alertas de criticidades (por dia):</h2>
+            <section class="dashboard-module">
+              <h2>Consumo semanal (últimas 14 semanas)</h2>
               <div class="module-content">
-                <canvas id="graficoAlertasPorDia"></canvas>
+                <canvas id="graficoConsumoSemanal"></canvas>
               </div>
             </section>
+
           </div>
 
-          <div class="bottom-row">
-            <!-- Gráfico Linha: Uso de CPU (média % por hora) -->
-            <section class="dashboard-module" id="module_cpu_%_por_hora">
-              <h2>Uso de CPU (média % por hora):</h2>
-              <div class="module-content">
-                <canvas id="graficoCpu%PorHora"></canvas>
-              </div>
-            </section>
-
-
-            <!-- Gráfico Linha: Atividade de memória RAM (média GB por hora) -->
-            <section class="dashboard-module" id="module_ram_gb_por_hora">
-              <h2>Atividade de memória RAM (média GB por hora):</h2>
-              <div class="module-content">
-                <canvas id="graficoRamGbPorHora"></canvas>
-              </div>
-            </section>
-
-            <!-- Gráfico Linha: Consumo de memória flash (média GB por hora) -->
-            <section class="dashboard-module" id="module_flash_gb_por_hora">
-              <h2>Consumo de memória flash (média GB por hora):</h2>
-              <div class="module-content">
-                <canvas id="graficoFlashGbPorHora"></canvas>
-              </div>
-            </section>
-          </div>
           <hr>
-          <!-- Eventos recentes / Tabela -->
+
+          <!-- Eventos recentes -->
           <section class="card events-card" aria-label="Eventos recentes">
             <div class="card-header">
               <h2>Eventos recentes</h2>
             </div>
-            <table class="events-table" aria-describedby="eventos-desc">
-              <caption id="eventos-desc" style="display:none">Lista de eventos recentes do dispositivo</caption>
+            <table class="events-table">
               <thead>
                 <tr>
                   <th>Horário</th>
-                  <th>Evento</th>
-                  <th>Duração</th>
+                  <th>Descrição</th>
+                  <th>Duração estimada</th>
                 </tr>
               </thead>
               <tbody id="eventsBody">
-                <tr>
-                  <td>2025-10-12 03:12</td>
-                  <td>RAM &lt; 90%</td>
-                  <td>5 min</td>
-                </tr>
-                <tr>
-                  <td>2025-10-11 10:45</td>
-                  <td>CPU &gt; 80%</td>
-                  <td>2 min</td>
-                </tr>
+                <!-- Preenchido via JavaScript -->
               </tbody>
             </table>
           </section>
-        </div>
 
+        </div>
       </div>
     </main>
   </div>
+
+  <!-- JavaScript -->
+  <script src="js/navbar.js"></script>
   <script src="js/dashboard_dispositivo.js"></script>
 </body>
 

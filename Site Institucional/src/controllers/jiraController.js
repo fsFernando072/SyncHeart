@@ -9,7 +9,7 @@ async function listar(req, res) {
 		const tickets = await jiraModel.buscarTicketsAtivos(nomeClinica)
 		res.status(200).json(tickets);
 	} catch (error) {
-		console.error("Erro ao listar alertas do jira:", error);
+		console.error("Erro ao lista alertas do jira:", error);
 		res.status(500).json({ erro: 'Ocorreu uma falha no servidor.' });
 	}
 }
@@ -31,7 +31,7 @@ async function listarTudo(req, res) {
 
 // --- FUNÇÃO PARA LISTAR OS TICKETS DO JIRA DE UM MODELO DE UMA CLÍNICA ---
 async function listarPorModelo(req, res) {
-	let nomeClinica = req.body.a;
+	let nomeClinica = req.body.nomeClinica;
 	let idModelo = req.body.idModelo;
 	nomeClinica = nomeClinica.replaceAll(" ", "_");
 
@@ -39,7 +39,7 @@ async function listarPorModelo(req, res) {
 		const tickets = await jiraModel.buscarTicketsAtivosModelo(nomeClinica, idModelo)
 		res.status(200).json(tickets);
 	} catch (error) {
-		console.error("Erro ao listar alertas do jira:", error);
+		console.error("Erro ao lista alertas do jira:", error);
 		res.status(500).json({ erro: 'Ocorreu uma falha no servidor.' });
 	}
 }
@@ -54,7 +54,7 @@ async function listarPorModeloUltimaSemana(req, res) {
 		const tickets = await jiraModel.buscarTicketsUltimaSemanaModelo(nomeClinica, idModelo)
 		res.status(200).json(tickets);
 	} catch (error) {
-		console.error("Erro ao listar alertas do jira:", error);
+		console.error("Erro ao lista alertas do jira:", error);
 		res.status(500).json({ erro: 'Ocorreu uma falha no servidor.' });
 	}
 }
@@ -70,15 +70,15 @@ async function listarPorModeloPorDia(req, res) {
 		const tickets = await jiraModel.buscarTicketsPorDiaModelo(nomeClinica, idModelo, dataDoDia);
 		res.status(200).json(tickets);
 	} catch (error) {
-		console.error("Erro ao listar alertas do jira:", error);
+		console.error("Erro ao lista alertas do jira:", error);
 		res.status(500).json({ erro: 'Ocorreu uma falha no servidor.' });
 	}
 }
 
 module.exports = {
 	listar,
-	listarTudo,
 	listarPorModelo,
 	listarPorModeloUltimaSemana,
-	listarPorModeloPorDia
+	listarPorModeloPorDia,
+	listarTudo
 };
