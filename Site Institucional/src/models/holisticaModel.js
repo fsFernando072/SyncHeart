@@ -366,8 +366,8 @@ async function obterHistoricoAlertas(clinicaId, dias = 7, nomeClinica) {
             historico.push({
                 day: dayLabel,
                 cpu: Math.floor(total / 4),
-                bateria: Math.floor(total / 4),
-                ram: Math.floor(total / 4),
+                bateria: Math.floor(total / 2),
+                ram: Math.floor(total / 2),
                 disco: total - Math.floor(total / 4) * 3
             });
         }
