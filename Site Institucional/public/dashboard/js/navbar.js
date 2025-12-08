@@ -150,7 +150,7 @@ function configurarBotaoCadastro(cargoId) {
  */
 function destacarItemAtivo() {
     const paginaAtual = window.location.pathname.split('/').pop();
-    const itensNav = document.querySelectorAll('.sidebar-top .nav-item');
+    const itensNav = document.querySelectorAll('.sidebar-top');
     
     itensNav.forEach(item => {
         item.classList.remove('active');

@@ -6,7 +6,7 @@ body {
     background-color: #f4f7fa;
     color: #3b3b3b;
     height: 100vh;
-    overflow: hidden;
+   
 }
 
 .app-container { display: flex; height: 100%; }
