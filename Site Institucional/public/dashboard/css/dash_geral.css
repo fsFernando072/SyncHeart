@@ -9,7 +9,7 @@ body {
    overflow: hidden;
 }
 
-.app-container { display: flex; height: 100%; overflow: auto;}
+.app-container { display: flex; height: 100%; }
 
 /* --- 2. BARRA LATERAL (SIDEBAR) --- */
 .sidebar {
@@ -21,6 +21,7 @@ body {
     justify-content: space-between;
     padding: 20px 0;
     transition: width 0.3s;
+    position: fixed;
 }
 
 .sidebar-top, .sidebar-bottom { display: flex; flex-direction: column; align-items: center; gap: 15px; }
