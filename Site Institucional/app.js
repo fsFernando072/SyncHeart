@@ -17,6 +17,7 @@ var usuarioRouter = require("./src/routes/usuarios");
 var aprovacaoRouter = require("./src/routes/aprovacao");
 var dispositivoRouter = require("./src/routes/dispositivos");          
 var dashDispositivoRouter = require("./src/routes/dashboard-dispositivo"); 
+const holisticaRouter = require('./src/routes/holistica');
 // == NOVO == //
 const clinicaRoutes = require('./src/routes/clinicas'); 
 const equipeRouter = require("./src/routes/equipes");
@@ -38,6 +39,7 @@ app.use("/usuarios", usuarioRouter);
 app.use("/aprovacao", aprovacaoRouter);
 app.use("/dispositivos", dispositivoRouter);              
 app.use("/dashboard-dispositivos", dashDispositivoRouter); 
+app.use("/holistica", holisticaRouter);
 
 
 // == NOVO == //

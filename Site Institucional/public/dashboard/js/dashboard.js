@@ -1,5 +1,3 @@
-// Arquivo: js/dashboard.js
-
 document.addEventListener('DOMContentLoaded', () => {
 
     // Selecionando os novos elementos
